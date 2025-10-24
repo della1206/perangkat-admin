@@ -7,7 +7,7 @@ use App\Http\Controllers\WargaController;
 use App\Http\Controllers\LembagaDesaController;
 use App\Http\Controllers\PerangkatDesaController;
 
-<<<<<<< HEAD
+
 // Halaman login
 Route::get('/login', [AuthController::class, 'index'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
@@ -23,7 +23,7 @@ Route::get('/', function () {
 
 // Dashboard (muncul setelah login)
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-=======
+
 // Redirect root ke dashboard
 Route::get('/', function () {
     return redirect()->route('dashboard.index');
@@ -31,7 +31,7 @@ Route::get('/', function () {
 
 // Dashboard
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
->>>>>>> 59432ac6662f10f497865ea45af921c8593438ac
+
 
 // CRUD Warga
 Route::resource('warga', WargaController::class);
@@ -41,8 +41,6 @@ Route::resource('lembaga', LembagaDesaController::class);
 
 // Perangkat Desa
 Route::get('perangkat-desa', [PerangkatDesaController::class, 'index'])->name('perangkat.index');
-<<<<<<< HEAD
 
-=======
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
->>>>>>> 59432ac6662f10f497865ea45af921c8593438ac
+
