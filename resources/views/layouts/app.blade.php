@@ -18,12 +18,9 @@
 
         <nav class="flex-1 p-4">
             <ul class="space-y-3">
-<<<<<<< HEAD
-                <li><a href="{{ route('dashboard') }}" class="block p-2 rounded hover:bg-gray-700">🏠 Dashboard</a></li>
-                <li><a href="{{ route('warga.index') }}" class="block p-2 rounded hover:bg-gray-700">👩🏻‍🦰 User</a></li>
-=======
+
                 <li><a href="{{ route('dashboard.index') }}" class="block p-2 rounded hover:bg-gray-700">🏠 Dashboard</a></li>
->>>>>>> 59432ac6662f10f497865ea45af921c8593438ac
+                <li><a class="block p-2 rounded hover:bg-gray-700">👩🏻‍🦰 User</a></li>
                 <li><a href="{{ route('warga.index') }}" class="block p-2 rounded hover:bg-gray-700">👨‍👩‍👧‍👦 Warga</a></li>
                 <li><a href="{{ route('lembaga.index') }}" class="block p-2 rounded hover:bg-gray-700">🏢 Lembaga Desa</a></li>
                 {{-- <li><a href="{{ route('perangkat.index') }}" class="block p-2 rounded hover:bg-gray-700">⚙️ Perangkat Desa</a></li> --}}

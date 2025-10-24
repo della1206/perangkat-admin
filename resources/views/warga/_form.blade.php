@@ -1,6 +1,5 @@
 <div class="bg-white p-6 rounded-lg shadow-md">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
         <div>
             <label class="block text-gray-700 font-medium mb-1">No KTP</label>
             <input type="text" name="no_ktp" class="w-full border border-gray-300 rounded p-2 focus:ring focus:ring-blue-200"

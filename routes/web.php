@@ -7,31 +7,26 @@ use App\Http\Controllers\WargaController;
 use App\Http\Controllers\LembagaDesaController;
 use App\Http\Controllers\PerangkatDesaController;
 
-
-// Halaman login
-Route::get('/login', [AuthController::class, 'index'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.process');
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-Route::post('/register', [AuthController::class, 'register'])->name('register.process');
-Route::get('/success', [AuthController::class, 'success'])->name('login.success');
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-
 // Saat buka root, arahkan ke login dulu
 Route::get('/', function () {
     return redirect()->route('login');
 });
 
-// Dashboard (muncul setelah login)
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+// Halaman login & register
+Route::get('/login', [AuthController::class, 'index'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.process');
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+Route::post('/register', [AuthController::class, 'register'])->name('register.process');
 
-// Redirect root ke dashboard
-Route::get('/', function () {
-    return redirect()->route('dashboard.index');
-});
+// Setelah login berhasil → ke halaman success
+Route::get('/success', [AuthController::class, 'success'])->name('login.success');
 
-// Dashboard
+// Logout
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout.post');
+
+// Dashboard (hanya bisa diakses setelah login)
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
-
 
 // CRUD Warga
 Route::resource('warga', WargaController::class);
@@ -41,6 +36,3 @@ Route::resource('lembaga', LembagaDesaController::class);
 
 // Perangkat Desa
 Route::get('perangkat-desa', [PerangkatDesaController::class, 'index'])->name('perangkat.index');
-
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-

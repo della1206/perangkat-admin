@@ -21,11 +21,7 @@
             <h3 class="font-semibold text-lg mb-2 text-gray-800">Lembaga Desa</h3>
             <p class="text-gray-600 text-sm">Kelola data lembaga yang berperan dalam desa.</p>
         </a>
-<<<<<<< HEAD
 
-        
-=======
->>>>>>> 59432ac6662f10f497865ea45af921c8593438ac
         <!-- Kartu Perangkat Desa -->
         <a href="{{ route('perangkat.index') }}" 
            class="block bg-white border border-gray-200 rounded-lg p-6 text-center shadow hover:shadow-lg hover:bg-yellow-50 transition duration-200">

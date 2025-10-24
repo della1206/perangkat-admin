@@ -20,7 +20,7 @@ class WargaController extends Controller
         $request->validate([
             'no_ktp' => 'required|unique:warga',
             'nama' => 'required',
-            'jenis_kelamin' => 'required',
+            'jenis_kelamin' => 'nullable',
             'agama' => 'required',
             'pekerjaan' => 'required'
         ]);

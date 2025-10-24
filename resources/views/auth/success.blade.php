@@ -19,11 +19,11 @@
         </p>
 
         <p class="text-gray-600 mb-6">
-            Password yang kamu gunakan: <span class="font-mono bg-gray-100 px-2 py-1 rounded">{{ session('password') }}</span>
+            Password: <span class="font-mono bg-gray-100 px-2 py-1 rounded">{{ session('password') }}</span>
         </p>
 
         <div class="mt-4">
-            <a href="{{ route('dashboard') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+            <a href="{{ route('dashboard.index') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
                 Lanjut ke Dashboard
             </a>
         </div>
