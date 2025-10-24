@@ -1,0 +1,21 @@
+[
+  {
+    "menu": [
+      {
+        "name": "Dashboard",
+        "icon": "bx bx-home",
+        "route": "/dashboard"
+      },
+      {
+        "name": "Data Warga",
+        "icon": "bx bx-group",
+        "route": "/warga"
+      },
+      {
+        "name": "Lembaga Desa",
+        "icon": "bx bx-buildings",
+        "route": "/lembaga"
+      }
+    ]
+  }
+]

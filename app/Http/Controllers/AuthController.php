@@ -6,48 +6,75 @@ use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
-    // Menampilkan form login
+    // Tampilkan halaman login
     public function index()
     {
         return view('auth.login');
     }
 
-    // Memproses login
+    // Proses login statis (Admin / Abc123)
     public function login(Request $request)
     {
-        // Validasi input
         $request->validate([
             'username' => 'required',
-            'password' => [
-                'required',
-                'min:3',
-                'regex:/[A-Z]/' // Harus ada huruf kapital
-            ]
-        ], [
-            'username.required' => 'Username wajib diisi!',
-            'password.required' => 'Password wajib diisi!',
-            'password.min' => 'Password minimal 3 karakter!',
-            'password.regex' => 'Password harus mengandung huruf kapital!'
+            'password' => 'required|min:3',
         ]);
 
-        // User contoh (hardcode)
-        $validUser = "admin";
-        $validPass = "Admin123";
+        $username = $request->input('username');
+        $password = $request->input('password');
+        $email = $request->input('email');
 
-        //update 4 
-
-        if ($request->username === $validUser && $request->password === $validPass) {
-            // Login berhasil → redirect ke halaman sukses
-            return redirect()->route('auth.success')->with('username', $request->username);
-        } else {
-            // Login gagal
-            return redirect()->back()->with('error', 'Username atau password salah!');
+        // Cek apakah password mengandung huruf kapital
+        if (!preg_match('/[A-Z]/', $password)) {
+            return back()->with('error', 'Password harus mengandung minimal satu huruf kapital.')->withInput();
         }
+
+        // Login hanya untuk Admin / Abc123
+        if ($username === 'Admin' && $password === 'Abc123') {
+            session([
+                'username' => $username,
+                'email' => $email ?? 'admin@example.com', // default kalau kosong
+                'password' => $password,
+            ]);
+            return redirect()->route('login.success')->with('message', 'Login berhasil!');
+        }
+
+        return back()->with('error', 'Username atau password salah.')->withInput();
     }
 
-    // Halaman sukses
+    // Halaman sukses setelah login
     public function success()
     {
+        if (!session()->has('username')) {
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
+        }
+
         return view('auth.success');
+    }
+
+    // Logout
+    public function logout(Request $request)
+    {
+        $request->session()->flush();
+        return redirect()->route('login')->with('success', 'Berhasil logout.');
+    }
+
+    // Halaman register (hanya tampilan)
+    public function showRegister()
+    {
+        return view('auth.register');
+    }
+
+    // Simulasi proses register (tidak mempengaruhi login)
+    public function register(Request $request)
+    {
+        $request->validate([
+            'username' => 'required|min:3|alpha_num',
+            'email' => 'required|email',
+            'password' => 'required|min:3',
+            'confirm_password' => 'required|same:password',
+        ]);
+
+        return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan login dengan akun Admin / Abc123.');
     }
 }
