@@ -10,15 +10,13 @@
         </a>
     </div>
 
-    {{-- Flash success --}}
     @if (session('success'))
         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded mb-4">
             {{ session('success') }}
         </div>
     @endif
 
-    {{-- Jika data kosong --}}
-    @if ($lembaga->isEmpty())
+    @if ($lembagas->isEmpty())
         <p class="text-gray-600">Belum ada data lembaga desa.</p>
     @else
         <div class="overflow-x-auto">
@@ -35,25 +33,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($lembaga as $index => $item)
+                    @foreach ($lembagas as $index => $item)
                         <tr class="hover:bg-gray-50 transition">
                             <td class="border px-4 py-2">{{ $index + 1 }}</td>
                             <td class="border px-4 py-2">{{ $item->nama_lembaga }}</td>
                             <td class="border px-4 py-2">{{ $item->ketua }}</td>
-                            <td class="border px-4 py-2">{{ $item->bidang }}</td>
-                            <td class="border px-4 py-2">{{ $item->kontak }}</td>
-                            <td class="border px-4 py-2">{{ $item->deskripsi }}</td>
+                            <td class="border px-4 py-2">{{ $item->bidang ?? '-' }}</td>
+                            <td class="border px-4 py-2">{{ $item->kontak ?? '-' }}</td>
+                            <td class="border px-4 py-2">{{ $item->deskripsi ?? '-' }}</td>
                             <td class="border px-4 py-2 text-center space-x-2">
-                                {{-- Tombol Edit --}}
-                                <a href="{{ route('lembaga.edit', $item) }}">
-                                   <class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 transition">
+                                <a href="{{ route('lembaga.edit', $item->id) }}" 
+                                   class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 transition">
                                     ✏️ Edit
                                 </a>
-
-                                {{-- Tombol Hapus --}}
-                                <form action="{{ route('lembaga.destroy', ['lembaga' => $item->lembaga_id]) }}" 
-                                      method="POST" 
-                                      class="inline"
+                                <form action="{{ route('lembaga.destroy', $item->id) }}" 
+                                      method="POST" class="inline" 
                                       onsubmit="return confirm('Yakin ingin menghapus data ini?');">
                                     @csrf
                                     @method('DELETE')

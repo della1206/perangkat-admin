@@ -24,10 +24,10 @@
 
         <form action="{{ route('login.process') }}" method="POST">
             @csrf
-            <div class="mb-4">
+            <!-- <div class="mb-4">
                 <label class="block text-gray-700 mb-2">Username</label>
                 <input type="text" name="username" class="w-full border border-gray-300 p-2 rounded" placeholder="" required>
-            </div>
+            </div> -->
 
             <div class="mb-4">
                 <label class="block text-gray-700 mb-2">email</label>

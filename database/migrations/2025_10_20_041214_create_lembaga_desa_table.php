@@ -6,24 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-      Schema::create('lembaga_desa', function (Blueprint $table) {
-    $table->id('lembaga_id');
-    $table->string('nama_lembaga');
-    $table->text('deskripsi')->nullable();
-    $table->string('kontak')->nullable();
-    $table->timestamps();
-});
-
+        Schema::create('lembaga_desa', function (Blueprint $table) {
+            $table->id();
+            $table->string('nama_lembaga');
+            $table->string('ketua');
+            $table->string('bidang')->nullable();
+            $table->string('kontak')->nullable();
+            $table->text('deskripsi')->nullable();
+            $table->timestamps();
+        });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('lembaga_desa');
