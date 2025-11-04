@@ -20,7 +20,7 @@
             <ul class="space-y-3">
 
                 <li><a href="{{ route('dashboard.index') }}" class="block p-2 rounded hover:bg-gray-700">🏠 Dashboard</a></li>
-                <li><a class="block p-2 rounded hover:bg-gray-700">👩🏻‍🦰 User</a></li>
+                <li><a href="{{ route('user.index') }}" class="block p-2 rounded hover:bg-gray-700">👩🏻‍🦰 User</a></li>
                 <li><a href="{{ route('warga.index') }}" class="block p-2 rounded hover:bg-gray-700">👨‍👩‍👧‍👦 Warga</a></li>
                 <li><a href="{{ route('lembaga.index') }}" class="block p-2 rounded hover:bg-gray-700">🏢 Lembaga Desa</a></li>
                 {{-- <li><a href="{{ route('perangkat.index') }}" class="block p-2 rounded hover:bg-gray-700">⚙️ Perangkat Desa</a></li> --}}

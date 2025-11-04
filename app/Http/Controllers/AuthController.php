@@ -3,50 +3,50 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
     // Tampilkan halaman login
     public function index()
     {
-        return view('auth.login');
+        return view('pages.auth.login');
     }
 
-    // Proses login statis (Admin / Abc123)
+    // Proses login
     public function login(Request $request)
     {
         $request->validate([
-            'username' => 'required',
+            'email' => 'required',
             'password' => 'required|min:3',
         ]);
 
-        $username = $request->input('username');
-         $email = $request->input('email');
+        $username = $request->input('email');
         $password = $request->input('password');
-         
 
-        // Cek apakah password mengandung huruf kapital
-        if (!preg_match('/[A-Z]/', $password)) {
-            return back()->with('error', 'Password harus mengandung minimal satu huruf kapital.')->withInput();
+        // Cari user berdasarkan username
+        $user = User::where('email', $username)->first();
+
+        if (!$user || !Hash::check($password, $user->password)) {
+            return back()->with('error', 'Username atau password salah.')->withInput();
         }
 
-        // Login hanya untuk Admin / Abc123
-        if ($username === 'Admin' && $password === 'Abc123') {
-            session([
-                'username' => $username,
-                 'email' => $email ?? 'della24si@mahasiswa.pcr.ac.id',
-                'password' => $password,
-            ]);
-            return redirect()->route('login.success')->with('message', 'Login berhasil!');
-        }
+        // Simpan data user ke session
+        session([
+            'user_id' => $user->id,
+            // 'username' => $user->username,
+            'email' => $user->email,
+        ]);
 
-        return back()->with('error', 'Username atau password salah.')->withInput();
+        return redirect()->route('dashboard.index')->with('message', 'Login berhasil!');
     }
 
     // Halaman sukses setelah login
     public function success()
     {
-        if (!session()->has('username')) {
+        if (!session()->has('user_id')) {
             return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
         }
 
@@ -60,23 +60,38 @@ class AuthController extends Controller
         return redirect()->route('login')->with('success', 'Berhasil logout.');
     }
 
-    // Halaman register (hanya tampilan)
+    // Halaman register
     public function showRegister()
     {
         return view('auth.register');
     }
 
-    // Simulasi proses register (tidak mempengaruhi login)
+    // Proses register
     public function register(Request $request)
     {
         $request->validate([
-            'username' => 'required|min:3|alpha_num',
-             'email' => 'required|email',
-            'password' => 'required|min:3',
-            'confirm_password' => 'required|same:password',
+    'name' => 'required|string|max:255',
+    // 'username' => 'required|min:3|alpha_num|unique:users,username',
+    'email' => 'required|email|unique:users,email',
+    'password' => [
+        'required',
+        'min:6',
+        'confirmed',
+        'regex:/[A-Z]/'  // <-- harus ada minimal satu huruf kapital
+    ],
+], [
+    'password.regex' => 'Password harus mengandung minimal satu huruf kapital.'
+]);
+
+
+        // Simpan user baru ke database
+        $user = User::create([
+            'name' => $request->name,
+            // 'username' => $request->username,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
         ]);
 
-        return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan login dengan akun Admin / Abc123.');
+        return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan login.');
     }
 }
-

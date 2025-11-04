@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\WargaController;
 use App\Http\Controllers\LembagaDesaController;
 use App\Http\Controllers\PerangkatDesaController;
+use App\Http\Controllers\UserController;
 
 // Saat buka root, arahkan ke login dulu
 Route::get('/', function () {
@@ -33,6 +34,11 @@ Route::resource('warga', WargaController::class);
 
 // CRUD Lembaga Desa
 Route::resource('lembaga', LembagaDesaController::class);
+
+Route::get('/user', [UserController::class, 'index'])->name('user.index');
+
+Route::resource('user', UserController::class);
+
 
 // Perangkat Desa
 Route::get('perangkat-desa', [PerangkatDesaController::class, 'index'])->name('perangkat.index');
