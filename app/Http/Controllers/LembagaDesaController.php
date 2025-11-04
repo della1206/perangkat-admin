@@ -36,7 +36,7 @@ class LembagaDesaController extends Controller
     public function edit($id)
     {
         $lembaga = LembagaDesa::findOrFail($id);
-        return view('lembaga.edit', compact('lembaga'));
+        return view('pages.lembaga.edit', compact('lembaga'));
     }
 
     public function update(Request $request, $id)
