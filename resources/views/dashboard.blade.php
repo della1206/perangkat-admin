@@ -1,6 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="flex justify-start mb-4">
+    <div class="relative w-full max-w-sm">
+        <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-4.35-4.35M11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14z" />
+        </svg>
+        <input
+            type="text"
+            placeholder="Cari data warga, lembaga, atau perangkat..."
+            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
+        >
+    </div>
+</div>
 <div class="bg-gray-50 p-8 rounded-lg">
     <h2 class="text-2xl font-bold mb-2">Selamat Datang di Aplikasi Perangkat Desa 👋</h2>
     <p class="text-gray-600 mb-6">
@@ -60,7 +73,7 @@
         </div>
     </div>
     <div class="bg-white p-6 shadow rounded-lg">
-    <h3 class="text-lg font-semibold mb-4">Statistik Jenis Kelamin Warga</h3>
+    <h3 class="text-lg font-semibold mb-4">Statistik Berdasarkan Banyak Warga</h3>
     <div class="mb-2 flex justify-between">
         <span class="text-blue-400 font-semibold">Laki-laki</span>
         <span>56%</span>
@@ -77,15 +90,57 @@
     </div>
 </div>
 
-{{-- Grafik --}}
+{{-- Grafik & Keterangan --}}
 <div class="bg-white p-6 shadow rounded-lg mt-6">
-    <h3 class="text-lg font-semibold mb-4 text-center">Statistik Warga Berdasarkan Jenis Kelamin</h3>
-    <div class="flex justify-center">
-        <div style="width: 650px; height: 650px;">
+    <h3 class="text-lg font-semibold mb-4 text-center">Statistik Berdasarkan Jenis Kelamin</h3>
+
+    {{-- Grafik --}}
+    <div class="flex justify-center mb-6">
+        <div style="width: 300px; height: 300px;">
             <canvas id="wargaChart"></canvas>
         </div>
     </div>
+
+{{-- Keterangan --}}
+<div class="mt-8 bg-white border border-gray-200 rounded-lg shadow-sm p-4 w-full">
+    <h3 class="text-lg font-semibold mb-4 text-gray-700 border-b pb-2"></h3>
+    <table class="w-full text-sm text-gray-700 border-collapse">
+        <thead class="bg-blue-100 border-b">
+            <tr>
+                <th class="text-left font-semibold py-3 px-4 border-r border-gray-300 w-1/2">Keterangan</th>
+                <th class="text-left font-semibold py-3 px-4 w-1/2">Media</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="border-b">
+                <td class="py-3 px-4 border-r border-gray-200">Master RW</td>
+                <td class="py-3 px-4 text-gray-500 italic">Opsional dipakai untuk referensi.</td>
+            </tr>
+            <tr class="border-b">
+                <td class="py-3 px-4 border-r border-gray-200">Master RT</td>
+                <td class="py-3 px-4 text-gray-500 italic">Di bawah RW.</td>
+            </tr>
+            <tr class="border-b">
+                <td class="py-3 px-4 border-r border-gray-200">Foto</td>
+                <td class="py-3 px-4">
+                    <span class="bg-red-100 text-red-600 px-2 py-1 rounded text-xs font-mono">
+                        'perangkat_desa'
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="py-3 px-4 border-r border-gray-200">Logo</td>
+                <td class="py-3 px-4">
+                    <span class="bg-red-100 text-red-600 px-2 py-1 rounded text-xs font-mono">
+                        'lembaga_desa'
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>

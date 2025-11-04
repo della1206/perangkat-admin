@@ -16,7 +16,7 @@
 
     <form action="{{ route('warga.store') }}" method="POST">
         @csrf
-        @include('warga._form', ['submitButtonText' => 'Simpan'])
+        @include('warga.form', ['submitButtonText' => 'Simpan'])
     </form>
 </div>
 @endsection
