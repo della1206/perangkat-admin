@@ -12,21 +12,21 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
-<<<<<<< HEAD
+
         return view('pages.user.index', compact('users'));
-=======
+
         return view('user.index', compact('users'));
->>>>>>> 0b0f6c7eab133f3a92c051b30a4b878e479e7405
+
     }
 
     // Form tambah user
     public function create()
     {
-<<<<<<< HEAD
+
         return view('pages.user.create');
-=======
+
         return view('user.create');
->>>>>>> 0b0f6c7eab133f3a92c051b30a4b878e479e7405
+
     }
 
     // Simpan user baru

@@ -17,7 +17,7 @@
     <form action="{{ route('warga.update', $warga) }}" method="POST">
         @csrf
         @method('PUT')
-        @include('warga._form', ['submitButtonText' => 'Update'])
+        @include('pages.warga.form', ['submitButtonText' => 'Update'])
     </form>
 </div>
 @endsection
