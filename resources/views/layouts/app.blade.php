@@ -74,7 +74,7 @@
                                     </div>
                                     <div class="flex-1">
                                         <p class="text-sm font-medium text-gray-800">User Baru Terdaftar</p>
-                                        <p class="text-xs text-gray-600">Sani baru saja mendaftar sebagai user</p>
+                                        <p class="text-xs text-gray-600">Della baru saja mendaftar sebagai user</p>
                                         <span class="text-xs text-blue-500">2 menit lalu</span>
                                     </div>
                                 </div>
