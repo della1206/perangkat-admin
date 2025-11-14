@@ -7,6 +7,7 @@ use App\Http\Controllers\WargaController;
 use App\Http\Controllers\LembagaDesaController;
 use App\Http\Controllers\PerangkatDesaController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\JabatanLembagaController;
 
 // Saat buka root, arahkan ke login dulu
 Route::get('/', function () {
@@ -42,3 +43,5 @@ Route::resource('user', UserController::class);
 
 // Perangkat Desa
 Route::get('perangkat-desa', [PerangkatDesaController::class, 'index'])->name('perangkat.index');
+
+Route::resource('jabatan', JabatanLembagaController::class);

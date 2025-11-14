@@ -41,21 +41,27 @@
                             <td class="border px-4 py-2">{{ $item->bidang ?? '-' }}</td>
                             <td class="border px-4 py-2">{{ $item->kontak ?? '-' }}</td>
                             <td class="border px-4 py-2">{{ $item->deskripsi ?? '-' }}</td>
+
                             <td class="border px-4 py-2 text-center space-x-2">
+
+                                {{-- EDIT --}}
                                 <a href="{{ route('lembaga.edit', $item->id) }}" 
                                    class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 transition">
                                     ✏️ Edit
                                 </a>
-                                <form action="{{ route('lembaga.destroy', $item->id) }}" 
-                                      method="POST" class="inline" 
+
+                                {{-- DELETE --}}
+                                <form action="{{ route('lembaga.destroy', $item->id) }}"
+                                      method="POST" class="inline"
                                       onsubmit="return confirm('Yakin ingin menghapus data ini?');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" 
+                                    <button type="submit"
                                             class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">
                                         🗑️ Hapus
                                     </button>
                                 </form>
+
                             </td>
                         </tr>
                     @endforeach
