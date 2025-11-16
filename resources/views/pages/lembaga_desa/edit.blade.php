@@ -1,79 +1,34 @@
-{{-- start css --}}
-@include('layouts.admin.css')
-{{-- end css --}}
+@extends('layouts.admin.app')
 
-{{-- start header --}}
-@include('layouts.admin.header')
-{{-- end header --}}
+@section('content')
+<div class="bg-white p-6 rounded shadow max-w-xl mx-auto">
 
-{{-- start content --}}
-<div class="container-xxl py-5">
-    <div class="container px-lg-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="card lembaga-form-card">
-                    <div class="card-header">
-                        <h4 class="mb-0 text-white">
-                            <i class="fa fa-edit me-2"></i>Edit Data Lembaga Desa
-                        </h4>
-                    </div>
-                    <div class="card-body p-4">
-                        <form action="{{ route('lembaga.update', $lembaga->lembaga_id) }}" method="POST">
-                            @csrf
-                            @method('PUT')
-
-                            <div class="mb-4">
-                                <label for="nama_lembaga" class="form-label fw-semibold">Nama Lembaga <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control form-control-lg @error('nama_lembaga') is-invalid @enderror"
-                                       id="nama_lembaga" name="nama_lembaga"
-                                       value="{{ old('nama_lembaga', $lembaga->nama_lembaga) }}" required maxlength="100"
-                                       placeholder="Masukkan nama lembaga">
-                                @error('nama_lembaga')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="mb-4">
-                                <label for="deskripsi" class="form-label fw-semibold">Deskripsi Lembaga</label>
-                                <textarea class="form-control @error('deskripsi') is-invalid @enderror"
-                                          id="deskripsi" name="deskripsi" rows="5"
-                                          placeholder="Deskripsikan tentang lembaga ini">{{ old('deskripsi', $lembaga->deskripsi) }}</textarea>
-                                @error('deskripsi')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="mb-4">
-                                <label for="kontak" class="form-label fw-semibold">Kontak</label>
-                                <input type="text" class="form-control @error('kontak') is-invalid @enderror"
-                                       id="kontak" name="kontak"
-                                       value="{{ old('kontak', $lembaga->kontak) }}" maxlength="50"
-                                       placeholder="Nomor telepon atau kontak lainnya">
-                                @error('kontak')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="d-flex justify-content-between align-items-center mt-4">
-                                <a href="{{ route('lembaga.index') }}" class="btn btn-secondary btn-lg">
-                                    <i class="fa fa-arrow-left me-2"></i>Kembali
-                                </a>
-                                <button type="submit" class="btn btn-add btn-lg">
-                                    <i class="fa fa-save me-2"></i>Update Lembaga
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+    {{-- ALERT SUKSES --}}
+    @if(session('success'))
+        <div class="bg-green-500 text-white p-3 rounded mb-4">
+            {{ session('success') }}
         </div>
-    </div>
+    @endif
+
+    <h1 class="text-2xl font-bold text-gray-800 mb-4">Edit Lembaga Desa</h1>
+
+    <form action="{{ route('lembaga.update', $lembaga->lembaga_id) }}" method="POST">
+        @csrf
+        @method('PUT')
+
+        <label class="block font-semibold">Nama Lembaga</label>
+        <input type="text" name="nama_lembaga" value="{{ $lembaga->nama_lembaga }}" class="w-full border rounded p-2 mb-4">
+
+         <label class="block text-gray-700">Ketua</label>
+        <input type="text" name="ketua" value="{{ $lembaga->ketua }}" class="w-full p-2 border rounded">
+
+        <label class="block font-semibold">Deskripsi</label>
+        <textarea name="deskripsi" class="w-full border rounded p-2 mb-4" rows="4">{{ $lembaga->deskripsi }}</textarea>
+
+        <label class="block font-semibold">Kontak</label>
+        <input type="text" name="kontak" value="{{ $lembaga->kontak }}" class="w-full border rounded p-2 mb-4">
+
+        <button class="bg-blue-600 text-white px-4 py-2 rounded">Update</button>
+    </form>
 </div>
-{{-- end content --}}
-
-<!-- Footer Start -->
-        @include('layouts.admin.footer')
-        <!-- Footer End -->
-
-        {{-- START JS --}}
-    @include('layouts.admin.js')
+@endsection

@@ -11,10 +11,13 @@ class LembagaDesa extends Model
 
     protected $table = 'lembaga_desa';
     protected $primaryKey = 'lembaga_id';
+    public $incrementing = true;
+    protected $keyType = 'int';
 
     protected $fillable = [
         'nama_lembaga',
         'deskripsi',
-        'kontak'
+        'kontak',
+        'ketua'
     ];
 }

@@ -10,12 +10,12 @@ class LembagaDesaController extends Controller
     public function index()
     {
         $lembaga = LembagaDesa::orderBy('nama_lembaga')->get();
-        return view('pages.lembaga_desa.index', compact('lembaga')); // Perhatikan 'pages.'
+        return view('pages.lembaga_desa.index', compact('lembaga'));
     }
 
     public function create()
     {
-        return view('pages.lembaga_desa.create'); // Perhatikan 'pages.'
+        return view('pages.lembaga_desa.create');
     }
 
     public function store(Request $request)
@@ -34,14 +34,14 @@ class LembagaDesaController extends Controller
 
     public function show($id)
     {
-        $lembaga = LembagaDesa::findOrFail($id);
-        return view('pages.lembaga_desa.show', compact('lembaga')); // Perhatikan 'pages.'
+        $lembaga = LembagaDesa::where('lembaga_id', $id)->firstOrFail();
+        return view('pages.lembaga_desa.show', compact('lembaga'));
     }
 
     public function edit($id)
     {
-        $lembaga = LembagaDesa::findOrFail($id);
-        return view('pages.lembaga_desa.edit', compact('lembaga')); // Perhatikan 'pages.'
+        $lembaga = LembagaDesa::where('lembaga_id', $id)->firstOrFail();
+        return view('pages.lembaga_desa.edit', compact('lembaga'));
     }
 
     public function update(Request $request, $id)
@@ -52,7 +52,7 @@ class LembagaDesaController extends Controller
             'kontak' => 'nullable|string|max:50'
         ]);
 
-        $lembaga = LembagaDesa::findOrFail($id);
+        $lembaga = LembagaDesa::where('lembaga_id', $id)->firstOrFail();
         $lembaga->update($request->all());
 
         return redirect()->route('lembaga.index')
@@ -61,7 +61,7 @@ class LembagaDesaController extends Controller
 
     public function destroy($id)
     {
-        $lembaga = LembagaDesa::findOrFail($id);
+        $lembaga = LembagaDesa::where('lembaga_id', $id)->firstOrFail();
         $lembaga->delete();
 
         return redirect()->route('lembaga.index')

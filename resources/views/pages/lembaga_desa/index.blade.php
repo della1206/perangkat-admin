@@ -1,121 +1,66 @@
-{{-- start css --}}
-@include('layouts.admin.css')
-{{-- end css --}}
+@extends('layouts.admin.app')
 
-{{-- start header --}}
-@include('layouts.admin.header')
-{{-- end header --}}
+@section('content')
+<div class="bg-white p-6 rounded shadow">
 
-{{-- start content --}}
-<div class="container-xxl py-4">
-    <div class="container px-lg-4">
-        @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="fa fa-check-circle me-2"></i>
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
-        <!-- Header Section -->
-        <div class="page-header mb-5">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <h1 class="page-title">PERANGKAT & LEMBAGA</h1>
-                    <p class="page-subtitle">Portal Desa Mandiri - Midsipant dengan Sepenuh Hati</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <a href="{{ route('lembaga.create') }}" class="btn btn-primary btn-add">
-                        <i class="fa fa-plus me-2"></i>Tambah Lembaga Baru
-                    </a>
-                </div>
-            </div>
+    {{-- ALERT SUKSES --}}
+    @if(session('success'))
+        <div class="bg-green-500 text-white p-3 rounded mb-4">
+            {{ session('success') }}
         </div>
+    @endif
 
-        <!-- Content Section -->
-        <div class="content-section">
-            <div class="section-header mb-4">
-                <h3 class="section-title">Daftar Lembaga</h3>
-                <p class="section-subtitle">Kelola semua lembaga desa</p>
-            </div>
+    <div class="flex justify-between mb-4">
+        <h1 class="text-2xl font-bold text-gray-800">Data Lembaga Desa</h1>
 
-            @if($lembaga->count() > 0)
-                <div class="row g-4">
-                    @foreach ($lembaga as $item)
-                        <div class="col-lg-4 col-md-6">
-                            <div class="modern-card">
-                                <div class="card-header-section">
-                                    <div class="card-icon">
-                                        <i class="fa fa-building"></i>
-                                    </div>
-                                    <div class="card-title-section">
-                                        <h4 class="card-title">{{ $item->nama_lembaga }}</h4>
-                                        <p class="card-subtitle">ID Lembaga {{ $item->lembaga_id }}</p>
-                                    </div>
-                                </div>
-
-                                <div class="card-divider"></div>
-
-                                <div class="card-body-section">
-                                    <div class="info-grid">
-                                        <div class="info-row">
-                                            <span class="info-label">Kontak:</span>
-                                            <span class="info-value">{{ $item->kontak ?? '-' }}</span>
-                                        </div>
-                                        <div class="info-row">
-                                            <span class="info-label">Deskripsi:</span>
-                                            <span class="info-value">{{ $item->deskripsi ? Str::limit($item->deskripsi, 50) : 'Tidak ada deskripsi' }}</span>
-                                        </div>
-                                        <div class="info-row">
-                                            <span class="info-label">Dibuat:</span>
-                                            <span class="info-value">{{ $item->created_at->format('d M Y') }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="card-footer-section">
-                                    <div class="action-buttons">
-                                        <a href="{{ route('lembaga.show', $item->lembaga_id) }}" class="btn btn-outline-primary btn-sm">
-                                            <i class="fa fa-eye me-1"></i>Detail
-                                        </a>
-                                        <a href="{{ route('lembaga.edit', $item->lembaga_id) }}" class="btn btn-outline-warning btn-sm">
-                                            <i class="fa fa-edit me-1"></i>Edit
-                                        </a>
-                                        <form action="{{ route('lembaga.destroy', $item->lembaga_id) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-outline-danger btn-sm"
-                                                    onclick="return confirm('Apakah Anda yakin ingin menghapus lembaga ini?')">
-                                                <i class="fa fa-trash me-1"></i>Hapus
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            @else
-                <div class="empty-state text-center py-5">
-                    <div class="empty-icon mb-4">
-                        <i class="fa fa-building fa-4x text-muted"></i>
-                    </div>
-                    <h3 class="mb-3">Belum Ada Data Lembaga Desa</h3>
-                    <p class="text-muted mb-4">Silakan tambah data lembaga desa terlebih dahulu</p>
-                    <a href="{{ route('lembaga.create') }}" class="btn btn-primary">
-                        <i class="fa fa-plus me-2"></i>Tambah Lembaga Pertama
-                    </a>
-                </div>
-            @endif
-        </div>
+        <a href="{{ route('lembaga.create') }}"
+           class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+            Tambah
+        </a>
     </div>
+
+    <table class="w-full border">
+        <thead class="bg-gray-100">
+            <tr>
+                <th class="border px-3 py-2">No</th>
+                <th class="border px-3 py-2">Nama</th>
+                <th class="border px-3 py-2">Ketua</th>
+                <th class="border px-3 py-2">Deskripsi</th>
+                <th class="border px-3 py-2">Kontak</th>
+                <th class="border px-3 py-2">Aksi</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach ($lembaga as $item)
+                <tr>
+                    <td class="border px-3 py-2 text-center">{{ $loop->iteration }}</td>
+                    <td class="border px-3 py-2">{{ $item->nama_lembaga }}</td>
+                    <td class="border px-3 py-2">{{ $item->ketua }}</td>
+                    <td class="border px-3 py-2">{{ $item->deskripsi }}</td>
+                    <td class="border px-3 py-2">{{ $item->kontak }}</td>
+
+                    <td class="border px-3 py-2 text-center flex justify-center gap-2">
+
+                        <a href="{{ route('lembaga.edit', $item->lembaga_id) }}"
+                           class="text-blue-600 hover:text-blue-800">
+                            <i class="fas fa-edit"></i>
+                        </a>
+
+                        <form action="{{ route('lembaga.destroy', $item->lembaga_id) }}" method="POST"
+                              onsubmit="return confirm('Hapus data ini?')">
+                            @csrf
+                            @method('DELETE')
+
+                            <button class="text-red-600 hover:text-red-800">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
 </div>
-{{-- end content --}}
-
-<!-- Footer Start -->
-@include('layouts.admin.footer')
-<!-- Footer End -->
-
-{{-- START JS --}}
-@include('layouts.admin.js')
-
+@endsection
