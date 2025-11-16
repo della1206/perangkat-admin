@@ -10,16 +10,10 @@ return new class extends Migration
     {
         Schema::create('jabatan_lembaga', function (Blueprint $table) {
             $table->id('jabatan_id');
-            $table->unsignedBigInteger('lembaga_id');
-            $table->string('nama_jabatan');
+            $table->foreignId('lembaga_id')->constrained('lembaga_desa', 'lembaga_id')->onDelete('cascade');
+            $table->string('nama_jabatan', 100);
             $table->integer('level')->default(1);
             $table->timestamps();
-
-            // FIX: tabel yang benar adalah lembaga_desa
-            $table->foreign('lembaga_id')
-                  ->references('lembaga_id')
-                  ->on('lembaga_desa')
-                  ->onDelete('cascade');
         });
     }
 

@@ -9,56 +9,62 @@ class LembagaDesaController extends Controller
 {
     public function index()
     {
-        $lembagas = LembagaDesa::all();
-        return view('pages.lembaga.index', compact('lembagas'));
+        $lembaga = LembagaDesa::orderBy('nama_lembaga')->get();
+        return view('pages.lembaga_desa.index', compact('lembaga')); // Perhatikan 'pages.'
     }
 
     public function create()
     {
-        return view('pages.lembaga.create');
+        return view('pages.lembaga_desa.create'); // Perhatikan 'pages.'
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'nama_lembaga' => 'required|string',
-            'ketua' => 'required|string',
-            'bidang' => 'nullable|string',
-            'kontak' => 'nullable|string',
+        $request->validate([
+            'nama_lembaga' => 'required|string|max:100',
             'deskripsi' => 'nullable|string',
+            'kontak' => 'nullable|string|max:50'
         ]);
 
-        LembagaDesa::create($validated);
+        LembagaDesa::create($request->all());
 
-        return redirect()->route('lembaga.index')->with('success', 'Data lembaga desa berhasil ditambahkan.');
+        return redirect()->route('lembaga.index')
+            ->with('success', 'Lembaga desa berhasil ditambahkan.');
+    }
+
+    public function show($id)
+    {
+        $lembaga = LembagaDesa::findOrFail($id);
+        return view('pages.lembaga_desa.show', compact('lembaga')); // Perhatikan 'pages.'
     }
 
     public function edit($id)
     {
         $lembaga = LembagaDesa::findOrFail($id);
-        return view('pages.lembaga.edit', compact('lembaga'));
+        return view('pages.lembaga_desa.edit', compact('lembaga')); // Perhatikan 'pages.'
     }
 
     public function update(Request $request, $id)
     {
-        $lembaga = LembagaDesa::findOrFail($id);
-
-        $validated = $request->validate([
-            'nama_lembaga' => 'required|string',
-            'ketua' => 'required|string',
-            'bidang' => 'nullable|string',
-            'kontak' => 'nullable|string',
+        $request->validate([
+            'nama_lembaga' => 'required|string|max:100',
             'deskripsi' => 'nullable|string',
+            'kontak' => 'nullable|string|max:50'
         ]);
 
-        $lembaga->update($validated);
+        $lembaga = LembagaDesa::findOrFail($id);
+        $lembaga->update($request->all());
 
-        return redirect()->route('lembaga.index')->with('success', 'Data lembaga desa berhasil diperbarui.');
+        return redirect()->route('lembaga.index')
+            ->with('success', 'Lembaga desa berhasil diperbarui.');
     }
 
     public function destroy($id)
     {
-        LembagaDesa::destroy($id);
-        return redirect()->route('lembaga.index')->with('success', 'Data lembaga desa berhasil dihapus.');
+        $lembaga = LembagaDesa::findOrFail($id);
+        $lembaga->delete();
+
+        return redirect()->route('lembaga.index')
+            ->with('success', 'Lembaga desa berhasil dihapus.');
     }
 }

@@ -10,15 +10,25 @@ class JabatanLembaga extends Model
     use HasFactory;
 
     protected $table = 'jabatan_lembaga';
+    protected $primaryKey = 'jabatan_id';
+    public $incrementing = true;
+    protected $keyType = 'int';
 
     protected $fillable = [
         'lembaga_id',
         'nama_jabatan',
-        'level',
+        'level'
     ];
 
+    protected $casts = [
+        'level' => 'integer',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
+    // Relasi ke LembagaDesa
     public function lembaga()
     {
-        return $this->belongsTo(Lembaga::class);
+        return $this->belongsTo(LembagaDesa::class, 'lembaga_id', 'lembaga_id');
     }
 }

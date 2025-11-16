@@ -10,64 +10,67 @@ class JabatanLembagaController extends Controller
 {
     public function index()
     {
-        $jabatan = JabatanLembaga::with('lembaga')->get();
-        return view('pages.jabatan.index', compact('jabatan'));
+        $jabatan = JabatanLembaga::with('lembaga')
+            ->orderBy('level')
+            ->orderBy('nama_jabatan')
+            ->get();
+        return view('pages.jabatan_lembaga.index', compact('jabatan'));
     }
 
     public function create()
     {
-        // FIX — ganti Lembaga menjadi LembagaDesa
-        $lembaga = LembagaDesa::all();
-        return view('pages.jabatan.create', compact('lembaga'));
+        $lembaga = LembagaDesa::orderBy('nama_lembaga')->get();
+        return view('pages.jabatan_lembaga.create', compact('lembaga'));
     }
 
     public function store(Request $request)
-{
-    $request->validate([
-        'nama_jabatan' => 'required|string|max:255'
-    ]);
+    {
+        $request->validate([
+            'lembaga_id' => 'required|exists:lembaga_desa,lembaga_id',
+            'nama_jabatan' => 'required|string|max:100',
+            'level' => 'required|integer|min:1|max:10'
+        ]);
 
-    Jabatan::create([
-        'nama_jabatan' => $request->nama_jabatan
-    ]);
+        JabatanLembaga::create($request->all());
 
-    return redirect()->route('jabatan.index')
-                     ->with('success', 'Data jabatan berhasil ditambahkan!');
-}
+        return redirect()->route('jabatan-lembaga.index')
+            ->with('success', 'Jabatan lembaga berhasil ditambahkan.');
+    }
+
+    public function show($id)
+    {
+        $jabatan = JabatanLembaga::with('lembaga')->findOrFail($id);
+        return view('pages.jabatan_lembaga.show', compact('jabatan'));
+    }
 
     public function edit($id)
     {
         $jabatan = JabatanLembaga::findOrFail($id);
-        $lembaga = LembagaDesa::all();
-
-        return view('pages.jabatan.edit', compact('jabatan', 'lembaga'));
+        $lembaga = LembagaDesa::orderBy('nama_lembaga')->get();
+        return view('pages.jabatan_lembaga.edit', compact('jabatan', 'lembaga'));
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'lembaga_id' => 'required',
-            'nama_jabatan' => 'required',
-            'level' => 'required|integer',
+            'lembaga_id' => 'required|exists:lembaga_desa,lembaga_id',
+            'nama_jabatan' => 'required|string|max:100',
+            'level' => 'required|integer|min:1|max:10'
         ]);
 
         $jabatan = JabatanLembaga::findOrFail($id);
+        $jabatan->update($request->all());
 
-        $jabatan->update([
-            'lembaga_id'   => $request->lembaga_id,
-            'nama_jabatan' => $request->nama_jabatan,
-            'level'        => $request->level,
-        ]);
-
-        return redirect()->route('jabatan.index')
-            ->with('success', 'Jabatan berhasil diupdate');
+        return redirect()->route('jabatan-lembaga.index')
+            ->with('success', 'Jabatan berhasil diperbarui!');
     }
 
     public function destroy($id)
     {
-        JabatanLembaga::findOrFail($id)->delete();
+        $jabatan = JabatanLembaga::findOrFail($id);
+        $jabatan->delete();
 
-        return redirect()->route('jabatan.index')
-            ->with('success', 'Jabatan berhasil dihapus');
+  return redirect()->route('jabatan-lembaga.index')
+    ->with('success', 'Jabatan berhasil dihapus!');
     }
 }

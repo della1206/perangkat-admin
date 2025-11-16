@@ -10,12 +10,11 @@ class LembagaDesa extends Model
     use HasFactory;
 
     protected $table = 'lembaga_desa';
+    protected $primaryKey = 'lembaga_id';
 
     protected $fillable = [
         'nama_lembaga',
-        'ketua',
-        'bidang',
-        'kontak',
         'deskripsi',
+        'kontak'
     ];
 }
