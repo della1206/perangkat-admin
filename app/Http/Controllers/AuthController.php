@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
@@ -23,34 +22,24 @@ class AuthController extends Controller
             'password' => 'required|min:3',
         ]);
 
-        $username = $request->input('email');
-        $password = $request->input('password');
+        $email = $request->email;
+        $password = $request->password;
 
-        // Cari user berdasarkan username
-        $user = User::where('email', $username)->first();
+        // Cek user
+        $user = User::where('email', $email)->first();
 
         if (!$user || !Hash::check($password, $user->password)) {
-            return back()->with('error', 'Username atau password salah.')->withInput();
+            return back()->with('error', 'Email atau password salah.')->withInput();
         }
 
-        // Simpan data user ke session
+        // Simpan session
         session([
             'user_id' => $user->id,
-            // 'username' => $user->username,
             'email' => $user->email,
+            'name' => $user->name,
         ]);
 
         return redirect()->route('dashboard.index')->with('message', 'Login berhasil!');
-    }
-
-    // Halaman sukses setelah login
-    public function success()
-    {
-        if (!session()->has('user_id')) {
-            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
-        }
-
-        return view('auth.success');
     }
 
     // Logout
@@ -60,7 +49,7 @@ class AuthController extends Controller
         return redirect()->route('login')->with('success', 'Berhasil logout.');
     }
 
-    // Halaman register
+    // Tampilkan halaman register
     public function showRegister()
     {
         return view('pages.auth.register');
@@ -70,24 +59,13 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-    'name' => 'required|string|max:255',
-    // 'username' => 'required|min:3|alpha_num|unique:users,username',
-    'email' => 'required|email|unique:users,email',
-    'password' => [
-        'required',
-        'min:6',
-        'confirmed',
-        'regex:/[A-Z]/'  // <-- harus ada minimal satu huruf kapital
-    ],
-], [
-    'password.regex' => 'Password harus mengandung minimal satu huruf kapital.'
-]);
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6|confirmed',
+        ]);
 
-
-        // Simpan user baru ke database
-        $user = User::create([
+        User::create([
             'name' => $request->name,
-            // 'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);

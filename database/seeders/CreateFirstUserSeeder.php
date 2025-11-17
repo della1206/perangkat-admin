@@ -21,6 +21,7 @@ class CreateFirstUserSeeder extends Seeder
             'name' => 'Admin Desa',
             'email' => 'admindesa@gmail.com',
             // Pastikan password di-hash sebelum disimpan
+            
             'password' => Hash::make('admin123'), 
         ]);
     }

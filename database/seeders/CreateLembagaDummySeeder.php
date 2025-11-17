@@ -27,7 +27,6 @@ class CreateLembagaDummySeeder extends Seeder
                 'nama_lembaga' => $faker->randomElement(['BPD', 'PKK', 'Karang Taruna', 'LPMD', 'Posyandu']) . ' ' . $faker->citySuffix,
                 'deskripsi'    => $faker->sentence(10),
                 'kontak'       => $faker->phoneNumber,
-                // Kolom logo (media_id) dikosongkan/diabaikan
             ]);
         }
         

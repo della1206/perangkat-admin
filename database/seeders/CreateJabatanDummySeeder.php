@@ -19,7 +19,6 @@ class CreateJabatanDummySeeder extends Seeder
         $faker = Faker::create('id_ID');
         $numberOfJabatan = 50;
 
-        // --- 1. Ambil semua ID dari tabel lembaga_desa ---
         // Ini penting agar relasi FK (lembaga_id) terisi dengan data yang valid
         $lembagaIds = DB::table('lembaga_desa')->pluck('lembaga_id')->toArray();
 
@@ -31,16 +30,15 @@ class CreateJabatanDummySeeder extends Seeder
 
         echo "Menambahkan $numberOfJabatan Jabatan Lembaga...\n";
 
-        // --- 2. Seed data ke tabel jabatan_lembaga (Tabel Anak) ---
         foreach (range(1, $numberOfJabatan) as $index) {
-            // Pilih salah satu lembaga_id yang sudah ada secara acak
+            
             $randomLembagaId = $faker->randomElement($lembagaIds);
 
             // Tambahkan data ke tabel jabatan_lembaga
             DB::table('jabatan_lembaga')->insert([
                 'lembaga_id'   => $randomLembagaId,
                 'nama_jabatan' => $faker->randomElement(['Ketua', 'Wakil Ketua', 'Sekretaris', 'Bendahara', 'Koordinator Bidang', 'Anggota']),
-                'level'        => $faker->numberBetween(1, 4), // Level 1 (Tertinggi) sampai 4 (Terendah)
+                'level'        => $faker->numberBetween(1, 4), 
             ]);
         }
         
