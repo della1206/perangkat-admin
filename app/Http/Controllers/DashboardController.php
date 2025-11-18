@@ -17,6 +17,6 @@ class DashboardController extends Controller
         // Ambil data user
         $user = User::find(session('user_id'));
 
-        return view('pages.dashboard', compact('user'));
+        return view('dashboard', compact('user'));
     }
 }
