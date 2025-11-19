@@ -18,6 +18,5 @@ class LembagaDesa extends Model
         'nama_lembaga',
         'deskripsi',
         'kontak',
-        'ketua'
     ];
 }

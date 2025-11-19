@@ -18,9 +18,6 @@
         <label class="block font-semibold">Nama Lembaga</label>
         <input type="text" name="nama_lembaga" class="w-full border rounded p-2 mb-4">
 
-         <label class="block text-gray-700">Ketua</label>
-        <input type="text" name="ketua" class="w-full p-2 border rounded">
-
         <label class="block font-semibold">Deskripsi</label>
         <textarea name="deskripsi" class="w-full border rounded p-2 mb-4" rows="4"></textarea>
 
