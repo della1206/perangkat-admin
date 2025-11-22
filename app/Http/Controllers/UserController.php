@@ -8,46 +8,41 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    // Tampilkan daftar user
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::all();
+        $searchableColumns = ['name', 'email'];
+    
+        $users = User::search($request, $searchableColumns)
+                    ->orderBy('name')
+                    ->paginate(10)
+                    ->withQueryString();
 
         return view('pages.user.index', compact('users'));
-
-        return view('user.index', compact('users'));
-
     }
 
     // Form tambah user
     public function create()
     {
-
         return view('pages.user.create');
-
-        return view('user.create');
-
     }
 
     // Simpan user baru
-   public function store(Request $request)
-{
-    $validated = $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email',
-        // 'username' => 'required|string|max:255|unique:users,username',
-        'password' => 'required|string|min:6',
-    ]);
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:6',
+        ]);
 
-    // Hash password dengan benar
-    $validated['password'] = Hash::make($validated['password']);
+        // Hash password dengan benar
+        $validated['password'] = Hash::make($validated['password']);
 
-    // Simpan user
-    User::create($validated);
+        // Simpan user
+        User::create($validated);
 
-    return redirect()->route('user.index')->with('success', 'User berhasil ditambahkan.');
-}
-
+        return redirect()->route('user.index')->with('success', 'User berhasil ditambahkan.');
+    }
 
     // Form edit user
     public function edit($id)
@@ -64,7 +59,6 @@ class UserController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $id,
-            // 'username' => 'required|string|max:255|unique:users,username,' . $id,
         ]);
 
         if ($request->filled('password')) {

@@ -8,8 +8,20 @@ use Illuminate\Validation\Rule;
 
 class WargaController extends Controller
 {
-    public function index() {
-        $warga = Warga::all();
+    public function index(Request $request) {
+        // Kolom yang bisa di-filter
+        $filterableColumns = ['jenis_kelamin', 'agama', 'pekerjaan'];
+        
+        // Kolom yang bisa di-search
+        $searchableColumns = ['no_ktp', 'nama', 'telp', 'email'];
+        
+        // Query dengan filter dan search
+        $warga = Warga::filter($request, $filterableColumns)
+                     ->search($request, $searchableColumns)
+                     ->orderBy('nama')
+                     ->paginate(10)
+                     ->withQueryString();
+
         return view('pages.warga.index', compact('warga'));
     }
 

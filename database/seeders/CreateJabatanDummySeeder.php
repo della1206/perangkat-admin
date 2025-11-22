@@ -17,7 +17,7 @@ class CreateJabatanDummySeeder extends Seeder
     public function run()
     {
         $faker = Faker::create('id_ID');
-        $numberOfJabatan = 50;
+        $numberOfJabatan = 100;
 
         // Ini penting agar relasi FK (lembaga_id) terisi dengan data yang valid
         $lembagaIds = DB::table('lembaga_desa')->pluck('lembaga_id')->toArray();

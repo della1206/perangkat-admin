@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Faker\Factory as Faker;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class CreateLembagaDummySeeder extends Seeder
 {
@@ -17,19 +16,32 @@ class CreateLembagaDummySeeder extends Seeder
     public function run()
     {
         $faker = Faker::create('id_ID');
-        $numberOfLembaga = 10;
+        $numberOfLembaga = 100;
 
         echo "Menambahkan $numberOfLembaga Lembaga Desa...\n";
 
-        // Insert data ke tabel lembaga_desa (Tabel Induk)
+        $jenisLembaga = [
+            'BPD', 'PKK', 'Karang Taruna', 'LPMD', 'Posyandu', 
+            'LKMD', 'RT', 'RW', 'Kelompok Tani', 'Kelompok Nelayan',
+            'Dasawisma', 'TP PKK', 'BUMDes', 'Satgas PPK', 'Forum Desa'
+        ];
+
+        
         foreach (range(1, $numberOfLembaga) as $index) {
-            DB::table('lembaga_desa')->insert([
-                'nama_lembaga' => $faker->randomElement(['BPD', 'PKK', 'Karang Taruna', 'LPMD', 'Posyandu']) . ' ' . $faker->citySuffix,
-                'deskripsi'    => $faker->sentence(10),
+            DB::table('lembaga_desa')->insert([ 
+                'nama_lembaga' => $faker->randomElement($jenisLembaga) . ' ' . $faker->randomElement(['Desa', 'Kampung', 'Dusun']) . ' ' . $faker->citySuffix,
+                'ketua'        => $faker->name(),
+                'deskripsi'    => 'Lembaga ' . $faker->randomElement($jenisLembaga) . ' yang bertugas untuk ' . $faker->sentence(8),
                 'kontak'       => $faker->phoneNumber,
+                'created_at'   => now(),
+                'updated_at'   => now()
             ]);
+
+            if ($index % 10 === 0) {
+                echo "Progress: $index/$numberOfLembaga\n";
+            }
         }
         
-        echo "Seeder Lembaga Desa selesai.\n";
+        echo "Seeder Lembaga Desa selesai. $numberOfLembaga data lembaga berhasil ditambahkan.\n";
     }
 }

@@ -37,9 +37,68 @@
                 transform: translateY(0) scale(1);
             }
         }
+
+        /* Pagination Styles */
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 1rem 0;
+            padding: 1rem 0;
+            border-top: 1px solid #e5e7eb;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .pagination-info {
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .pagination-pages {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .pagination-prev-next {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .page-link {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            color: #374151;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .page-link:hover {
+            background-color: #f3f4f6;
+            border-color: #9ca3af;
+        }
+
+        .page-link.active {
+            background-color: #10b981;
+            color: white;
+            border-color: #10b981;
+        }
+
+        .page-link.disabled {
+            color: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .page-link.disabled:hover {
+            background-color: transparent;
+            border-color: #d1d5db;
+        }
     </style>
 </head>
-
 
 <body class="bg-green-100 flex h-screen">
 

@@ -8,13 +8,24 @@ use Illuminate\Http\Request;
 
 class JabatanLembagaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $lembagaList = LembagaDesa::orderBy('nama_lembaga')->get();
+        
+        $filterableColumns = ['lembaga_id', 'level'];
+        
+        // Kolom yang bisa di-search
+        $searchableColumns = ['nama_jabatan'];
+        
         $jabatan = JabatanLembaga::with('lembaga')
+            ->filter($request, $filterableColumns)
+            ->search($request, $searchableColumns)
             ->orderBy('level')
             ->orderBy('nama_jabatan')
-            ->get();
-        return view('pages.jabatan_lembaga.index', compact('jabatan'));
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('pages.jabatan_lembaga.index', compact('jabatan', 'lembagaList'));
     }
 
     public function create()
@@ -70,7 +81,7 @@ class JabatanLembagaController extends Controller
         $jabatan = JabatanLembaga::findOrFail($id);
         $jabatan->delete();
 
-  return redirect()->route('jabatan-lembaga.index')
-    ->with('success', 'Jabatan berhasil dihapus!');
+        return redirect()->route('jabatan-lembaga.index')
+            ->with('success', 'Jabatan berhasil dihapus!');
     }
 }
