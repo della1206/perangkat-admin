@@ -39,19 +39,23 @@
                 <td class="border px-4 py-2">{{ $item->email }}</td>
                 <td class="border px-4 py-2 text-center">
                    <a href="{{ route('warga.edit', $item) }}" class="text-blue-600 hover:underline">Edit</a> |
-<form action="{{ route('warga.destroy', $item) }}" method="POST" class="inline">
-    @csrf
-    @method('DELETE')
-    <button type="submit" onclick="return confirm('Yakin ingin menghapus data ini?')" class="text-red-600 hover:underline">Hapus</button>
-</form>
+                    <form action="{{ route('warga.destroy', $item) }}" method="POST" class="inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" onclick="return confirm('Yakin ingin menghapus data ini?')" class="text-red-600 hover:underline">Hapus</button>
+                    </form>
                 </td>
             </tr>
-            @empty
+            @empty'
+            
             <tr>
                 <td colspan="8" class="border px-4 py-2 text-center text-gray-500">Belum ada data warga.</td>
             </tr>
             @endforelse
         </tbody>
     </table>
+    
 </div>
+
 @endsection
+

@@ -9,7 +9,7 @@ use Illuminate\Validation\Rule;
 class WargaController extends Controller
 {
     public function index() {
-        $warga = Warga::all();
+        $warga = Warga::paginate(10);
         return view('pages.warga.index', compact('warga'));
     }
 

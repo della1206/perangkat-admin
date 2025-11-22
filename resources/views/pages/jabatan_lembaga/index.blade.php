@@ -69,7 +69,9 @@
             </tbody>
 
         </table>
-
+ <div class="mt-3">
+        {{ $jabatan->links('pagination::bootstrap-5') }}
+    </div>
     </div>
 
 </div>

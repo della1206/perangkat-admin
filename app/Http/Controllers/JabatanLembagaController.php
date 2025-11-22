@@ -10,10 +10,7 @@ class JabatanLembagaController extends Controller
 {
     public function index()
     {
-        $jabatan = JabatanLembaga::with('lembaga')
-            ->orderBy('level')
-            ->orderBy('nama_jabatan')
-            ->get();
+        $jabatan = JabatanLembaga::paginate(10);
         return view('pages.jabatan_lembaga.index', compact('jabatan'));
     }
 

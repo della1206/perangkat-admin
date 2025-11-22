@@ -38,7 +38,7 @@
                         <td class="px-6 py-4 whitespace-nowrap">{{ $index + 1 }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $user->name }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $user->email }}</td>
-                        <!-- <td class="px-6 py-4 whitespace-nowrap">{{ $user->username }}</td> -->
+                        <td class="px-6 py-4 whitespace-nowrap">{{ $user->username }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-center flex justify-center gap-2">
                             <a href="{{ route('user.edit', $user->id) }}" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">Edit</a>
                             <form action="{{ route('user.destroy', $user->id) }}" method="POST">
@@ -51,6 +51,10 @@
                 @endforeach
             </tbody>
         </table>
+
+         <div class="mt-3">
+        {{ $dataUser->links('pagination::bootstrap-5') }}
+    </div>
     </div>
 </div>
 @endsection

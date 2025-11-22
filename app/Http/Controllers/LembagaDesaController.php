@@ -9,7 +9,7 @@ class LembagaDesaController extends Controller
 {
     public function index()
     {
-        $lembaga = LembagaDesa::orderBy('nama_lembaga')->get();
+        $lembaga = LembagaDesa::paginate(10);
         return view('pages.lembaga_desa.index', compact('lembaga'));
     }
 
