@@ -16,7 +16,11 @@
         @csrf
 
         <label class="block font-semibold">Nama Lembaga</label>
-        <input type="text" name="nama_lembaga" class="w-full border rounded p-2 mb-4">
+        <input type="text" name="nama_lembaga" class="w-full border rounded p-2 mb-4" required>
+
+        {{-- TAMBAHKAN FIELD KETUA --}}
+        <label class="block font-semibold">Ketua</label>
+        <input type="text" name="ketua" class="w-full border rounded p-2 mb-4" required>
 
         <label class="block font-semibold">Deskripsi</label>
         <textarea name="deskripsi" class="w-full border rounded p-2 mb-4" rows="4"></textarea>
@@ -24,7 +28,7 @@
         <label class="block font-semibold">Kontak</label>
         <input type="text" name="kontak" class="w-full border rounded p-2 mb-4">
 
-        <button class="bg-green-600 text-white px-4 py-2 rounded">Simpan</button>
+        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Simpan</button>
     </form>
 </div>
 @endsection

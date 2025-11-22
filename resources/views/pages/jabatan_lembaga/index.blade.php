@@ -19,8 +19,81 @@
         </a>
     </div>
 
-    <div class="bg-white rounded-lg shadow overflow-hidden">
+    {{-- FORM FILTER DAN SEARCH --}}
+    <form method="GET" action="{{ route('jabatan-lembaga.index') }}" class="mb-6">
+        <div class="bg-white p-4 rounded-lg shadow">
+            <div class="flex flex-wrap gap-4 items-end">
+                {{-- Filter Lembaga --}}
+                <div class="flex-1 min-w-[200px]">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Lembaga</label>
+                    <select name="lembaga_id" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Semua Lembaga</option>
+                        @foreach($lembagaList as $lembaga)
+                            <option value="{{ $lembaga->lembaga_id }}" {{ request('lembaga_id') == $lembaga->lembaga_id ? 'selected' : '' }}>
+                                {{ $lembaga->nama_lembaga }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
 
+                {{-- Filter Level --}}
+                <div class="flex-1 min-w-[150px]">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Level</label>
+                    <select name="level" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Semua Level</option>
+                        <option value="1" {{ request('level') == '1' ? 'selected' : '' }}>Level 1</option>
+                        <option value="2" {{ request('level') == '2' ? 'selected' : '' }}>Level 2</option>
+                        <option value="3" {{ request('level') == '3' ? 'selected' : '' }}>Level 3</option>
+                        <option value="4" {{ request('level') == '4' ? 'selected' : '' }}>Level 4</option>
+                        <option value="5" {{ request('level') == '5' ? 'selected' : '' }}>Level 5</option>
+                    </select>
+                </div>
+
+                {{-- Search --}}
+                <div class="flex-1 min-w-[250px]">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                    <div class="flex gap-2">
+                        <div class="relative flex-1">
+                            <input type="text" 
+                                   name="search" 
+                                   value="{{ request('search') }}" 
+                                   placeholder="Cari jabatan..." 
+                                   class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                                <button type="submit" class="text-gray-500 hover:text-gray-700">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        {{-- Clear Search --}}
+                        @if(request('search'))
+                            <a href="{{ request()->fullUrlWithQuery(['search' => null]) }}" 
+                               class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg shadow text-sm whitespace-nowrap">
+                                Clear
+                            </a>
+                        @endif
+                    </div>
+                </div>
+
+                {{-- Tombol Filter --}}
+                <div class="flex gap-2">
+                    <button type="submit" 
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow">
+                        Filter
+                    </button>
+                    <a href="{{ route('jabatan-lembaga.index') }}" 
+                       class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg shadow">
+                        Reset
+                    </a>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="bg-white rounded-lg shadow overflow-hidden">
         <table class="min-w-full">
             <thead>
                 <tr class="bg-gray-100 text-gray-700">
@@ -62,17 +135,20 @@
                 @empty
                     <tr>
                         <td colspan="5" class="py-4 px-4 border text-center text-gray-500">
-                            Tidak ada data jabatan.
+                            @if(request()->anyFilled(['lembaga_id', 'level', 'search']))
+                                Tidak ada data jabatan yang sesuai dengan filter.
+                            @else
+                                Tidak ada data jabatan.
+                            @endif
                         </td>
                     </tr>
                 @endforelse
             </tbody>
-
         </table>
- <div class="mt-3">
+    </div>
+    
+    <div class="mt-3">
         {{ $jabatan->links('pagination::bootstrap-5') }}
     </div>
-    </div>
-
 </div>
 @endsection

@@ -8,11 +8,28 @@ use Illuminate\Http\Request;
 
 class JabatanLembagaController extends Controller
 {
-    public function index()
-    {
-        $jabatan = JabatanLembaga::paginate(10);
-        return view('pages.jabatan_lembaga.index', compact('jabatan'));
-    }
+public function index(Request $request)
+{
+    // Ambil data lembaga untuk dropdown filter
+    $lembagaList = LembagaDesa::orderBy('nama_lembaga')->get();
+    
+    // Kolom yang bisa di-filter
+    $filterableColumns = ['lembaga_id', 'level'];
+    
+    // Kolom yang bisa di-search
+    $searchableColumns = ['nama_jabatan'];
+    
+    // Query dengan filter dan search
+    $jabatan = JabatanLembaga::with('lembaga')
+        ->filter($request, $filterableColumns)
+        ->search($request, $searchableColumns)
+        ->orderBy('level')
+        ->orderBy('nama_jabatan')
+        ->paginate(10)
+        ->withQueryString();
+
+    return view('pages.jabatan_lembaga.index', compact('jabatan', 'lembagaList'));
+}
 
     public function create()
     {
@@ -67,7 +84,7 @@ class JabatanLembagaController extends Controller
         $jabatan = JabatanLembaga::findOrFail($id);
         $jabatan->delete();
 
-  return redirect()->route('jabatan-lembaga.index')
-    ->with('success', 'Jabatan berhasil dihapus!');
+        return redirect()->route('jabatan-lembaga.index')
+            ->with('success', 'Jabatan berhasil dihapus!');
     }
 }
