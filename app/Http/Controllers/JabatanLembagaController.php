@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class JabatanLembagaController extends Controller
 {
+<<<<<<< HEAD
     public function index(Request $request)
     {
         $lembagaList = LembagaDesa::orderBy('nama_lembaga')->get();
@@ -27,6 +28,30 @@ class JabatanLembagaController extends Controller
 
         return view('pages.jabatan_lembaga.index', compact('jabatan', 'lembagaList'));
     }
+=======
+public function index(Request $request)
+{
+    // Ambil data lembaga untuk dropdown filter
+    $lembagaList = LembagaDesa::orderBy('nama_lembaga')->get();
+    
+    // Kolom yang bisa di-filter
+    $filterableColumns = ['lembaga_id', 'level'];
+    
+    // Kolom yang bisa di-search
+    $searchableColumns = ['nama_jabatan'];
+    
+    // Query dengan filter dan search
+    $jabatan = JabatanLembaga::with('lembaga')
+        ->filter($request, $filterableColumns)
+        ->search($request, $searchableColumns)
+        ->orderBy('level')
+        ->orderBy('nama_jabatan')
+        ->paginate(10)
+        ->withQueryString();
+
+    return view('pages.jabatan_lembaga.index', compact('jabatan', 'lembagaList'));
+}
+>>>>>>> 69431c22075e6e06bc46eb911ace1883b6ca516a
 
     public function create()
     {

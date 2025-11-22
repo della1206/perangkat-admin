@@ -74,6 +74,7 @@
                     <th class="border px-3 py-2">Kontak</th>
                     <th class="border px-3 py-2">Aksi</th>
                 </tr>
+<<<<<<< HEAD
             </thead>
 
             <tbody>
@@ -120,6 +121,12 @@
 
     <!-- PAGINATION -->
     <div class="mt-4">
+=======
+            @endforeach
+        </tbody>
+    </table>
+     <div class="mt-3">
+>>>>>>> 69431c22075e6e06bc46eb911ace1883b6ca516a
         {{ $lembaga->links('pagination::bootstrap-5') }}
     </div>
 </div>

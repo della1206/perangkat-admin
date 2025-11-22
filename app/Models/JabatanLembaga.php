@@ -54,6 +54,9 @@ class JabatanLembaga extends Model
                 }
             });
         }
+<<<<<<< HEAD
         return $query;
+=======
+>>>>>>> 69431c22075e6e06bc46eb911ace1883b6ca516a
     }
 }
