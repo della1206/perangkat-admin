@@ -9,7 +9,7 @@ class LembagaDesaController extends Controller
 {
     public function index(Request $request)
     {
-<<<<<<< HEAD
+
         $searchableColumns = ['nama_lembaga', 'deskripsi', 'kontak'];
         
         $lembaga = LembagaDesa::search($request, $searchableColumns)
@@ -17,9 +17,9 @@ class LembagaDesaController extends Controller
                     ->paginate(10)
                     ->withQueryString();
 
-=======
+
         $lembaga = LembagaDesa::orderBy('nama_lembaga')->paginate(10);
->>>>>>> 69431c22075e6e06bc46eb911ace1883b6ca516a
+
         return view('pages.lembaga_desa.index', compact('lembaga'));
     }
 

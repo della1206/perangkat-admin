@@ -35,7 +35,7 @@
                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <div class="absolute inset-y-0 right-0 flex items-center pr-3">
                                 <button type="submit" class="text-gray-500 hover:text-gray-700">
-                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
                                     </svg>
                                 </button>
@@ -74,13 +74,14 @@
                     <th class="border px-3 py-2">Kontak</th>
                     <th class="border px-3 py-2">Aksi</th>
                 </tr>
-<<<<<<< HEAD
             </thead>
 
             <tbody>
                 @forelse ($lembaga as $index => $item)
                     <tr class="hover:bg-gray-50">
-                        <td class="border px-3 py-2 text-center">{{ ($lembaga->currentPage() - 1) * $lembaga->perPage() + $index + 1 }}</td>
+                        <td class="border px-3 py-2 text-center">
+                            {{ ($lembaga->currentPage() - 1) * $lembaga->perPage() + $index + 1 }}
+                        </td>
                         <td class="border px-3 py-2">{{ $item->nama_lembaga }}</td>
                         <td class="border px-3 py-2">{{ Str::limit($item->deskripsi, 50) }}</td>
                         <td class="border px-3 py-2">{{ $item->kontak ?? '-' }}</td>
@@ -92,11 +93,10 @@
                                     <i class="fas fa-edit"></i>
                                 </a>
 
-                                <form action="{{ route('lembaga.destroy', $item->lembaga_id) }}" method="POST"
-                                      onsubmit="return confirm('Hapus data ini?')">
+                                <form action="{{ route('lembaga.destroy', $item->lembaga_id) }}"
+                                      method="POST" onsubmit="return confirm('Hapus data ini?')">
                                     @csrf
                                     @method('DELETE')
-
                                     <button class="text-red-600 hover:text-red-800" title="Hapus">
                                         <i class="fas fa-trash"></i>
                                     </button>
@@ -121,13 +121,8 @@
 
     <!-- PAGINATION -->
     <div class="mt-4">
-=======
-            @endforeach
-        </tbody>
-    </table>
-     <div class="mt-3">
->>>>>>> 69431c22075e6e06bc46eb911ace1883b6ca516a
         {{ $lembaga->links('pagination::bootstrap-5') }}
     </div>
+
 </div>
 @endsection
