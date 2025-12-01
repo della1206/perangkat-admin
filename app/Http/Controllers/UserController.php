@@ -8,12 +8,7 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-<<<<<<< HEAD
-    public function index(Request $request)
-    {
-        $searchableColumns = ['name', 'email'];
-    
-=======
+
     // Tampilkan daftar user
     public function index(Request $request)
     {
@@ -21,7 +16,6 @@ class UserController extends Controller
         $searchableColumns = ['name', 'email'];
         
         // Query dengan search
->>>>>>> 69431c22075e6e06bc46eb911ace1883b6ca516a
         $users = User::search($request, $searchableColumns)
                     ->orderBy('name')
                     ->paginate(10)

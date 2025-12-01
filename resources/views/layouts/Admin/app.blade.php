@@ -115,6 +115,7 @@
                 <li><a href="{{ route('warga.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('warga.*') ? 'bg-dark green-700' : '' }}">👨‍👩‍👧‍👦 Warga</a></li>
                 <li><a href="{{ route('lembaga.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('lembaga.*') ? 'bg-dark green-700' : '' }}">🏢 Lembaga Desa</a></li>
                 <li><a href="{{ route('jabatan-lembaga.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('jabatan.*') ? 'bg-dark green-700' : '' }}">🔱 Jabatan Desa</a></li>
+                 <li><a href="{{ route('perangkat_desa.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('perangkat_desa.*') ? 'bg-green-700' : '' }}"> 🧑‍🌾 Perangkat Desa</a></li>
             </ul>
         </nav>
 

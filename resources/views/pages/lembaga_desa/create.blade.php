@@ -15,7 +15,7 @@
     <form action="{{ route('lembaga.store') }}" method="POST">
         @csrf
 
-<<<<<<< HEAD
+
         <div class="mb-4">
             <label class="block font-semibold text-gray-700 mb-2">Nama Lembaga</label>
             <input type="text" name="nama_lembaga" value="{{ old('nama_lembaga') }}" 
@@ -24,14 +24,10 @@
                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
             @enderror
         </div>
-=======
+
         <label class="block font-semibold">Nama Lembaga</label>
         <input type="text" name="nama_lembaga" class="w-full border rounded p-2 mb-4" required>
 
-        {{-- TAMBAHKAN FIELD KETUA --}}
-        <label class="block font-semibold">Ketua</label>
-        <input type="text" name="ketua" class="w-full border rounded p-2 mb-4" required>
->>>>>>> 69431c22075e6e06bc46eb911ace1883b6ca516a
 
         <div class="mb-4">
             <label class="block font-semibold text-gray-700 mb-2">Deskripsi</label>
@@ -51,7 +47,6 @@
             @enderror
         </div>
 
-<<<<<<< HEAD
         <div class="flex gap-2">
             <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
                 Simpan
@@ -60,9 +55,8 @@
                 Batal
             </a>
         </div>
-=======
+
         <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Simpan</button>
->>>>>>> 69431c22075e6e06bc46eb911ace1883b6ca516a
     </form>
 </div>
 @endsection

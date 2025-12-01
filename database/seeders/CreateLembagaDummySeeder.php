@@ -16,11 +16,11 @@ class CreateLembagaDummySeeder extends Seeder
     public function run()
     {
         $faker = Faker::create('id_ID');
-<<<<<<< HEAD
+
         $numberOfLembaga = 100;
-=======
+
         $numberOfLembaga = 1000;
->>>>>>> 69431c22075e6e06bc46eb911ace1883b6ca516a
+
 
         echo "Menambahkan $numberOfLembaga Lembaga Desa...\n";
 
@@ -34,7 +34,6 @@ class CreateLembagaDummySeeder extends Seeder
         foreach (range(1, $numberOfLembaga) as $index) {
             DB::table('lembaga_desa')->insert([ 
                 'nama_lembaga' => $faker->randomElement($jenisLembaga) . ' ' . $faker->randomElement(['Desa', 'Kampung', 'Dusun']) . ' ' . $faker->citySuffix,
-                'ketua'        => $faker->name(),
                 'deskripsi'    => 'Lembaga ' . $faker->randomElement($jenisLembaga) . ' yang bertugas untuk ' . $faker->sentence(8),
                 'kontak'       => $faker->phoneNumber,
                 'created_at'   => now(),

@@ -8,15 +8,11 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::table('lembaga_desa', function (Blueprint $table) {
-            $table->string('ketua', 100)->nullable()->change();
-        });
+       
     }
 
     public function down()
     {
-        Schema::table('lembaga_desa', function (Blueprint $table) {
-            $table->string('ketua', 100)->nullable(false)->change();
-        });
+       
     }
 };

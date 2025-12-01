@@ -16,7 +16,6 @@
         @csrf
         @method('PUT')
 
-<<<<<<< HEAD
         <div class="mb-4">
             <label class="block font-semibold text-gray-700 mb-2">Nama Lembaga</label>
             <input type="text" name="nama_lembaga" value="{{ old('nama_lembaga', $lembaga->nama_lembaga) }}" 
@@ -34,12 +33,10 @@
                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
             @enderror
         </div>
-=======
         <label class="block font-semibold">Nama Lembaga</label>
         <input type="text" name="nama_lembaga" value="{{ $lembaga->nama_lembaga }}" class="w-full border rounded p-2 mb-4" required>
 
         {{-- HAPUS FIELD KETUA --}}
->>>>>>> 69431c22075e6e06bc46eb911ace1883b6ca516a
 
         <div class="mb-4">
             <label class="block font-semibold text-gray-700 mb-2">Kontak</label>
@@ -50,7 +47,6 @@
             @enderror
         </div>
 
-<<<<<<< HEAD
         <div class="flex gap-2">
             <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
                 Update
@@ -59,12 +55,10 @@
                 Batal
             </a>
         </div>
-=======
         <label class="block font-semibold">Kontak</label>
         <input type="text" name="kontak" value="{{ $lembaga->kontak }}" class="w-full border rounded p-2 mb-4">
 
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Update</button>
->>>>>>> 69431c22075e6e06bc46eb911ace1883b6ca516a
     </form>
 </div>
 @endsection

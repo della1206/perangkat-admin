@@ -46,3 +46,5 @@ Route::get('perangkat-desa', [PerangkatDesaController::class, 'index'])->name('p
 
 // Route untuk Jabatan Lembaga
 Route::resource('jabatan-lembaga', JabatanLembagaController::class);
+
+Route::resource('perangkat_desa', PerangkatDesaController::class);
