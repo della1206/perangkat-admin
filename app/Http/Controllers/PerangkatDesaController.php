@@ -5,20 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\PerangkatDesa;
 use App\Models\Media;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class PerangkatDesaController extends Controller
 {
     public function index(Request $request)
     {
-        $query = PerangkatDesa::with('media');
-
-        if ($request->search) {
-            $query->where('jabatan', 'like', '%' . $request->search . '%')
-                  ->orWhere('warga_id', 'like', '%' . $request->search . '%');
-        }
-
-        $data = $query->paginate(10);
+        $data = PerangkatDesa::with('media')
+            ->orderBy('perangkat_id', 'DESC')
+            ->paginate(10);
 
         return view('pages.perangkat_desa.index', compact('data'));
     }
@@ -30,34 +25,45 @@ class PerangkatDesaController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'warga_id'   => 'required',
-            'jabatan'    => 'required',
-            'kontak'     => 'nullable',
-            'foto.*'     => 'image|mimes:jpg,jpeg,png|max:2048'
+        $request->validate([
+            'jabatan' => 'required',
+            'kontak' => 'nullable',
+            'media.*' => 'image|mimes:jpg,png,jpeg|max:2048'
         ]);
 
-        // SIMPAN DATA PERANGKAT DESA
-        $perangkat = PerangkatDesa::create($validated);
+        // Buat data perangkat baru
+        $pd = PerangkatDesa::create([
+            'jabatan' => $request->jabatan,
+            'kontak'  => $request->kontak
+        ]);
 
-        // JIKA ADA FOTO, SIMPAN KE MEDIA
-        if ($request->hasFile('foto')) {
-            foreach ($request->file('foto') as $i => $file) {
-                $fileName = time() . "_" . rand(100, 999) . "." . $file->getClientOriginalExtension();
-                $file->storeAs('public/uploads/perangkat_desa', $fileName);
+        // Upload foto jika ada
+        if ($request->hasFile('media')) {
 
-                Media::create([
-                    'ref_table' => 'perangkat_desa',
-                    'ref_id'    => $perangkat->perangkat_id,
-                    'file_name' => $fileName,
-                    'mime_type' => $file->getClientMimeType(),
-                    'sort_order' => $i,
-                ]);
-            }
+            // Ambil hanya file pertama
+            $file = $request->file('media')[0];
+            $fileName = time() . '_' . $file->getClientOriginalName();
+
+            // Simpan file
+            $file->move(public_path('uploads/perangkat_desa'), $fileName);
+
+            // Simpan ke tabel media
+            Media::create([
+                'ref_table' => 'perangkat_desa',
+                'ref_id'    => $pd->perangkat_id,
+                'file_name' => $fileName,
+                'caption'   => 'foto perangkat desa',
+                'mime_type' => $file->getClientMimeType()
+            ]);
         }
 
-        return redirect()->route('perangkat_desa.index')
-            ->with('success', 'Data berhasil ditambahkan.');
+        return redirect()->route('perangkat_desa.index')->with('success', 'Perangkat desa berhasil ditambahkan');
+    }
+
+    public function show($id)
+    {
+        $data = PerangkatDesa::with('media')->findOrFail($id);
+        return view('pages.perangkat_desa.show', compact('data'));
     }
 
     public function edit($id)
@@ -68,50 +74,77 @@ class PerangkatDesaController extends Controller
 
     public function update(Request $request, $id)
     {
-        $validated = $request->validate([
-            'warga_id'   => 'required',
-            'jabatan'    => 'required',
-            'kontak'     => 'nullable',
-            'foto.*'     => 'image|mimes:jpg,jpeg,png|max:2048'
+        $request->validate([
+            'jabatan' => 'required',
+            'kontak'  => 'nullable',
+            'media.*' => 'image|mimes:jpg,png,jpeg|max:2048'
         ]);
 
-        $perangkat = PerangkatDesa::findOrFail($id);
-        $perangkat->update($validated);
+        $pd = PerangkatDesa::findOrFail($id);
 
-        // TAMBAH FOTO BARU SAAT EDIT
-        if ($request->hasFile('foto')) {
-            foreach ($request->file('foto') as $i => $file) {
-                $fileName = time() . "_" . rand(100, 999) . "." . $file->getClientOriginalExtension();
-                $file->storeAs('public/uploads/perangkat_desa', $fileName);
+        // update data
+        $pd->update([
+            'jabatan' => $request->jabatan,
+            'kontak'  => $request->kontak
+        ]);
 
-                Media::create([
-                    'ref_table' => 'perangkat_desa',
-                    'ref_id'    => $perangkat->perangkat_id,
-                    'file_name' => $fileName,
-                    'mime_type' => $file->getClientMimeType(),
-                    'sort_order' => $i,
-                ]);
+        // Jika ada file baru
+        if ($request->hasFile('media')) {
+
+            // Hapus media lama (di folder + database)
+            $oldMedia = Media::where('ref_table', 'perangkat_desa')
+                ->where('ref_id', $id)
+                ->first();
+
+            if ($oldMedia) {
+
+                $oldPath = public_path('uploads/perangkat_desa/' . $oldMedia->file_name);
+                if (File::exists($oldPath)) {
+                    File::delete($oldPath);
+                }
+
+                // Hapus database
+                $oldMedia->delete();
             }
+
+            // Upload file baru
+            $file = $request->file('media')[0];
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/perangkat_desa'), $fileName);
+
+            // Simpan media baru
+            Media::create([
+                'ref_table' => 'perangkat_desa',
+                'ref_id'    => $id,
+                'file_name' => $fileName,
+                'caption'   => 'foto perangkat desa',
+                'mime_type' => $file->getClientMimeType()
+            ]);
         }
 
-        return redirect()->route('perangkat_desa.index')
-            ->with('success', 'Data berhasil diperbarui.');
+        return redirect()->route('perangkat_desa.index')->with('success', 'Data perangkat desa berhasil diperbarui');
     }
 
     public function destroy($id)
     {
-        $perangkat = PerangkatDesa::with('media')->findOrFail($id);
+        $pd = PerangkatDesa::with('media')->findOrFail($id);
 
-        // HAPUS FILE DARI STORAGE
-        foreach ($perangkat->media as $m) {
-            Storage::delete('public/uploads/perangkat_desa/' . $m->file_name);
+        // Hapus semua media terkait
+        foreach ($pd->media as $m) {
+
+            $path = public_path('uploads/perangkat_desa/' . $m->file_name);
+
+            if (File::exists($path)) {
+                File::delete($path);
+            }
+
             $m->delete();
         }
 
-        // HAPUS DATA PERANGKAT
-        $perangkat->delete();
+        // Hapus perangkat desa
+        $pd->delete();
 
         return redirect()->route('perangkat_desa.index')
-            ->with('success', 'Data berhasil dihapus.');
+            ->with('success', 'Data berhasil dihapus');
     }
 }

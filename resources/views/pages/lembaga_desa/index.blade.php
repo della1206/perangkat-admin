@@ -3,126 +3,84 @@
 @section('content')
 <div class="bg-white p-6 rounded shadow">
 
-    {{-- ALERT SUKSES --}}
-    @if(session('success'))
-        <div class="bg-green-500 text-white p-3 rounded mb-4">
-            {{ session('success') }}
-        </div>
-    @endif
+    <h1 class="text-xl font-bold mb-4">Daftar Lembaga Desa</h1>
 
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">Data Lembaga Desa</h1>
+    <table class="w-full text-sm border">
+        <thead class="bg-gray-100">
+            <tr>
+                <th class="p-2 border">No</th>
+                <th class="p-2 border">Logo</th>
+                <th class="p-2 border">Nama Lembaga</th>
+                <th class="p-2 border">Deskripsi</th>
+                <th class="p-2 border text-center">Aksi</th>
+            </tr>
+        </thead>
 
-        <a href="{{ route('lembaga.create') }}"
-           class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-            Tambah
-        </a>
-    </div>
+        <tbody>
+            @foreach ($lembaga as $i => $row)
+                <tr class="border">
+                    <td class="p-2 text-center">{{ $i + 1 }}</td>
 
-    <!-- FORM SEARCH -->
-    <form method="GET" action="{{ route('lembaga.index') }}" class="mb-6">
-        <div class="bg-gray-50 p-4 rounded-lg border">
-            <div class="flex flex-wrap gap-4 items-end">
-                <!-- Search -->
-                <div class="flex-1 min-w-[300px]">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
-                    <div class="flex gap-2">
-                        <div class="relative flex-1">
-                            <input type="text" 
-                                   name="search" 
-                                   value="{{ request('search') }}" 
-                                   placeholder="Cari nama lembaga, deskripsi, atau kontak..." 
-                                   class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <div class="absolute inset-y-0 right-0 flex items-center pr-3">
-                                <button type="submit" class="text-gray-500 hover:text-gray-700">
-                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        @if(request('search'))
-                            <a href="{{ request()->fullUrlWithQuery(['search' => null]) }}" 
-                               class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg shadow text-sm whitespace-nowrap flex items-center">
-                                Clear
-                            </a>
+                    {{-- LOGO --}}
+                    <td class="p-2 text-center">
+                        @php
+                            $logo = $row->media->first();
+                        @endphp
+
+                        @if ($logo)
+                            <img src="{{ asset('uploads/'.$logo->file_name) }}"
+                                 class="w-14 h-14 object-cover rounded border">
+                        @else
+                            <span class="text-gray-400">No Logo</span>
                         @endif
-                    </div>
-                </div>
+                    </td>
 
-                <!-- Tombol Aksi -->
-                <div class="flex gap-2">
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow">
-                        Terapkan
-                    </button>
-                    <a href="{{ route('lembaga.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg shadow">
-                        Reset
-                    </a>
-                </div>
-            </div>
-        </div>
-    </form>
+                    {{-- NAMA --}}
+                    <td class="p-2">{{ $row->nama_lembaga }}</td>
 
-    <div class="overflow-x-auto">
-        <table class="w-full border">
-            <thead class="bg-gray-100">
-                <tr>
-                    <th class="border px-3 py-2">No</th>
-                    <th class="border px-3 py-2">Nama Lembaga</th>
-                    <th class="border px-3 py-2">Deskripsi</th>
-                    <th class="border px-3 py-2">Kontak</th>
-                    <th class="border px-3 py-2">Aksi</th>
-                </tr>
-            </thead>
+                    {{-- DESKRIPSI --}}
+                    <td class="p-2">
+                        {{ \Illuminate\Support\Str::limit($row->deskripsi, 100) }}
+                    </td>
 
-            <tbody>
-                @forelse ($lembaga as $index => $item)
-                    <tr class="hover:bg-gray-50">
-                        <td class="border px-3 py-2 text-center">
-                            {{ ($lembaga->currentPage() - 1) * $lembaga->perPage() + $index + 1 }}
-                        </td>
-                        <td class="border px-3 py-2">{{ $item->nama_lembaga }}</td>
-                        <td class="border px-3 py-2">{{ Str::limit($item->deskripsi, 50) }}</td>
-                        <td class="border px-3 py-2">{{ $item->kontak ?? '-' }}</td>
+                    {{-- AKSI --}}
+                    <td class="p-2">
+                        <div class="flex gap-2 justify-center">
 
-                        <td class="border px-3 py-2 text-center">
-                            <div class="flex justify-center gap-3">
-                                <a href="{{ route('lembaga.edit', $item->lembaga_id) }}"
-                                   class="text-blue-600 hover:text-blue-800" title="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </a>
+                            <a href="{{ route('lembaga.show', $row->lembaga_id) }}"
+                               class="px-3 py-1 bg-blue-500 text-white rounded">
+                                Detail
+                            </a>
 
-                                <form action="{{ route('lembaga.destroy', $item->lembaga_id) }}"
-                                      method="POST" onsubmit="return confirm('Hapus data ini?')">
+                            <a href="{{ route('lembaga.edit', $row->lembaga_id) }}"
+                               class="px-3 py-1 bg-yellow-500 text-white rounded">
+                                Edit
+                            </a>
+
+                            {{-- Jika ada logo, tampilkan tombol hapus --}}
+                            @if ($logo)
+                                <form action="{{ route('media.destroy', $logo->media_id) }}"
+                                      method="POST"
+                                      onsubmit="return confirm('Hapus logo ini?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button class="text-red-600 hover:text-red-800" title="Hapus">
-                                        <i class="fas fa-trash"></i>
+
+                                    <button class="px-2 py-1 bg-red-600 text-white rounded">
+                                        Hapus 
                                     </button>
                                 </form>
-                            </div>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="5" class="border px-3 py-2 text-center text-gray-500">
-                            @if(request('search'))
-                                Tidak ada data lembaga yang sesuai dengan pencarian "{{ request('search') }}".
-                            @else
-                                Belum ada data lembaga.
                             @endif
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
 
-    <!-- PAGINATION -->
+                        </div>
+                    </td>
+
+                </tr>
+            @endforeach
+        </tbody>
+
+    </table>
     <div class="mt-4">
-        {{ $lembaga->links('pagination::bootstrap-5') }}
-    </div>
-
+    {{ $lembaga->links() }}
+</div>
 </div>
 @endsection

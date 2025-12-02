@@ -8,6 +8,9 @@ use App\Http\Controllers\LembagaDesaController;
 use App\Http\Controllers\PerangkatDesaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\JabatanLembagaController;
+use App\Http\Controllers\MediaController;
+
+
 
 // Saat buka root, arahkan ke login dulu
 Route::get('/', function () {
@@ -35,6 +38,10 @@ Route::resource('warga', WargaController::class);
 
 // CRUD Lembaga Desa
 Route::resource('lembaga', LembagaDesaController::class);
+Route::get('/lembaga/{id}', [LembagaDesaController::class, 'show'])->name('lembaga.show');
+Route::delete('/media/{id}', [MediaController::class, 'destroy'])
+    ->name('media.destroy');
+
 
 Route::get('/user', [UserController::class, 'index'])->name('user.index');
 
@@ -47,4 +54,10 @@ Route::get('perangkat-desa', [PerangkatDesaController::class, 'index'])->name('p
 // Route untuk Jabatan Lembaga
 Route::resource('jabatan-lembaga', JabatanLembagaController::class);
 
+// Perangkat Desa
 Route::resource('perangkat_desa', PerangkatDesaController::class);
+
+// DELETE FOTO PERANGKAT DESA
+Route::delete('/media/perangkat_desa/{id}', [MediaController::class, 'destroy'])
+    ->name('media.perangkat_desa.delete');
+

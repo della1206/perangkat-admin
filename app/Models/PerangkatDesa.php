@@ -8,7 +8,6 @@ class PerangkatDesa extends Model
 {
     protected $table = 'perangkat_desa';
     protected $primaryKey = 'perangkat_id';
-
     protected $fillable = [
         'warga_id',
         'jabatan',
@@ -18,11 +17,17 @@ class PerangkatDesa extends Model
         'periode_selesai'
     ];
 
-    // 🔥 Tambahkan relasi ke tabel media
+    // 🔥 Relasi ke tabel warga WAJIB ADA
+    public function warga()
+    {
+        return $this->belongsTo(Warga::class, 'warga_id', 'warga_id');
+    }
+
+    // Relasi ke media
     public function media()
     {
-        return $this->hasMany(Media::class, 'ref_id')
+        return $this->hasMany(Media::class, 'ref_id', 'perangkat_id')
                     ->where('ref_table', 'perangkat_desa')
-                    ->orderBy('sort_order', 'ASC');
+                    ->orderBy('sort_order');
     }
 }
