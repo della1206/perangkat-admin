@@ -15,7 +15,7 @@
                      class="w-40 h-40 object-cover border rounded">
             @else
                 <div class="w-40 h-40 border rounded flex justify-center items-center text-gray-500">
-                    Tidak ada media
+                    Tidak ada logo
                 </div>
             @endif
         </div>
@@ -36,13 +36,6 @@
                 <p class="text-gray-700">{{ $lembaga->kontak ?? '-' }}</p>
             </div>
         </div>
-    </div>
-
-    <h3 class="text-lg font-semibold mt-6 mb-2">Semua Media</h3>
-    <div class="flex gap-3 flex-wrap">
-        @foreach ($lembaga->media as $img)
-            <img src="{{ asset('uploads/'.$img->file_name) }}" class="w-24 h-24 object-cover border rounded">
-        @endforeach
     </div>
 
     <div class="mt-6">

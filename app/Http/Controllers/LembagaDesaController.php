@@ -127,21 +127,21 @@ class LembagaDesaController extends Controller
             ->with('success', 'Lembaga berhasil diperbarui');
     }
 
-    public function destroy($id)
-    {
-        $lembaga = LembagaDesa::findOrFail($id);
+   public function destroy($id)
+{
+    $lembaga = LembagaDesa::findOrFail($id);
 
-        // Hapus semua media
-        foreach ($lembaga->media as $m) {
-            $filePath = public_path('uploads/' . $m->file_name);
-            if (file_exists($filePath)) unlink($filePath);
-            $m->delete();
-        }
-
-        // Hapus lembaga
-        $lembaga->delete();
-
-        return redirect()->route('lembaga.index')
-            ->with('success', 'Lembaga berhasil dihapus');
+    // Hapus semua media
+    foreach ($lembaga->media as $m) {
+        $filePath = public_path('uploads/' . $m->file_name);
+        if (file_exists($filePath)) unlink($filePath);
+        $m->delete();
     }
+
+    // Hapus lembaga
+    $lembaga->delete();
+
+    return redirect()->route('lembaga.index')
+        ->with('success', 'Lembaga berhasil dihapus');
+}
 }

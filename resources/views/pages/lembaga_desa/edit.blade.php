@@ -30,26 +30,5 @@
         <button class="bg-blue-600 text-white px-4 py-2 rounded">Update</button>
     </form>
 
-    <h3 class="font-semibold mb-2 mt-6">Media Saat Ini:</h3>
-
-    <div class="flex gap-4">
-        @foreach ($lembaga->media as $m)
-            <div class="text-center">
-                <img src="{{ asset('uploads/' . $m->file_name) }}"
-                    class="w-24 h-24 object-cover border rounded shadow mb-1">
-
-                <form action="{{ route('media.destroy', $m->media_id) }}" method="POST"
-                        onsubmit="return confirm('Hapus media ini?')">
-                    @csrf
-                    @method('DELETE')
-
-                    <button class="bg-red-600 text-white px-2 py-1 text-sm rounded">
-                        Hapus
-                    </button>
-                </form>
-            </div>
-        @endforeach
-    </div>
-
 </div>
 @endsection

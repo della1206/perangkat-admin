@@ -12,6 +12,7 @@
                 <th class="p-2 border">Logo</th>
                 <th class="p-2 border">Nama Lembaga</th>
                 <th class="p-2 border">Deskripsi</th>
+                <th class="p-2 border">Kontak</th> <!-- KOLOM BARU -->
                 <th class="p-2 border text-center">Aksi</th>
             </tr>
         </thead>
@@ -43,6 +44,15 @@
                         {{ \Illuminate\Support\Str::limit($row->deskripsi, 100) }}
                     </td>
 
+                    {{-- KONTAK --}}
+                    <td class="p-2">
+                        @if ($row->kontak)
+                            {{ $row->kontak }}
+                        @else
+                            <span class="text-gray-400">-</span>
+                        @endif
+                    </td>
+
                     {{-- AKSI --}}
                     <td class="p-2">
                         <div class="flex gap-2 justify-center">
@@ -57,19 +67,18 @@
                                 Edit
                             </a>
 
-                            {{-- Jika ada logo, tampilkan tombol hapus --}}
-                            @if ($logo)
-                                <form action="{{ route('media.destroy', $logo->media_id) }}"
-                                      method="POST"
-                                      onsubmit="return confirm('Hapus logo ini?')">
-                                    @csrf
-                                    @method('DELETE')
+                            {{-- TOMBOL HAPUS LEMBAGA --}}
+                            <form action="{{ route('lembaga.destroy', $row->lembaga_id) }}"
+                                  method="POST"
+                                  onsubmit="return confirm('Hapus data lembaga ini? Data yang dihapus tidak dapat dikembalikan.')">
+                                @csrf
+                                @method('DELETE')
 
-                                    <button class="px-2 py-1 bg-red-600 text-white rounded">
-                                        Hapus 
-                                    </button>
-                                </form>
-                            @endif
+                                <button type="submit" 
+                                        class="px-3 py-1 bg-red-600 text-white rounded">
+                                    Hapus
+                                </button>
+                            </form>
 
                         </div>
                     </td>
@@ -80,7 +89,7 @@
 
     </table>
     <div class="mt-4">
-    {{ $lembaga->links() }}
-</div>
+        {{ $lembaga->links() }}
+    </div>
 </div>
 @endsection
