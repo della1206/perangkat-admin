@@ -108,7 +108,7 @@
             <tbody>
                 @forelse($jabatan as $item)
                     <tr class="hover:bg-gray-50">
-                        <td class="py-2 px-4 border text-center">{{ $loop->iteration }}</td>
+                        <td class="py-2 px-4 border text-center">{{ ($jabatan->currentPage() - 1) * $jabatan->perPage() + $loop->iteration }}</td>
                         <td class="py-2 px-4 border">{{ $item->lembaga->nama_lembaga ?? '-' }}</td>
                         <td class="py-2 px-4 border">{{ $item->nama_jabatan }}</td>
                         <td class="py-2 px-4 border text-center">{{ $item->level }}</td>
@@ -147,8 +147,93 @@
         </table>
     </div>
     
+    {{-- PAGINATION --}}
+    @if($jabatan->hasPages())
     <div class="mt-3">
-        {{ $jabatan->links('pagination::bootstrap-5') }}
+        <div class="flex items-center justify-between">
+            <!-- Info results -->
+            <div class="text-sm text-gray-700 mb-2 sm:mb-0">
+                Showing {{ $jabatan->firstItem() }} to {{ $jabatan->lastItem() }} of {{ $jabatan->total() }} results
+            </div>
+            
+            <!-- Navigation -->
+            <div class="flex items-center space-x-2">
+                <!-- Previous Button -->
+                @if($jabatan->onFirstPage())
+                    <span class="px-3 py-1 text-gray-400 cursor-not-allowed">
+                        &laquo; Previous
+                    </span>
+                @else
+                    <a href="{{ $jabatan->previousPageUrl() }}" class="px-3 py-1 text-blue-600 hover:text-blue-800">
+                        &laquo; Previous
+                    </a>
+                @endif
+                
+                <!-- Page Numbers -->
+                <div class="flex items-center space-x-1">
+                    @php
+                        $currentPage = $jabatan->currentPage();
+                        $lastPage = $jabatan->lastPage();
+                        
+                        // Tentukan rentang halaman yang ditampilkan
+                        $start = max(1, $currentPage - 4);
+                        $end = min($lastPage, $currentPage + 5);
+                        
+                        // Jika terlalu dekat dengan awal, geser ke kanan
+                        if ($currentPage <= 5) {
+                            $end = min(10, $lastPage);
+                        }
+                        
+                        // Jika terlalu dekat dengan akhir, geser ke kiri
+                        if ($currentPage >= $lastPage - 4) {
+                            $start = max(1, $lastPage - 9);
+                        }
+                    @endphp
+                    
+                    @if($start > 1)
+                        <a href="{{ $jabatan->url(1) }}" class="px-3 py-1 text-blue-600 hover:text-blue-800 rounded">
+                            1
+                        </a>
+                        @if($start > 2)
+                            <span class="px-2 text-gray-500">...</span>
+                        @endif
+                    @endif
+                    
+                    @for($page = $start; $page <= $end; $page++)
+                        @if($page == $currentPage)
+                            <span class="px-3 py-1 bg-blue-600 text-white rounded">
+                                {{ $page }}
+                            </span>
+                        @else
+                            <a href="{{ $jabatan->url($page) }}" class="px-3 py-1 text-blue-600 hover:text-blue-800 rounded">
+                                {{ $page }}
+                            </a>
+                        @endif
+                    @endfor
+                    
+                    @if($end < $lastPage)
+                        @if($end < $lastPage - 1)
+                            <span class="px-2 text-gray-500">...</span>
+                        @endif
+                        <a href="{{ $jabatan->url($lastPage) }}" class="px-3 py-1 text-blue-600 hover:text-blue-800 rounded">
+                            {{ $lastPage }}
+                        </a>
+                    @endif
+                </div>
+                
+                <!-- Next Button -->
+                @if($jabatan->hasMorePages())
+                    <a href="{{ $jabatan->nextPageUrl() }}" class="px-3 py-1 text-blue-600 hover:text-blue-800">
+                        Next &raquo;
+                    </a>
+                @else
+                    <span class="px-3 py-1 text-gray-400 cursor-not-allowed">
+                        Next &raquo;
+                    </span>
+                @endif
+            </div>
+        </div>
     </div>
+    @endif
 </div>
 @endsection

@@ -11,10 +11,16 @@ class PerangkatDesaController extends Controller
 {
     public function index(Request $request)
     {
-        $data = PerangkatDesa::with('media')
-            ->orderBy('perangkat_id', 'DESC')
-            ->paginate(10);
-
+        $search = $request->input('search');
+        
+        $query = PerangkatDesa::with('media')->orderBy('perangkat_id', 'DESC');
+        
+        if ($search) {
+            $query->where('jabatan', 'like', '%' . $search . '%');
+        }
+        
+        $data = $query->paginate(10)->withQueryString();
+        
         return view('pages.perangkat_desa.index', compact('data'));
     }
 
@@ -39,7 +45,6 @@ class PerangkatDesaController extends Controller
 
         // Upload foto jika ada
         if ($request->hasFile('media')) {
-
             // Ambil hanya file pertama
             $file = $request->file('media')[0];
             $fileName = time() . '_' . $file->getClientOriginalName();
@@ -90,14 +95,12 @@ class PerangkatDesaController extends Controller
 
         // Jika ada file baru
         if ($request->hasFile('media')) {
-
             // Hapus media lama (di folder + database)
             $oldMedia = Media::where('ref_table', 'perangkat_desa')
                 ->where('ref_id', $id)
                 ->first();
 
             if ($oldMedia) {
-
                 $oldPath = public_path('uploads/perangkat_desa/' . $oldMedia->file_name);
                 if (File::exists($oldPath)) {
                     File::delete($oldPath);
@@ -131,7 +134,6 @@ class PerangkatDesaController extends Controller
 
         // Hapus semua media terkait
         foreach ($pd->media as $m) {
-
             $path = public_path('uploads/perangkat_desa/' . $m->file_name);
 
             if (File::exists($path)) {

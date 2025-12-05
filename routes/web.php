@@ -10,54 +10,36 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\JabatanLembagaController;
 use App\Http\Controllers\MediaController;
 
-
-
 // Saat buka root, arahkan ke login dulu
 Route::get('/', function () {
     return redirect()->route('login');
 });
 
-// Halaman login & register
+// Halaman login & register (bisa diakses tanpa login)
 Route::get('/login', [AuthController::class, 'index'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register'])->name('register.process');
 
-// Setelah login berhasil → ke halaman success
-Route::get('/success', [AuthController::class, 'success'])->name('login.success');
-
 // Logout
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout.post');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Dashboard (hanya bisa diakses setelah login)
+// ROUTE TANPA MIDDLEWARE DULU UNTUK PERBAIKAN
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
-
-// CRUD Warga
 Route::resource('warga', WargaController::class);
-
-// CRUD Lembaga Desa
 Route::resource('lembaga', LembagaDesaController::class);
-Route::get('/lembaga/{id}', [LembagaDesaController::class, 'show'])->name('lembaga.show');
-Route::delete('/media/{id}', [MediaController::class, 'destroy'])
-    ->name('media.destroy');
-
-
-Route::get('/user', [UserController::class, 'index'])->name('user.index');
-
-Route::resource('user', UserController::class);
-
-
-// Perangkat Desa
-Route::get('perangkat-desa', [PerangkatDesaController::class, 'index'])->name('perangkat.index');
-
-// Route untuk Jabatan Lembaga
-Route::resource('jabatan-lembaga', JabatanLembagaController::class);
-
-// Perangkat Desa
 Route::resource('perangkat_desa', PerangkatDesaController::class);
+Route::resource('jabatan-lembaga', JabatanLembagaController::class);
+Route::resource('user', UserController::class);
+Route::delete('/media/{id}', [MediaController::class, 'destroy'])->name('media.destroy');
+Route::delete('/media/perangkat_desa/{id}', [MediaController::class, 'destroyPerangkatDesa'])->name('media.perangkat_desa.delete');
 
-// DELETE FOTO PERANGKAT DESA
-Route::delete('/media/perangkat_desa/{id}', [MediaController::class, 'destroy'])
-    ->name('media.perangkat_desa.delete');
-
+// Route khusus untuk testing - bypass semua middleware
+Route::get('/test-login', function() {
+    $user = \App\Models\User::where('email', 'della@gmail.com')->first();
+    if ($user) {
+        \Illuminate\Support\Facades\Auth::login($user);
+        return redirect('/dashboard')->with('success', 'Login manual berhasil!');
+    }
+    return 'User tidak ditemukan';
+});

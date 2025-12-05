@@ -5,12 +5,21 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
     // Tampilkan halaman login
     public function index()
     {
+        // Jika sudah login DAN role ada, redirect ke dashboard
+        if (Auth::check() && !empty(Auth::user()->role)) {
+            return redirect()->route('dashboard.index');
+        }
+        
+        // Jika sudah login tapi role kosong, tetap di login page
+        // atau bisa ke halaman khusus untuk set role
+        
         return view('pages.auth.login');
     }
 
@@ -22,36 +31,50 @@ class AuthController extends Controller
             'password' => 'required|min:3',
         ]);
 
-        $email = $request->email;
-        $password = $request->password;
+        // Cek user dengan Auth attempt
+        $credentials = $request->only('email', 'password');
+        
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+            
+            // Jika role kosong/null, set default 'User'
+            if (empty($user->role)) {
+                $user->role = 'User';
+                $user->save();
+            }
+            
+            // Simpan session
+            session([
+                'user_id' => $user->id,
+                'email' => $user->email,
+                'name' => $user->name,
+                'role' => $user->role,
+            ]);
 
-        // Cek user
-        $user = User::where('email', $email)->first();
-
-        if (!$user || !Hash::check($password, $user->password)) {
-            return back()->with('error', 'Email atau password salah.')->withInput();
+            return redirect()->route('dashboard.index')->with('success', 'Login berhasil!');
         }
 
-        // Simpan session
-        session([
-            'user_id' => $user->id,
-            'email' => $user->email,
-            'name' => $user->name,
-        ]);
-
-        return redirect()->route('dashboard.index')->with('message', 'Login berhasil!');
+        return back()->with('error', 'Email atau password salah.')->withInput();
     }
 
     // Logout
     public function logout(Request $request)
     {
-        $request->session()->flush();
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        
         return redirect()->route('login')->with('success', 'Berhasil logout.');
     }
 
     // Tampilkan halaman register
     public function showRegister()
     {
+        // Jika sudah login, redirect ke dashboard
+        if (Auth::check()) {
+            return redirect()->route('dashboard.index');
+        }
+        
         return view('pages.auth.register');
     }
 
@@ -68,6 +91,7 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => 'User', // DEFAULT ROLE
         ]);
 
         return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan login.');

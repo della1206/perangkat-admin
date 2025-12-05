@@ -8,12 +8,11 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-
     // Tampilkan daftar user
     public function index(Request $request)
     {
         // Kolom yang bisa di-search
-        $searchableColumns = ['name', 'email'];
+        $searchableColumns = ['name', 'email', 'role']; // TAMBAHKAN 'role'
         
         // Query dengan search
         $users = User::search($request, $searchableColumns)
@@ -36,7 +35,8 @@ class UserController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6',
+            'role' => 'required|in:Super Admin,Admin,User',
+            'password' => 'required|string|min:6|confirmed',
         ]);
 
         // Hash password dengan benar
@@ -63,10 +63,14 @@ class UserController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $id,
+            'role' => 'required|in:Super Admin,Admin,User',
+            'password' => 'nullable|string|min:6|confirmed',
         ]);
 
         if ($request->filled('password')) {
             $validated['password'] = Hash::make($request->password);
+        } else {
+            unset($validated['password']);
         }
 
         $user->update($validated);

@@ -22,7 +22,8 @@ class MediaController extends Controller
 
         return back()->with('success', 'Media berhasil dihapus');
     }
-     public function destroyPerangkatDesa($id)
+    
+    public function destroyPerangkatDesa($id)
     {
         $media = Media::findOrFail($id);
 

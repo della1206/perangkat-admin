@@ -34,17 +34,28 @@
                     class="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-200" required>
             </div>
 
-            <!-- {{-- Username --}}
+            {{-- Role --}}
             <div>
-                <label class="block text-gray-700 font-medium mb-1">Username</label>
-                <input type="text" name="username" value="{{ old('username') }}"
-                    class="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-200" required>
-            </div> -->
+                <label class="block text-gray-700 font-medium mb-1">Role</label>
+                <select name="role" class="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-200" required>
+                    <option value="">Pilih Role</option>
+                    <option value="Super Admin" {{ old('role') == 'Super Admin' ? 'selected' : '' }}>Super Admin</option>
+                    <option value="Admin" {{ old('role') == 'Admin' ? 'selected' : '' }}>Admin</option>
+                    <option value="User" {{ old('role') == 'User' ? 'selected' : '' }}>User</option>
+                </select>
+            </div>
 
             {{-- Password --}}
             <div>
                 <label class="block text-gray-700 font-medium mb-1">Password</label>
                 <input type="password" name="password"
+                    class="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-200" required>
+            </div>
+
+            {{-- Konfirmasi Password --}}
+            <div>
+                <label class="block text-gray-700 font-medium mb-1">Konfirmasi Password</label>
+                <input type="password" name="password_confirmation"
                     class="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-200" required>
             </div>
         </div>

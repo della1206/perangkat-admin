@@ -23,17 +23,31 @@
                 <label class="block text-gray-700 font-medium mb-1">Nama</label>
                 <input type="text" name="name" value="{{ old('name', $user->name) }}" class="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-200" required>
             </div>
+            
             <div>
                 <label class="block text-gray-700 font-medium mb-1">Email</label>
                 <input type="email" name="email" value="{{ old('email', $user->email) }}" class="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-200" required>
             </div>
-            <!-- <div>
-                <label class="block text-gray-700 font-medium mb-1">Username</label>
-                <input type="text" name="username" value="{{ old('username', $user->username) }}" class="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-200" required>
-            </div> -->
+            
+            {{-- Role --}}
+            <div>
+                <label class="block text-gray-700 font-medium mb-1">Role</label>
+                <select name="role" class="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-200" required>
+                    <option value="Super Admin" {{ old('role', $user->role) == 'Super Admin' ? 'selected' : '' }}>Super Admin</option>
+                    <option value="Admin" {{ old('role', $user->role) == 'Admin' ? 'selected' : '' }}>Admin</option>
+                    <option value="User" {{ old('role', $user->role) == 'User' ? 'selected' : '' }}>User</option>
+                </select>
+            </div>
+            
             <div>
                 <label class="block text-gray-700 font-medium mb-1">Password (Opsional)</label>
-                <input type="password" name="password" class="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-200">
+                <input type="password" name="password" class="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-200" placeholder="Kosongkan jika tidak ingin mengubah">
+            </div>
+            
+            {{-- Konfirmasi Password --}}
+            <div>
+                <label class="block text-gray-700 font-medium mb-1">Konfirmasi Password</label>
+                <input type="password" name="password_confirmation" class="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-200" placeholder="Kosongkan jika tidak ingin mengubah">
             </div>
         </div>
 

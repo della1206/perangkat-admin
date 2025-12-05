@@ -2,75 +2,77 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
-use App\Models\Warga;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Hash;
 
 class WargaController extends Controller
 {
-    public function index(Request $request) {
-        // Kolom yang bisa di-filter
-        $filterableColumns = ['jenis_kelamin', 'agama', 'pekerjaan'];
-        
+    public function index(Request $request)
+    {
         // Kolom yang bisa di-search
-        $searchableColumns = ['no_ktp', 'nama', 'telp', 'email'];
+        $searchableColumns = ['name', 'email', 'role'];
         
-        // Query dengan filter dan search
-        $warga = Warga::filter($request, $filterableColumns)
-                     ->search($request, $searchableColumns)
-                     ->orderBy('nama')
-                     ->paginate(10)
-                     ->withQueryString();
+        // Query dengan search
+        $users = User::search($request, $searchableColumns)
+                    ->orderBy('name')
+                    ->paginate(10)  // ✅ Pagination 10 data per halaman
+                    ->withQueryString();
 
-        return view('pages.warga.index', compact('warga'));
+        return view('pages.user.index', compact('users'));
     }
 
-    public function create() {
-        return view('pages.warga.create');
+    public function create()
+    {
+        return view('pages.user.create');
     }
 
-    public function store(Request $request) {
-        $request->validate([
-            'no_ktp' => 'required|unique:warga|max:16',
-            'nama' => 'required|string|max:255',
-            'jenis_kelamin' => 'required|in:L,P',
-            'agama' => 'required|string|max:50',
-            'pekerjaan' => 'required|string|max:100',
-            'telp' => 'nullable|string|max:15',
-            'email' => 'nullable|email|max:255'
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'role' => 'required|in:Super Admin,Admin,User',
+            'password' => 'required|string|min:6|confirmed',
         ]);
 
-        Warga::create($request->all());
-        return redirect()->route('warga.index')->with('success', 'Data warga berhasil ditambahkan');
+        $validated['password'] = Hash::make($validated['password']);
+        User::create($validated);
+
+        return redirect()->route('user.index')->with('success', 'User berhasil ditambahkan.');
     }
 
-    public function edit($id) {
-        $warga = Warga::findOrFail($id);
-        return view('pages.warga.edit', compact('warga'));
+    public function edit($id)
+    {
+        $user = User::findOrFail($id);
+        return view('pages.user.edit', compact('user'));
     }
 
-    public function update(Request $request, $id) {
-        $warga = Warga::findOrFail($id);
+    public function update(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
 
-        $request->validate([
-            'no_ktp' => [
-                'required',
-                Rule::unique('warga')->ignore($warga->warga_id, 'warga_id')
-            ],
-            'nama' => 'required|string|max:255',
-            'jenis_kelamin' => 'required|in:L,P',
-            'agama' => 'required|string|max:50',
-            'pekerjaan' => 'required|string|max:100',
-            'telp' => 'nullable|string|max:15',
-            'email' => 'nullable|email|max:255'
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'role' => 'required|in:Super Admin,Admin,User',
+            'password' => 'nullable|string|min:6|confirmed',
         ]);
 
-        $warga->update($request->all());
-        return redirect()->route('warga.index')->with('success', 'Data warga berhasil diperbarui');
+        if ($request->filled('password')) {
+            $validated['password'] = Hash::make($request->password);
+        } else {
+            unset($validated['password']);
+        }
+
+        $user->update($validated);
+
+        return redirect()->route('user.index')->with('success', 'User berhasil diperbarui.');
     }
 
-    public function destroy($id) {
-        Warga::destroy($id);
-        return redirect()->route('warga.index')->with('success', 'Data warga berhasil dihapus');
+    public function destroy($id)
+    {
+        User::destroy($id);
+        return redirect()->route('user.index')->with('success', 'User berhasil dihapus.');
     }
 }
