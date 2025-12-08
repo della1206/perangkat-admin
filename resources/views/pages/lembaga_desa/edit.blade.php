@@ -1,34 +1,113 @@
 @extends('layouts.admin.app')
 
 @section('content')
-<div class="bg-white p-6 rounded shadow max-w-xl mx-auto">
+<div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md mt-8">
+    <h2 class="text-2xl font-bold mb-6 text-gray-800">Edit Lembaga Desa</h2>
 
-    {{-- ALERT SUKSES --}}
+    @if ($errors->any())
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            <ul class="list-disc pl-5 text-sm">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     @if(session('success'))
-        <div class="bg-green-500 text-white p-3 rounded mb-4">
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
             {{ session('success') }}
         </div>
     @endif
 
-    <h1 class="text-2xl font-bold text-gray-800 mb-4">Edit Lembaga Desa</h1>
-
-    <form action="{{ route('lembaga.update', $lembaga->lembaga_id) }}" method="POST">
+    <form action="{{ route('lembaga.update', $lembaga->lembaga_id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
-        <label class="block font-semibold">Nama Lembaga</label>
-        <input type="text" name="nama_lembaga" value="{{ $lembaga->nama_lembaga }}" class="w-full border rounded p-2 mb-4">
+        <div class="space-y-6">
+            {{-- Nama Lembaga --}}
+            <div>
+                <label class="block font-semibold text-gray-700 mb-2">Nama Lembaga</label>
+                <input type="text" name="nama_lembaga" value="{{ old('nama_lembaga', $lembaga->nama_lembaga) }}" 
+                       class="w-full border border-gray-300 rounded-lg p-3 focus:ring focus:ring-blue-200" required>
+            </div>
 
-         <label class="block text-gray-700">Ketua</label>
-        <input type="text" name="ketua" value="{{ $lembaga->ketua }}" class="w-full p-2 border rounded">
+            {{-- Ketua --}}
+            <div>
+                <label class="block font-semibold text-gray-700 mb-2">Ketua</label>
+                <input type="text" name="ketua" value="{{ old('ketua', $lembaga->ketua) }}" 
+                       class="w-full border border-gray-300 rounded-lg p-3 focus:ring focus:ring-blue-200">
+            </div>
 
-        <label class="block font-semibold">Deskripsi</label>
-        <textarea name="deskripsi" class="w-full border rounded p-2 mb-4" rows="4">{{ $lembaga->deskripsi }}</textarea>
+            {{-- Logo --}}
+            <div>
+                <label class="block font-semibold text-gray-700 mb-2">Logo Lembaga</label>
+                @if($lembaga->logo)
+                    <div class="mb-3">
+                        <img src="{{ Storage::url($lembaga->logo) }}" 
+                             alt="Logo {{ $lembaga->nama_lembaga }}" 
+                             class="w-32 h-32 object-contain border rounded-lg">
+                    </div>
+                @endif
+                <input type="file" name="logo" 
+                       class="w-full border border-gray-300 rounded-lg p-3 focus:ring focus:ring-blue-200"
+                       accept="image/*">
+                <p class="text-sm text-gray-500 mt-1">Kosongkan jika tidak ingin mengubah logo</p>
+            </div>
 
-        <label class="block font-semibold">Kontak</label>
-        <input type="text" name="kontak" value="{{ $lembaga->kontak }}" class="w-full border rounded p-2 mb-4">
+            {{-- Multiple Foto --}}
+            <div>
+                <label class="block font-semibold text-gray-700 mb-2">Foto Kegiatan</label>
+                
+                {{-- Tampilkan foto yang sudah ada --}}
+                @if($lembaga->foto && count($lembaga->foto) > 0)
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
+                        @foreach($lembaga->foto as $index => $foto)
+                            <div class="relative">
+                                <img src="{{ Storage::url($foto) }}" 
+                                     alt="Foto {{ $index + 1 }}" 
+                                     class="w-full h-32 object-cover rounded-lg border">
+                                <a href="{{ route('lembaga.delete-foto', ['id' => $lembaga->lembaga_id, 'index' => $index]) }}" 
+                                   class="absolute top-1 right-1 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center"
+                                   onclick="return confirm('Hapus foto ini?')">
+                                    <i class="fas fa-times text-xs"></i>
+                                </a>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+                
+                <input type="file" name="foto[]" multiple 
+                       class="w-full border border-gray-300 rounded-lg p-3 focus:ring focus:ring-blue-200"
+                       accept="image/*">
+                <p class="text-sm text-gray-500 mt-1">Pilih file tambahan, maksimal 2MB per file</p>
+            </div>
 
-        <button class="bg-blue-600 text-white px-4 py-2 rounded">Update</button>
+            {{-- Deskripsi --}}
+            <div>
+                <label class="block font-semibold text-gray-700 mb-2">Deskripsi</label>
+                <textarea name="deskripsi" rows="4" 
+                          class="w-full border border-gray-300 rounded-lg p-3 focus:ring focus:ring-blue-200">{{ old('deskripsi', $lembaga->deskripsi) }}</textarea>
+            </div>
+
+            {{-- Kontak --}}
+            <div>
+                <label class="block font-semibold text-gray-700 mb-2">Kontak</label>
+                <input type="text" name="kontak" value="{{ old('kontak', $lembaga->kontak) }}" 
+                       class="w-full border border-gray-300 rounded-lg p-3 focus:ring focus:ring-blue-200">
+            </div>
+        </div>
+
+        <div class="mt-8 flex justify-end space-x-3">
+            <a href="{{ route('lembaga.index') }}" 
+               class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition">
+                Batal
+            </a>
+            <button type="submit" 
+                    class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
+                Update
+            </button>
+        </div>
     </form>
 </div>
 @endsection

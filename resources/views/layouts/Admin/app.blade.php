@@ -49,15 +49,17 @@
             Perangkat Desa
         </div>
 
-        <nav class="flex-1 p-4">
-            <ul class="space-y-3">
-                <li><a href="{{ route('dashboard.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('dashboard.*') ? 'bg-dark green-700' : '' }}">🏠 Dashboard</a></li>
-                <li><a href="{{ route('user.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('user.*') ? 'bg-dark green-700' : '' }}">👩🏻‍🦰 User</a></li>
-                <li><a href="{{ route('warga.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('warga.*') ? 'bg-dark green-700' : '' }}">👨‍👩‍👧‍👦 Warga</a></li>
-                <li><a href="{{ route('lembaga.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('lembaga.*') ? 'bg-dark green-700' : '' }}">🏢 Lembaga Desa</a></li>
-                <li><a href="{{ route('jabatan-lembaga.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('jabatan.*') ? 'bg-dark green-700' : '' }}">🔱 Jabatan Desa</a></li>
-            </ul>
-        </nav>
+       <nav class="flex-1 p-4">
+    <ul class="space-y-3">
+        <li><a href="{{ route('dashboard.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('dashboard.*') ? 'bg-dark green-700' : '' }}">🏠 Dashboard</a></li>
+        <li><a href="{{ route('user.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('user.*') ? 'bg-dark green-700' : '' }}">👩🏻‍🦰 User</a></li>
+        <li><a href="{{ route('warga.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('warga.*') ? 'bg-dark green-700' : '' }}">👨‍👩‍👧‍👦 Warga</a></li>
+        <!-- TAMBAHKAN INI -->
+        <li><a href="{{ route('perangkat-desa.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('perangkat-desa.*') ? 'bg-dark green-700' : '' }}">👥 Perangkat Desa</a></li>
+        <li><a href="{{ route('lembaga.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('lembaga.*') ? 'bg-dark green-700' : '' }}">🏢 Lembaga Desa</a></li>
+        <li><a href="{{ route('jabatan-lembaga.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('jabatan.*') ? 'bg-dark green-700' : '' }}">🔱 Jabatan Desa</a></li>
+    </ul>
+</nav>
 
         <div class="p-4 border-t border-gray-700">
             <form action="{{ route('logout') }}" method="POST">
@@ -132,25 +134,76 @@
                     <i class="fas fa-chevron-down text-gray-500 text-xs"></i>
                 </div>
 
-                <!-- PROFILE DROPDOWN -->
-                <div id="profileDropdown" class="absolute right-6 mt-32 w-48 bg-white rounded-lg shadow-xl border border-gray-200 hidden z-50">
+                <!-- PROFILE DROPDOWN - DIPERBAIKI -->
+                <div id="profileDropdown" class="absolute right-6 mt-32 w-72 bg-white rounded-lg shadow-xl border border-gray-200 hidden z-50">
+                    <!-- Informasi Profil -->
                     <div class="p-4 border-b border-green-200">
-                        <p class="font-medium text-gray-800">{{ auth()->user()->name ?? 'Della' }}</p>
-                        <p class="text-sm text-gray-600">Administrator</p>
+                        <div class="flex items-center mb-3">
+                            <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name ?? 'Admin Desa') }}&background=0D8ABC&color=fff&size=64"
+                                 alt="Avatar" class="w-12 h-12 rounded-full mr-3">
+                            <div>
+                                <p class="font-medium text-gray-800">{{ auth()->user()->name ?? 'Della' }}</p>
+                                <p class="text-sm text-gray-600">Administrator</p>
+                                <span class="inline-block mt-1 bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full">
+                                    Super Admin
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <!-- Informasi Login & Update -->
+                        <div class="space-y-2 text-xs text-gray-600 border-t pt-3">
+                            <div class="flex items-center">
+                                <i class="fas fa-sign-in-alt text-green-500 mr-2 w-4"></i>
+                                <span class="font-medium">Login:</span>
+                                <span class="ml-1">
+                                    @if(auth()->user()->last_login_at)
+                                        {{ \Carbon\Carbon::parse(auth()->user()->last_login_at)->format('d/m H:i') }}
+                                    @else
+                                        Baru saja
+                                    @endif
+                                </span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-edit text-blue-500 mr-2 w-4"></i>
+                                <span class="font-medium">Update:</span>
+                                <span class="ml-1">
+                                    @if(auth()->user()->updated_at)
+                                        {{ \Carbon\Carbon::parse(auth()->user()->updated_at)->format('d/m/Y') }}
+                                    @else
+                                        -
+                                    @endif
+                                </span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-calendar-alt text-purple-500 mr-2 w-4"></i>
+                                <span class="font-medium">Akun Dibuat:</span>
+                                <span class="ml-1">
+                                    @if(auth()->user()->created_at)
+                                        {{ \Carbon\Carbon::parse(auth()->user()->created_at)->format('d/m/Y') }}
+                                    @else
+                                        -
+                                    @endif
+                                </span>
+                            </div>
+                        </div>
                     </div>
+                    
+                    <!-- Menu Profil -->
                     <div class="p-2">
-                        <a href="#" class="block px-4 py-2 text-sm text-green-700 hover:bg-green-100 rounded transition duration-200">
-                            <i class="fas fa-user-circle mr-2"></i>Profil Saya
+                        <a href="#" class="flex items-center px-4 py-2 text-sm text-green-700 hover:bg-green-100 rounded transition duration-200">
+                            <i class="fas fa-user-circle mr-3"></i>Profil Saya
                         </a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-100 rounded transition duration-200">
-                            <i class="fas fa-cog mr-2"></i>Pengaturan
+                        <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-green-100 rounded transition duration-200">
+                            <i class="fas fa-cog mr-3"></i>Pengaturan
                         </a>
                     </div>
+                    
+                    <!-- Logout -->
                     <div class="p-2 border-t border-gray-200">
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf
-                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded transition duration-200">
-                                <i class="fas fa-sign-out-alt mr-2"></i>Keluar
+                            <button type="submit" class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded transition duration-200">
+                                <i class="fas fa-sign-out-alt mr-3"></i>Keluar
                             </button>
                         </form>
                     </div>

@@ -9,14 +9,14 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Jika belum login, kembalikan ke login
-        // if (!session()->has('user_id')) {
-        //     return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
-        // }
+        // Data untuk dashboard
+        $totalWarga = \App\Models\Warga::count();
+        $totalPerangkat = \App\Models\PerangkatDesa::count();
+        $totalLembaga = \App\Models\LembagaDesa::count();
+        $totalUser = User::count();
+        
+        $user = auth()->user();
 
-        // Ambil data user
-        $user = User::find(session('user_id'));
-
-        return view('dashboard', compact('user'));
+        return view('dashboard', compact('user', 'totalWarga', 'totalPerangkat', 'totalLembaga', 'totalUser'));
     }
 }

@@ -5,16 +5,18 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    // Tampilkan halaman login
     public function index()
     {
+        if (Auth::check()) {
+            return redirect()->route('dashboard.index');
+        }
         return view('pages.auth.login');
     }
 
-    // Proses login
     public function login(Request $request)
     {
         $request->validate([
@@ -22,40 +24,34 @@ class AuthController extends Controller
             'password' => 'required|min:3',
         ]);
 
-        $email = $request->email;
-        $password = $request->password;
+        $credentials = $request->only('email', 'password');
 
-        // Cek user
-        $user = User::where('email', $email)->first();
-
-        if (!$user || !Hash::check($password, $user->password)) {
-            return back()->with('error', 'Email atau password salah.')->withInput();
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            
+            // Simpan waktu login terakhir
+            session(['last_login' => now()]);
+            
+            return redirect()->route('dashboard.index')->with('success', 'Login berhasil!');
         }
 
-        // Simpan session
-        session([
-            'user_id' => $user->id,
-            'email' => $user->email,
-            'name' => $user->name,
-        ]);
-
-        return redirect()->route('dashboard.index')->with('message', 'Login berhasil!');
+        return back()->with('error', 'Email atau password salah.')->withInput();
     }
 
-    // Logout
     public function logout(Request $request)
     {
-        $request->session()->flush();
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        
         return redirect()->route('login')->with('success', 'Berhasil logout.');
     }
 
-    // Tampilkan halaman register
     public function showRegister()
     {
         return view('pages.auth.register');
     }
 
-    // Proses register
     public function register(Request $request)
     {
         $request->validate([
@@ -68,6 +64,7 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => 'admin', // Default role warga untuk registrasi publik
         ]);
 
         return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan login.');

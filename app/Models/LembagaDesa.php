@@ -16,7 +16,20 @@ class LembagaDesa extends Model
 
     protected $fillable = [
         'nama_lembaga',
+        'ketua',
         'deskripsi',
         'kontak',
+        'logo',
     ];
+
+    // Untuk multiple foto
+    public function getFotoAttribute($value)
+    {
+        return $value ? json_decode($value, true) : [];
+    }
+
+    public function setFotoAttribute($value)
+    {
+        $this->attributes['foto'] = json_encode($value);
+    }
 }

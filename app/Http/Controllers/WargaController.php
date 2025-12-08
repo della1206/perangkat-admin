@@ -8,8 +8,45 @@ use Illuminate\Validation\Rule;
 
 class WargaController extends Controller
 {
-    public function index() {
-        $warga = Warga::all();
+    public function index(Request $request) {
+        // Query dasar
+        $query = Warga::query();
+        
+        // SEARCH: Cari berdasarkan nama, no_ktp, email, telp
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                  ->orWhere('no_ktp', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('telp', 'like', "%{$search}%");
+            });
+        }
+        
+        // FILTER: Jenis Kelamin
+        if ($request->has('jenis_kelamin') && $request->jenis_kelamin != '') {
+            $query->where('jenis_kelamin', $request->jenis_kelamin);
+        }
+        
+        // FILTER: Agama
+        if ($request->has('agama') && $request->agama != '') {
+            $query->where('agama', $request->agama);
+        }
+        
+        // PAGINATION: 10 data per halaman
+        $warga = $query->paginate(10);
+        
+        // Tambahkan parameter filter ke pagination links
+        if ($request->has('search')) {
+            $warga->appends(['search' => $request->search]);
+        }
+        if ($request->has('jenis_kelamin')) {
+            $warga->appends(['jenis_kelamin' => $request->jenis_kelamin]);
+        }
+        if ($request->has('agama')) {
+            $warga->appends(['agama' => $request->agama]);
+        }
+        
         return view('pages.warga.index', compact('warga'));
     }
 
@@ -43,7 +80,8 @@ class WargaController extends Controller
         $request->validate([
             'no_ktp' => [
                 'required',
-                Rule::unique('warga')->ignore($warga->warga_id, 'warga_id')
+                'max:16',
+                Rule::unique('warga')->ignore($warga->id)
             ],
             'nama' => 'required|string|max:255',
             'jenis_kelamin' => 'required|in:L,P',
@@ -58,7 +96,8 @@ class WargaController extends Controller
     }
 
     public function destroy($id) {
-        Warga::destroy($id);
+        $warga = Warga::findOrFail($id);
+        $warga->delete();
         return redirect()->route('warga.index')->with('success', 'Data warga berhasil dihapus');
     }
 }

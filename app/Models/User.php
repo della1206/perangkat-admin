@@ -9,12 +9,33 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'username',
         'password',
+        'role',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
     ];
+
+    // Helper methods
+    public function isSuperAdmin()
+    {
+        return $this->role === 'super_admin';
+    }
+
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isWarga()
+    {
+        return $this->role === 'warga';
+    }
+
+    public function hasRole($role)
+    {
+        return $this->role === $role;
+    }
 }

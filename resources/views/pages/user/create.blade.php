@@ -1,65 +1,117 @@
 @extends('layouts.admin.app')
 
 @section('content')
-<div class="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-md mt-10">
-    <h2 class="text-2xl font-bold mb-6 text-gray-800 text-center">Tambah Data User</h2>
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-2xl mx-auto">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-2xl font-bold text-gray-800">Tambah Data User</h1>
+            <p class="text-gray-600 mt-1">Tambahkan pengguna baru ke dalam sistem</p>
+        </div>
 
-    {{-- Pesan error validasi --}}
-    @if ($errors->any())
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            <ul class="list-disc pl-5 text-sm">
-                @foreach ($errors->all() as $error)
+        <!-- Card Form -->
+        <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+            <!-- Error Messages -->
+            @if ($errors->any())
+            <div class="bg-red-50 border border-red-200 text-red-800 rounded-lg p-4 mb-6">
+                <div class="flex items-center mb-2">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="font-semibold">Terjadi kesalahan!</span>
+                </div>
+                <ul class="list-disc pl-5 text-sm">
+                    @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-    {{-- Form tambah user --}}
-    <form action="{{ route('user.store') }}" method="POST">
-        @csrf
-
-        <div class="space-y-4">
-            {{-- Nama --}}
-            <div>
-                <label class="block text-gray-700 font-medium mb-1">Nama</label>
-                <input type="text" name="name" value="{{ old('name') }}"
-                    class="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-200" required>
+                    @endforeach
+                </ul>
             </div>
+            @endif
 
-            {{-- Email --}}
-            <div>
-                <label class="block text-gray-700 font-medium mb-1">Email</label>
-                <input type="email" name="email" value="{{ old('email') }}"
-                    class="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-200" required>
-            </div>
+            <!-- Form -->
+            <form action="{{ route('user.store') }}" method="POST">
+                @csrf
 
-            <!-- {{-- Username --}}
-            <div>
-                <label class="block text-gray-700 font-medium mb-1">Username</label>
-                <input type="text" name="username" value="{{ old('username') }}"
-                    class="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-200" required>
-            </div> -->
+                <div class="space-y-6">
+                    <!-- Nama -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Nama Lengkap <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" 
+                               name="name" 
+                               value="{{ old('name') }}"
+                               class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                               placeholder="Masukkan nama lengkap"
+                               required>
+                    </div>
 
-            {{-- Password --}}
-            <div>
-                <label class="block text-gray-700 font-medium mb-1">Password</label>
-                <input type="password" name="password"
-                    class="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-200" required>
-            </div>
+                    <!-- Email -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Email <span class="text-red-500">*</span>
+                        </label>
+                        <input type="email" 
+                               name="email" 
+                               value="{{ old('email') }}"
+                               class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                               placeholder="contoh@email.com"
+                               required>
+                    </div>
+
+                    <!-- Role -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Role <span class="text-red-500">*</span>
+                        </label>
+                        <select name="role" 
+                                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                                required>
+                            <option value="">Pilih Role</option>
+                            <option value="super_admin" {{ old('role') == 'super_admin' ? 'selected' : '' }}>Super Admin</option>
+                            <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                            <option value="warga" {{ old('role') == 'warga' ? 'selected' : '' }}>Warga</option>
+                        </select>
+                    </div>
+
+                    <!-- Password -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Password <span class="text-red-500">*</span>
+                        </label>
+                        <input type="password" 
+                               name="password"
+                               class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                               placeholder="Minimal 8 karakter"
+                               required>
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Konfirmasi Password <span class="text-red-500">*</span>
+                        </label>
+                        <input type="password" 
+                               name="password_confirmation"
+                               class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                               placeholder="Ulangi password"
+                               required>
+                    </div>
+                </div>
+
+                <!-- Tombol Action -->
+                <div class="mt-8 pt-6 border-t border-gray-200 flex justify-end space-x-3">
+                    <a href="{{ route('user.index') }}" 
+                       class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
+                        Kembali
+                    </a>
+                    <button type="submit" 
+                            class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium">
+                        Simpan Data
+                    </button>
+                </div>
+            </form>
         </div>
-
-        {{-- Tombol --}}
-        <div class="mt-6 flex justify-end space-x-2">
-            <a href="{{ route('user.index') }}"
-                class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition">
-                Kembali
-            </a>
-            <button type="submit"
-                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
-                Simpan
-            </button>
-        </div>
-    </form>
+    </div>
 </div>
 @endsection

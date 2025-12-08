@@ -8,13 +8,53 @@ use Illuminate\Http\Request;
 
 class JabatanLembagaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $jabatan = JabatanLembaga::with('lembaga')
-            ->orderBy('level')
-            ->orderBy('nama_jabatan')
-            ->get();
-        return view('pages.jabatan_lembaga.index', compact('jabatan'));
+        // Query dasar dengan eager loading
+        $query = JabatanLembaga::with('lembaga');
+        
+        // SEARCH: Cari berdasarkan nama jabatan atau nama lembaga
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('nama_jabatan', 'like', "%{$search}%")
+                  ->orWhereHas('lembaga', function($q2) use ($search) {
+                      $q2->where('nama_lembaga', 'like', "%{$search}%");
+                  });
+            });
+        }
+        
+        // FILTER: Berdasarkan lembaga
+        if ($request->has('lembaga_id') && $request->lembaga_id != '') {
+            $query->where('lembaga_id', $request->lembaga_id);
+        }
+        
+        // FILTER: Berdasarkan level
+        if ($request->has('level') && $request->level != '') {
+            $query->where('level', $request->level);
+        }
+        
+        // Sorting
+        $query->orderBy('level')
+              ->orderBy('nama_jabatan');
+        
+        // PAGINATION: 10 data per halaman
+        $jabatan = $query->paginate(10);
+        
+        // Tambahkan parameter filter ke pagination links
+        if ($request->has('search')) {
+            $jabatan->appends(['search' => $request->search]);
+        }
+        if ($request->has('lembaga_id')) {
+            $jabatan->appends(['lembaga_id' => $request->lembaga_id]);
+        }
+        if ($request->has('level')) {
+            $jabatan->appends(['level' => $request->level]);
+        }
+        
+        $lembaga = LembagaDesa::orderBy('nama_lembaga')->get();
+        
+        return view('pages.jabatan_lembaga.index', compact('jabatan', 'lembaga'));
     }
 
     public function create()
@@ -70,7 +110,7 @@ class JabatanLembagaController extends Controller
         $jabatan = JabatanLembaga::findOrFail($id);
         $jabatan->delete();
 
-  return redirect()->route('jabatan-lembaga.index')
-    ->with('success', 'Jabatan berhasil dihapus!');
+        return redirect()->route('jabatan-lembaga.index')
+            ->with('success', 'Jabatan berhasil dihapus!');
     }
 }

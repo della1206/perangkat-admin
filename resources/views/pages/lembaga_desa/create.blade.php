@@ -1,30 +1,80 @@
 @extends('layouts.admin.app')
 
 @section('content')
-<div class="bg-white p-6 rounded shadow max-w-xl mx-auto">
+<div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md mt-8">
+    <h2 class="text-2xl font-bold mb-6 text-gray-800">Tambah Lembaga Desa</h2>
 
-    {{-- ALERT SUKSES --}}
-    @if(session('success'))
-        <div class="bg-green-500 text-white p-3 rounded mb-4">
-            {{ session('success') }}
+    @if ($errors->any())
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            <ul class="list-disc pl-5 text-sm">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
         </div>
     @endif
 
-    <h1 class="text-2xl font-bold text-gray-800 mb-4">Tambah Lembaga Desa</h1>
-
-    <form action="{{ route('lembaga.store') }}" method="POST">
+    <form action="{{ route('lembaga.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
-        <label class="block font-semibold">Nama Lembaga</label>
-        <input type="text" name="nama_lembaga" class="w-full border rounded p-2 mb-4">
+        <div class="space-y-6">
+            {{-- Nama Lembaga --}}
+            <div>
+                <label class="block font-semibold text-gray-700 mb-2">Nama Lembaga</label>
+                <input type="text" name="nama_lembaga" value="{{ old('nama_lembaga') }}" 
+                       class="w-full border border-gray-300 rounded-lg p-3 focus:ring focus:ring-blue-200" required>
+            </div>
 
-        <label class="block font-semibold">Deskripsi</label>
-        <textarea name="deskripsi" class="w-full border rounded p-2 mb-4" rows="4"></textarea>
+            {{-- Ketua --}}
+            <div>
+                <label class="block font-semibold text-gray-700 mb-2">Ketua</label>
+                <input type="text" name="ketua" value="{{ old('ketua') }}" 
+                       class="w-full border border-gray-300 rounded-lg p-3 focus:ring focus:ring-blue-200">
+            </div>
 
-        <label class="block font-semibold">Kontak</label>
-        <input type="text" name="kontak" class="w-full border rounded p-2 mb-4">
+            {{-- Logo --}}
+            <div>
+                <label class="block font-semibold text-gray-700 mb-2">Logo Lembaga</label>
+                <input type="file" name="logo" 
+                       class="w-full border border-gray-300 rounded-lg p-3 focus:ring focus:ring-blue-200"
+                       accept="image/*">
+                <p class="text-sm text-gray-500 mt-1">Maksimal 2MB (jpg, jpeg, png)</p>
+            </div>
 
-        <button class="bg-green-600 text-white px-4 py-2 rounded">Simpan</button>
+            {{-- Multiple Foto --}}
+            <div>
+                <label class="block font-semibold text-gray-700 mb-2">Foto Kegiatan (Multiple)</label>
+                <input type="file" name="foto[]" multiple 
+                       class="w-full border border-gray-300 rounded-lg p-3 focus:ring focus:ring-blue-200"
+                       accept="image/*">
+                <p class="text-sm text-gray-500 mt-1">Pilih beberapa file, maksimal 2MB per file</p>
+            </div>
+
+            {{-- Deskripsi --}}
+            <div>
+                <label class="block font-semibold text-gray-700 mb-2">Deskripsi</label>
+                <textarea name="deskripsi" rows="4" 
+                          class="w-full border border-gray-300 rounded-lg p-3 focus:ring focus:ring-blue-200">{{ old('deskripsi') }}</textarea>
+            </div>
+
+            {{-- Kontak --}}
+            <div>
+                <label class="block font-semibold text-gray-700 mb-2">Kontak</label>
+                <input type="text" name="kontak" value="{{ old('kontak') }}" 
+                       class="w-full border border-gray-300 rounded-lg p-3 focus:ring focus:ring-blue-200">
+            </div>
+        </div>
+
+        <div class="mt-8 flex justify-end space-x-3">
+            <a href="{{ route('lembaga.index') }}" 
+               class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition">
+                Batal
+            </a>
+            <button type="submit" 
+                    class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
+                Simpan
+            </button>
+        </div>
     </form>
 </div>
 @endsection

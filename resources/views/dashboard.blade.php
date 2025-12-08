@@ -38,7 +38,7 @@
                 <p class="text-gray-600 text-sm">Kelola data lembaga yang berperan dalam desa.</p>
             </a>
 
-            <a href="{{ route('perangkat.index') }}" 
+            <a href="{{ route('perangkat-desa.index') }}" 
                class="block bg-white border border-gray-200 rounded-lg p-6 text-center shadow hover:shadow-lg hover:bg-yellow-50 transition duration-200">
                 <h3 class="font-semibold text-lg mb-2 text-gray-800">Perangkat Desa</h3>
                 <p class="text-gray-600 text-sm">Atur struktur organisasi perangkat desa.</p>
