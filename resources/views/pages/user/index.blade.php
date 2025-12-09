@@ -8,10 +8,10 @@
             <h1 class="text-2xl font-bold text-gray-800">Daftar User</h1>
             <p class="text-gray-600 mt-1">Kelola data pengguna sistem</p>
         </div>
-        
-        <!-- PERIKSA: Hanya superadmin dan admin yang bisa tambah user -->
-        @if(in_array(auth()->user()->role, ['superadmin', 'admin']))
-        <a href="{{ route('user.create') }}" 
+
+        <!-- PERIKSA: Hanya super_admin dan admin yang bisa tambah user -->
+        @if(in_array(auth()->user()->role, ['super_admin', 'admin']))
+        <a href="{{ route('user.create') }}"
            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center transition">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -27,23 +27,23 @@
             <!-- Filter Role -->
             <select name="role" class="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 <option value="">Semua Role</option>
-                <option value="superadmin" {{ request('role') == 'superadmin' ? 'selected' : '' }}>Super Admin</option>
+                <option value="super_admin" {{ request('role') == 'super_admin' ? 'selected' : '' }}>Super Admin</option>
                 <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
                 <option value="warga" {{ request('role') == 'warga' ? 'selected' : '' }}>Warga</option>
             </select>
-            
+
             <!-- Search -->
-            <input type="text" 
-                   name="search" 
+            <input type="text"
+                   name="search"
                    value="{{ request('search') }}"
-                   placeholder="Cari nama atau email..." 
+                   placeholder="Cari nama atau email..."
                    class="border rounded-lg p-2 flex-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-            
+
             <div class="flex gap-2">
                 <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
                     Cari
                 </button>
-                
+
                 @if(request('search') || request('role'))
                 <a href="{{ route('user.index') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg transition">
                     Reset
@@ -81,7 +81,7 @@
                             <div class="text-sm text-gray-900">{{ $user->email }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            @if($user->role == 'superadmin')
+                            @if($user->role == 'super_admin')
                             <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
                                 Super Admin
                             </span>
@@ -96,23 +96,23 @@
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <!-- PERIKSA: Hanya superadmin dan admin yang bisa edit/hapus -->
-                            @if(in_array(auth()->user()->role, ['superadmin', 'admin']))
+                            <!-- PERIKSA: Hanya super_admin dan admin yang bisa edit/hapus -->
+                            @if(in_array(auth()->user()->role, ['super_admin', 'admin']))
                             <div class="flex justify-center space-x-2">
                                 <!-- Tombol Edit -->
-                                @if(auth()->user()->role === 'superadmin' || $user->role !== 'superadmin')
-                                <a href="{{ route('user.edit', $user->id) }}" 
+                                @if(auth()->user()->role === 'super_admin' || $user->role !== 'super_admin')
+                                <a href="{{ route('user.edit', $user->id) }}"
                                    class="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition">
                                     Edit
                                 </a>
                                 @endif
-                                
+
                                 <!-- Tombol Hapus -->
-                                @if($user->id != auth()->id() && (auth()->user()->role === 'superadmin' || (auth()->user()->role === 'admin' && $user->role !== 'superadmin')))
+                                @if($user->id != auth()->id() && (auth()->user()->role === 'super_admin' || (auth()->user()->role === 'admin' && $user->role !== 'super_admin')))
                                 <form action="{{ route('user.destroy', $user->id) }}" method="POST" class="inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" 
+                                    <button type="submit"
                                             class="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition"
                                             onclick="return confirm('Apakah Anda yakin ingin menghapus user ini?')">
                                         Hapus
@@ -131,22 +131,22 @@
                 </tbody>
             </table>
         </div>
-        
+
         <!-- PAGINATION SECTION -->
         @if($users->hasPages())
         <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
             <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0">
                 <!-- Info jumlah data -->
                 <div class="text-sm text-gray-700">
-                    Menampilkan 
-                    <span class="font-medium">{{ $users->firstItem() }}</span> 
-                    sampai 
-                    <span class="font-medium">{{ $users->lastItem() }}</span> 
-                    dari 
-                    <span class="font-medium">{{ $users->total() }}</span> 
+                    Menampilkan
+                    <span class="font-medium">{{ $users->firstItem() }}</span>
+                    sampai
+                    <span class="font-medium">{{ $users->lastItem() }}</span>
+                    dari
+                    <span class="font-medium">{{ $users->total() }}</span>
                     data
                 </div>
-                
+
                 <!-- Navigasi halaman -->
                 <div class="flex items-center space-x-1">
                     <!-- Tombol Previous -->
@@ -155,15 +155,15 @@
                             &laquo; Prev
                         </span>
                     @else
-                        <a href="{{ $users->previousPageUrl() }}{{ request('role') ? '&role=' . request('role') : '' }}{{ request('search') ? '&search=' . request('search') : '' }}" 
+                        <a href="{{ $users->previousPageUrl() }}{{ request('role') ? '&role=' . request('role') : '' }}{{ request('search') ? '&search=' . request('search') : '' }}"
                            class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-100 transition">
                             &laquo; Prev
                         </a>
                     @endif
-                    
+
                     <!-- Tombol Next -->
                     @if($users->hasMorePages())
-                        <a href="{{ $users->nextPageUrl() }}{{ request('role') ? '&role=' . request('role') : '' }}{{ request('search') ? '&search=' . request('search') : '' }}" 
+                        <a href="{{ $users->nextPageUrl() }}{{ request('role') ? '&role=' . request('role') : '' }}{{ request('search') ? '&search=' . request('search') : '' }}"
                            class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-100 transition">
                             Next &raquo;
                         </a>
@@ -176,7 +176,7 @@
             </div>
         </div>
         @endif
-        
+
         @else
         <!-- Empty state -->
         <div class="text-center py-12">
@@ -189,8 +189,8 @@
                     Coba ubah filter pencarian Anda atau
                     <a href="{{ route('user.index') }}" class="text-blue-600 hover:text-blue-800">reset filter</a>
                 @else
-                    Belum ada data user. 
-                    @if(in_array(auth()->user()->role, ['superadmin', 'admin']))
+                    Belum ada data user.
+                    @if(in_array(auth()->user()->role, ['super_admin', 'admin']))
                         <a href="{{ route('user.create') }}" class="text-blue-600 hover:text-blue-800">Tambahkan user baru</a>
                     @endif
                 @endif

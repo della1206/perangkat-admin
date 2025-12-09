@@ -18,7 +18,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    // Helper methods
+    // Helper methods dengan underscore konsisten
     public function isSuperAdmin()
     {
         return $this->role === 'super_admin';
