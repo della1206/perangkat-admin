@@ -107,6 +107,7 @@
                         <th class="py-3 px-4 border text-left text-sm font-medium text-gray-700">Nama</th>
                         <th class="py-3 px-4 border text-left text-sm font-medium text-gray-700">Ketua</th>
                         <th class="py-3 px-4 border text-left text-sm font-medium text-gray-700">Kontak</th>
+                        <th class="py-3 px-4 border text-left text-sm font-medium text-gray-700">Deskripsi</th>
                         <th class="py-3 px-4 border text-center text-sm font-medium text-gray-700 w-40">Aksi</th>
                     </tr>
                 </thead>
@@ -132,9 +133,6 @@
                                     @endif
                                     <div>
                                         <div class="font-medium text-gray-900">{{ $item->nama_lembaga }}</div>
-                                        <div class="text-xs text-gray-500 truncate max-w-xs">
-                                            {{ Str::limit($item->deskripsi, 50) }}
-                                        </div>
                                     </div>
                                 </div>
                             </td>
@@ -153,6 +151,16 @@
                                 @else
                                     <span class="text-gray-400 text-sm">-</span>
                                 @endif
+                            </td>
+
+                            <td class="py-3 px-4 border">
+                                <div class="text-sm text-gray-600 max-w-xs">
+                                    @if($item->deskripsi)
+                                        {{ Str::limit($item->deskripsi, 100) }}
+                                    @else
+                                        <span class="text-gray-400 text-sm">-</span>
+                                    @endif
+                                </div>
                             </td>
 
                             <td class="py-3 px-4 border">

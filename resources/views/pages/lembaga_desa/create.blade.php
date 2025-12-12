@@ -41,15 +41,6 @@
                 <p class="text-sm text-gray-500 mt-1">Maksimal 2MB (jpg, jpeg, png)</p>
             </div>
 
-            {{-- Multiple Foto --}}
-            <div>
-                <label class="block font-semibold text-gray-700 mb-2">Foto Kegiatan (Multiple)</label>
-                <input type="file" name="foto[]" multiple 
-                       class="w-full border border-gray-300 rounded-lg p-3 focus:ring focus:ring-blue-200"
-                       accept="image/*">
-                <p class="text-sm text-gray-500 mt-1">Pilih beberapa file, maksimal 2MB per file</p>
-            </div>
-
             {{-- Deskripsi --}}
             <div>
                 <label class="block font-semibold text-gray-700 mb-2">Deskripsi</label>

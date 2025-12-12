@@ -17,7 +17,7 @@ class CreateLembagaDummySeeder extends Seeder
     public function run()
     {
         $faker = Faker::create('id_ID');
-        $numberOfLembaga = 10;
+        $numberOfLembaga = 90;
 
         echo "Menambahkan $numberOfLembaga Lembaga Desa...\n";
 

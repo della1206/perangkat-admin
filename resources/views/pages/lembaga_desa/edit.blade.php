@@ -55,34 +55,6 @@
                 <p class="text-sm text-gray-500 mt-1">Kosongkan jika tidak ingin mengubah logo</p>
             </div>
 
-            {{-- Multiple Foto --}}
-            <div>
-                <label class="block font-semibold text-gray-700 mb-2">Foto Kegiatan</label>
-                
-                {{-- Tampilkan foto yang sudah ada --}}
-                @if($lembaga->foto && count($lembaga->foto) > 0)
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
-                        @foreach($lembaga->foto as $index => $foto)
-                            <div class="relative">
-                                <img src="{{ Storage::url($foto) }}" 
-                                     alt="Foto {{ $index + 1 }}" 
-                                     class="w-full h-32 object-cover rounded-lg border">
-                                <a href="{{ route('lembaga.delete-foto', ['id' => $lembaga->lembaga_id, 'index' => $index]) }}" 
-                                   class="absolute top-1 right-1 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center"
-                                   onclick="return confirm('Hapus foto ini?')">
-                                    <i class="fas fa-times text-xs"></i>
-                                </a>
-                            </div>
-                        @endforeach
-                    </div>
-                @endif
-                
-                <input type="file" name="foto[]" multiple 
-                       class="w-full border border-gray-300 rounded-lg p-3 focus:ring focus:ring-blue-200"
-                       accept="image/*">
-                <p class="text-sm text-gray-500 mt-1">Pilih file tambahan, maksimal 2MB per file</p>
-            </div>
-
             {{-- Deskripsi --}}
             <div>
                 <label class="block font-semibold text-gray-700 mb-2">Deskripsi</label>

@@ -31,7 +31,7 @@
                     Bergabung dengan Kami
                 </h1>
                 <p class="text-xl text-gray-600 mb-6">
-                    Daftarkan akun admin untuk mulai mengelola data desa secara digital
+                    Daftarkan akun untuk mulai mengelola data desa secara digital
                 </p>
             </div>
 
@@ -142,6 +142,31 @@
                     @enderror
                 </div>
 
+                <!-- Role Selection -->
+                <div>
+                    <label class="block text-gray-700 font-medium mb-2">Peran (Role)</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-user-tag text-gray-400"></i>
+                        </div>
+                        <select
+                            name="role"
+                            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 appearance-none bg-white"
+                            required
+                        >
+                            <option value="" disabled selected>Pilih peran Anda</option>
+                            <option value="Super admin" {{ old('role') == 'Super admin' ? 'selected' : '' }}>Super Admin</option>
+                            <option value="Admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                            <option value="warga" {{ old('role') == 'warga' ? 'selected' : '' }}>Warga</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                            <i class="fas fa-chevron-down text-gray-400"></i>
+                        </div>
+                    </div>
+                    @error('role')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                    
                 <!-- Password -->
                 <div>
                     <label class="block text-gray-700 font-medium mb-2">Password</label>
@@ -160,6 +185,13 @@
                     @error('password')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
+                    
+                    <div class="mt-2">
+                        <p class="text-xs text-gray-500 flex items-center">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Password minimal 8 karakter dengan kombinasi huruf dan angka
+                        </p>
+                    </div>
                 </div>
 
                 <!-- Password Confirmation -->
@@ -219,9 +251,19 @@
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
 
-        input:focus {
+        input:focus, select:focus {
             outline: none;
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
         }
     </style>
 </body>

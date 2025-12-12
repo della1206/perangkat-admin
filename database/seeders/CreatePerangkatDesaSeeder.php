@@ -17,7 +17,7 @@ class CreatePerangkatDesaSeeder extends Seeder
     public function run()
     {
         $faker = Faker::create('id_ID');
-        $numberOfPerangkat = 50;
+        $numberOfPerangkat = 80;
 
         // Ambil ID warga dari tabel warga untuk relasi FK
         $wargaIds = DB::table('warga')->pluck('warga_id')->toArray();

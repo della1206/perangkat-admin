@@ -145,7 +145,7 @@
                                 <p class="font-medium text-gray-800">{{ auth()->user()->name ?? 'Della' }}</p>
                                 <p class="text-sm text-gray-600">Administrator</p>
                                 <span class="inline-block mt-1 bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full">
-                                    Super Admin
+                                    Admin
                                 </span>
                             </div>
                         </div>
@@ -221,7 +221,7 @@
         <footer class="bg-white border-t border-gray-200 py-4 px-6">
             <div class="flex justify-between items-center">
                 <div class="text-sm text-gray-600">
-                    &copy; {{ date('Y') }} Aplikasi Bina Desa. All rights reserved.
+                    &copy; {{ date('Y') }} Sistem Perangkat Desa. All rights reserved.
                 </div>
                 <div class="text-sm text-gray-600">
                     Versi 1.0.0

@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container mx-auto px-4 py-8">
-    <div class="max-w-6xl mx-auto">
+    <div class="max-w-4xl mx-auto">
         {{-- Header dengan Breadcrumb --}}
         <div class="mb-6">
             <nav class="flex mb-4" aria-label="Breadcrumb">
@@ -91,45 +91,57 @@
                     </div>
                 </div>
 
-                {{-- Multiple Foto --}}
-                @if($lembaga->foto && count($lembaga->foto) > 0)
-                    <div class="mb-8">
-                        <h3 class="text-xl font-bold text-gray-800 mb-4 pb-2 border-b">Galeri Foto</h3>
-                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                            @foreach($lembaga->foto as $index => $foto)
-                                <div class="relative group overflow-hidden rounded-lg shadow-md">
-                                    <img src="{{ Storage::url($foto) }}" 
-                                         alt="Foto {{ $index + 1 }}" 
-                                         class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110">
-                                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-opacity duration-300 flex items-center justify-center">
-                                        <button onclick="openModal('{{ Storage::url($foto) }}')"
-                                                class="opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 bg-white text-gray-800 px-4 py-2 rounded-lg font-medium">
-                                            Lihat Detail
-                                        </button>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                        <p class="text-sm text-gray-500 mt-3">Total {{ count($lembaga->foto) }} foto</p>
-                    </div>
-                @else
-                    <div class="mb-8">
-                        <h3 class="text-xl font-bold text-gray-800 mb-4 pb-2 border-b">Galeri Foto</h3>
-                        <div class="text-center py-12 bg-gray-50 rounded-lg">
-                            <svg class="w-16 h-16 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                {{-- Informasi Lembaga --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-gray-50 p-6 rounded-lg">
+                        <h4 class="font-semibold text-gray-700 mb-3 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                             </svg>
-                            <p class="mt-4 text-gray-500">Belum ada foto untuk lembaga ini</p>
+                            Informasi Kepengurusan
+                        </h4>
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Ketua:</span>
+                                <span class="font-medium">{{ $lembaga->ketua ?: '-' }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Kontak:</span>
+                                <span class="font-medium">{{ $lembaga->kontak ?: '-' }}</span>
+                            </div>
                         </div>
                     </div>
-                @endif
+
+                    <div class="bg-gray-50 p-6 rounded-lg">
+                        <h4 class="font-semibold text-gray-700 mb-3 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Informasi Sistem
+                        </h4>
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">ID Lembaga:</span>
+                                <span class="font-medium text-gray-900">{{ $lembaga->lembaga_id }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Tanggal Dibuat:</span>
+                                <span class="font-medium">{{ $lembaga->created_at->format('d-m-Y') }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Terakhir Diperbarui:</span>
+                                <span class="font-medium">{{ $lembaga->updated_at->format('d-m-Y') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             {{-- Footer dengan Tombol Aksi --}}
             <div class="px-8 py-6 bg-gray-50 border-t">
-                <div class="flex justify-between items-center">
-                    <div class="text-sm text-gray-500">
-                        ID Lembaga: {{ $lembaga->lembaga_id }}
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="text-sm text-gray-500 mb-4 md:mb-0">
+                        Terakhir diperbarui: {{ $lembaga->updated_at->format('d F Y H:i') }}
                     </div>
                     <div class="flex space-x-3">
                         <a href="{{ route('lembaga.edit', $lembaga->lembaga_id) }}"
@@ -137,7 +149,7 @@
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                             </svg>
-                            Edit
+                            Edit Lembaga
                         </a>
                         <a href="{{ route('lembaga.index') }}"
                            class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded-lg flex items-center transition">
@@ -152,48 +164,6 @@
         </div>
     </div>
 </div>
-
-{{-- Modal untuk foto besar --}}
-<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 z-50 hidden items-center justify-center p-4">
-    <div class="relative max-w-4xl w-full">
-        <button onclick="closeModal()"
-                class="absolute -top-10 right-0 text-white text-2xl hover:text-gray-300">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-        </button>
-        <img id="modalImage" src="" alt="" class="w-full h-auto rounded-lg shadow-2xl">
-    </div>
-</div>
-
-<script>
-    function openModal(imageSrc) {
-        document.getElementById('modalImage').src = imageSrc;
-        document.getElementById('imageModal').classList.remove('hidden');
-        document.getElementById('imageModal').classList.add('flex');
-        document.body.classList.add('overflow-hidden');
-    }
-
-    function closeModal() {
-        document.getElementById('imageModal').classList.add('hidden');
-        document.getElementById('imageModal').classList.remove('flex');
-        document.body.classList.remove('overflow-hidden');
-    }
-
-    // Close modal with ESC key
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape') {
-            closeModal();
-        }
-    });
-
-    // Close modal when clicking outside image
-    document.getElementById('imageModal').addEventListener('click', function(event) {
-        if (event.target === this) {
-            closeModal();
-        }
-    });
-</script>
 
 <style>
     .prose {
