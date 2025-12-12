@@ -46,7 +46,7 @@
     <!-- Sidebar -->
     <aside class="w-64 bg-green-800 text-white flex flex-col">
         <div class="p-4 text-2xl font-bold border-b border-gray-700">
-            Perangkat Desa
+           ⚜️ SIPERDES ⚜️
         </div>
 
        <nav class="flex-1 p-4">
