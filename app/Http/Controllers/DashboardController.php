@@ -20,3 +20,4 @@ class DashboardController extends Controller
         return view('dashboard', compact('user', 'totalWarga', 'totalPerangkat', 'totalLembaga', 'totalUser'));
     }
 }
+// tes
