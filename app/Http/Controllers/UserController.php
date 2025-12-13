@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -48,20 +51,74 @@ class UserController extends Controller
      */
     public function create()
     {
-        // PERIKSA: Apakah user yang login adalah admin/super_admin
-        $userRole = auth()->user()->role;
-
-        // Izinkan hanya admin dan super_admin
-        if (!in_array($userRole, ['admin', 'super_admin'])) {
-            abort(403, 'Anda tidak memiliki izin untuk menambahkan user.');
+          // Otorisasi sudah dilakukan di middleware atau di blade (seperti pada index.blade.php)
+        // Tapi jika ingin memastikan di controller:
+        if (!in_array(auth()->user()->role, ['admin', 'super_admin'])) {
+            abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
+
 
         return view('pages.user.create');
     }
 
+   /*
+     * CATATAN:
+     * Dua fungsi helper 'uploadPhoto' dan 'deleteOldPhoto' yang lama di sini
+     * telah dihapus untuk menghindari konflik (redeclare) dengan fungsi helper
+     * yang lebih baik di bagian bawah.
+    */
+
     /**
      * Store a newly created resource in storage.
-     */
+     */
+// AKU TUTUP DIBAGIAN INI
+    // private function uploadPhoto($file)
+    // {
+    //     if (!$file) {
+    //         return null;
+    //     }
+
+    //     // Validasi file
+    //     $validated = validator(['photo' => $file], [
+    //         'photo' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
+    //     ])->validate();
+
+    //     // Generate nama file unik
+    //     $fileName = 'user_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+    //     // Simpan file original
+    //     $path = $file->storeAs('public/photos', $fileName);
+
+    //     // Untuk versi sederhana, tidak buat thumbnail dulu
+    //     // Bisa ditambahkan nanti setelah package berfungsi
+        
+    //     return $fileName;
+    // }
+
+    // /**
+    //  * Hapus foto lama jika ada
+    //  */
+
+    // private function deleteOldPhoto($fileName)
+    // {
+    //     if ($fileName) {
+    //         // Hapus file original
+    //         $originalPath = 'public/photos/' . $fileName;
+    //         if (Storage::exists($originalPath)) {
+    //             Storage::delete($originalPath);
+    //         }
+
+    //         // Jika ada thumbnail, hapus juga
+    //         $thumbnailPath = 'public/photos/thumbnails/' . $fileName;
+    //         if (Storage::exists($thumbnailPath)) {
+    //             Storage::delete($thumbnailPath);
+    //         }
+    //     }
+    // }
+
+    // /**
+    //  * Store a newly created resource in storage.
+    //  */
     public function store(Request $request)
     {
         // Validasi akses - hanya admin dan super_admin
@@ -70,18 +127,27 @@ class UserController extends Controller
         }
 
         // Validasi data
-        $request->validate([
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6|confirmed',
-            'role' => 'required|in:super_admin,admin,warga'
+            'role' => 'required|in:super_admin,admin,warga',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
+        // Upload foto jika ada
+        $photoName = null;
+        if ($request->hasFile('photo')) {
+            $photoName = $this->uploadPhoto($request->file('photo'));
+        }
+
+        // Buat user
         User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'role' => $request->role
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
+            'password' => bcrypt($validatedData['password']),
+            'role' => $validatedData['role'],
+            'photo' => $photoName
         ]);
 
         return redirect()->route('user.index')->with('success', 'User berhasil ditambahkan.');
@@ -134,33 +200,43 @@ class UserController extends Controller
         }
 
         // Validasi data
-        $request->validate([
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
-            'role' => 'required|in:super_admin,admin,warga'
+            'role' => 'required|in:super_admin,admin,warga',
+            'password' => 'nullable|min:6|confirmed',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
         // Admin tidak bisa mengubah role menjadi super_admin
-        if ($currentUserRole === 'admin' && $request->role === 'super_admin') {
+        if ($currentUserRole === 'admin' && $validatedData['role'] === 'super_admin') {
             abort(403, 'Admin tidak dapat mengubah role menjadi Super Admin.');
         }
 
+        // Handle upload foto
+        $photoName = $user->photo;
+        if ($request->hasFile('photo')) {
+            // Hapus foto lama jika ada
+            $this->deleteOldPhoto($photoName);
+            
+            // Upload foto baru
+            $photoName = $this->uploadPhoto($request->file('photo'));
+        }
+
         // Update data user
-        $user->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'role' => $request->role
-        ]);
+        $updateData = [
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
+            'role' => $validatedData['role'],
+            'photo' => $photoName
+        ];
 
         // Jika password diisi, update password
         if ($request->filled('password')) {
-            $request->validate([
-                'password' => 'min:6|confirmed'
-            ]);
-            $user->update([
-                'password' => bcrypt($request->password)
-            ]);
+            $updateData['password'] = bcrypt($validatedData['password']);
         }
+
+        $user->update($updateData);
 
         return redirect()->route('user.index')->with('success', 'User berhasil diperbarui.');
     }
@@ -187,6 +263,9 @@ class UserController extends Controller
             abort(403, 'Admin tidak dapat menghapus Super Admin.');
         }
 
+        // Hapus foto jika ada
+        $this->deleteOldPhoto($user->photo);
+
         $user->delete();
 
         return redirect()->route('user.index')->with('success', 'User berhasil dihapus.');
@@ -208,26 +287,86 @@ class UserController extends Controller
     {
         $user = auth()->user();
 
-        $request->validate([
+        // Validasi current password
+        if (!Hash::check($request->current_password, $user->password)) {
+            return redirect()->back()->withErrors(['current_password' => 'Password saat ini tidak valid.']);
+        }
+
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'nullable|min:6|confirmed',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'current_password' => 'required'
         ]);
 
-        $user->update([
-            'name' => $request->name,
-            'email' => $request->email,
-        ]);
+        // Handle upload foto
+        $photoName = $user->photo;
+        if ($request->hasFile('photo')) {
+            // Hapus foto lama jika ada
+            $this->deleteOldPhoto($photoName);
+            
+            // Upload foto baru
+            $photoName = $this->uploadPhoto($request->file('photo'));
+        }
+
+        $updateData = [
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
+            'photo' => $photoName
+        ];
 
         // Jika password diisi, update password
         if ($request->filled('password')) {
-            $request->validate([
-                'password' => 'min:6|confirmed'
-            ]);
-            $user->update([
-                'password' => bcrypt($request->password)
-            ]);
+            $updateData['password'] = bcrypt($validatedData['password']);
         }
 
+        $user->update($updateData);
+
         return redirect()->back()->with('success', 'Profile berhasil diperbarui.');
+    }
+
+      // --- Helper Methods untuk Photo Upload/Delete ---
+
+    /**
+     * Menyimpan file foto ke storage.
+     * @param \Illuminate\Http\UploadedFile $file
+     * @return string Nama file yang disimpan
+     */
+    protected function uploadPhoto($file)
+    {
+        // Generate nama file unik
+        $fileName = 'user_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+        // Simpan di folder storage/app/public/photos
+        // Menggunakan storeAs dengan disk 'public' lebih baik
+        $file->storeAs('photos', $fileName, 'public'); 
+        
+        // Catatan: Jika ingin menggunakan Image Intervention untuk thumbnail, 
+        // Anda bisa menambahkannya di sini.
+
+        return $fileName;
+    }
+
+    /**
+     * Menghapus foto lama dari storage, termasuk thumbnail jika ada.
+     * @param string|null $fileName Nama file foto lama
+     */
+    protected function deleteOldPhoto(?string $fileName)
+    {
+        if ($fileName) {
+            // Hapus file original
+            $originalPath = 'photos/' . $fileName;
+            if (Storage::disk('public')->exists($originalPath)) {
+                Storage::disk('public')->delete($originalPath);
+            }
+
+            // Jika ada thumbnail, hapus juga (untuk antisipasi di masa depan)
+            $thumbnailPath = 'photos/thumbnails/' . $fileName;
+            if (Storage::disk('public')->exists($thumbnailPath)) {
+                Storage::disk('public')->delete($thumbnailPath);
+            }
+    
+    }
     }
 }

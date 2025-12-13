@@ -3,15 +3,13 @@
 @section('content')
 <div class="container mx-auto px-4 py-8">
     <div class="max-w-2xl mx-auto">
-        <!-- Header -->
         <div class="mb-8">
             <h1 class="text-2xl font-bold text-gray-800">Tambah Data User</h1>
             <p class="text-gray-600 mt-1">Tambahkan pengguna baru ke dalam sistem</p>
         </div>
 
-        <!-- Card Form -->
         <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
-            <!-- Error Messages -->
+            
             @if ($errors->any())
             <div class="bg-red-50 border border-red-200 text-red-800 rounded-lg p-4 mb-6">
                 <div class="flex items-center mb-2">
@@ -28,38 +26,63 @@
             </div>
             @endif
 
-            <!-- Form -->
-            <form action="{{ route('user.store') }}" method="POST">
+            <form action="{{ route('user.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <div class="space-y-6">
-                    <!-- Nama -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Foto Profil
+                        </label>
+                        <div class="flex items-center space-x-6">
+                            <div class="shrink-0">
+                                <img id="photoPreview" 
+                                    class="h-32 w-32 object-cover rounded-full border-2 border-gray-300"
+                                    {{-- START FIX: Menggunakan jalur yang benar (public/images/) --}}
+                                    src="{{ asset('img/fotoo.png') }}"
+                                    {{-- END FIX --}}
+                                    alt="Preview foto profil">
+                            </div>
+                            <div class="flex-1">
+                                <label class="block">
+                                    <input type="file" 
+                                            name="photo" 
+                                            id="photoInput"
+                                            class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                            accept="image/*"
+                                            onchange="previewPhoto(event)">
+                                    <p class="mt-1 text-xs text-gray-500">
+                                        PNG, JPG, atau JPEG (maks. 2MB)
+                                    </p>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             Nama Lengkap <span class="text-red-500">*</span>
                         </label>
                         <input type="text" 
-                               name="name" 
-                               value="{{ old('name') }}"
-                               class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                               placeholder="Masukkan nama lengkap"
-                               required>
+                                name="name" 
+                                value="{{ old('name') }}"
+                                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                                placeholder="Masukkan nama lengkap"
+                                required>
                     </div>
 
-                    <!-- Email -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             Email <span class="text-red-500">*</span>
                         </label>
                         <input type="email" 
-                               name="email" 
-                               value="{{ old('email') }}"
-                               class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                               placeholder="contoh@email.com"
-                               required>
+                                name="email" 
+                                value="{{ old('email') }}"
+                                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                                placeholder="contoh@email.com"
+                                required>
                     </div>
 
-                    <!-- Role -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             Role <span class="text-red-500">*</span>
@@ -74,35 +97,32 @@
                         </select>
                     </div>
 
-                    <!-- Password -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             Password <span class="text-red-500">*</span>
                         </label>
                         <input type="password" 
-                               name="password"
-                               class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                               placeholder="Minimal 8 karakter"
-                               required>
+                                name="password"
+                                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                                placeholder="Minimal 8 karakter"
+                                required>
                     </div>
 
-                    <!-- Confirm Password -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             Konfirmasi Password <span class="text-red-500">*</span>
                         </label>
                         <input type="password" 
-                               name="password_confirmation"
-                               class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                               placeholder="Ulangi password"
-                               required>
+                                name="password_confirmation"
+                                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                                placeholder="Ulangi password"
+                                required>
                     </div>
                 </div>
 
-                <!-- Tombol Action -->
                 <div class="mt-8 pt-6 border-t border-gray-200 flex justify-end space-x-3">
                     <a href="{{ route('user.index') }}" 
-                       class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
+                        class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
                         Kembali
                     </a>
                     <button type="submit" 
@@ -110,8 +130,26 @@
                         Simpan Data
                     </button>
                 </div>
+
             </form>
         </div>
     </div>
 </div>
+
+<script>
+function previewPhoto(event) {
+    const input = event.target;
+    const preview = document.getElementById('photoPreview');
+    
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+        }
+        
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+</script>
 @endsection

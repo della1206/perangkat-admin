@@ -81,3 +81,7 @@ Route::middleware(['auth'])->group(function () {
 Route::fallback(function () {
     return redirect()->route('dashboard.index');
 });
+
+// Rute khusus untuk Profile user (dapat diakses semua role)
+    Route::get('/profile', [UserController::class, 'editProfile'])->name('profile.edit');
+    Route::put('/profile', [UserController::class, 'updateProfile'])->name('profile.update');

@@ -2,14 +2,12 @@
 
 @section('content')
 <div class="container mx-auto px-4 py-8">
-    <!-- Header dengan Tombol Tambah -->
     <div class="flex justify-between items-center mb-6">
         <div>
             <h1 class="text-2xl font-bold text-gray-800">Daftar User</h1>
             <p class="text-gray-600 mt-1">Kelola data pengguna sistem</p>
         </div>
 
-        <!-- PERIKSA: Hanya super_admin dan admin yang bisa tambah user -->
         @if(in_array(auth()->user()->role, ['super_admin', 'admin']))
         <a href="{{ route('user.create') }}"
            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center transition">
@@ -21,10 +19,8 @@
         @endif
     </div>
 
-    <!-- Filter dan Search -->
     <div class="bg-white rounded-lg shadow p-4 mb-6">
         <form method="GET" action="{{ route('user.index') }}" class="flex flex-col md:flex-row gap-4">
-            <!-- Filter Role -->
             <select name="role" class="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 <option value="">Semua Role</option>
                 <option value="super_admin" {{ request('role') == 'super_admin' ? 'selected' : '' }}>Super Admin</option>
@@ -32,7 +28,6 @@
                 <option value="warga" {{ request('role') == 'warga' ? 'selected' : '' }}>Warga</option>
             </select>
 
-            <!-- Search -->
             <input type="text"
                    name="search"
                    value="{{ request('search') }}"
@@ -53,7 +48,6 @@
         </form>
     </div>
 
-    <!-- Tabel User -->
     <div class="bg-white rounded-lg shadow overflow-hidden">
         @if($users->count() > 0)
         <div class="overflow-x-auto">
@@ -61,6 +55,7 @@
                 <thead class="bg-gray-50">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NO</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">FOTO</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NAMA</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">EMAIL</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ROLE</th>
@@ -70,10 +65,23 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     @foreach($users as $index => $user)
                     <tr class="hover:bg-gray-50 transition">
-                        <!-- Nomor dengan pagination offset -->
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             {{ ($users->currentPage() - 1) * $users->perPage() + $loop->iteration }}
                         </td>
+                        
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            @php
+                                // Periksa apakah ada foto dan gunakan URL yang tepat
+                                $photoPath = $user->photo ? asset('storage/photos/' . $user->photo) : asset('assets/img/fotoo.png');
+                                // Jika Anda menggunakan accessor photo_url dan yakin sudah benar:
+                                // $photoPath = $user->photo_url ?? asset('assets/img/fotoo.png'); 
+                            @endphp
+                            <img src="{{ $photoPath }}" 
+                                 alt="{{ $user->name }}" 
+                                 style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%;">
+                        </td>
+                        {{-- END FIX --}}
+                        
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm font-medium text-gray-900">{{ $user->name }}</div>
                         </td>
@@ -96,10 +104,8 @@
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <!-- PERIKSA: Hanya super_admin dan admin yang bisa edit/hapus -->
                             @if(in_array(auth()->user()->role, ['super_admin', 'admin']))
                             <div class="flex justify-center space-x-2">
-                                <!-- Tombol Edit -->
                                 @if(auth()->user()->role === 'super_admin' || $user->role !== 'super_admin')
                                 <a href="{{ route('user.edit', $user->id) }}"
                                    class="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition">
@@ -107,7 +113,6 @@
                                 </a>
                                 @endif
 
-                                <!-- Tombol Hapus -->
                                 @if($user->id != auth()->id() && (auth()->user()->role === 'super_admin' || (auth()->user()->role === 'admin' && $user->role !== 'super_admin')))
                                 <form action="{{ route('user.destroy', $user->id) }}" method="POST" class="inline">
                                     @csrf
@@ -132,11 +137,9 @@
             </table>
         </div>
 
-        <!-- PAGINATION SECTION -->
         @if($users->hasPages())
         <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
             <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0">
-                <!-- Info jumlah data -->
                 <div class="text-sm text-gray-700">
                     Menampilkan
                     <span class="font-medium">{{ $users->firstItem() }}</span>
@@ -147,9 +150,7 @@
                     data
                 </div>
 
-                <!-- Navigasi halaman -->
                 <div class="flex items-center space-x-1">
-                    <!-- Tombol Previous -->
                     @if($users->onFirstPage())
                         <span class="px-3 py-1 border border-gray-300 rounded text-gray-400 cursor-not-allowed">
                             &laquo; Prev
@@ -161,7 +162,6 @@
                         </a>
                     @endif
 
-                    <!-- Tombol Next -->
                     @if($users->hasMorePages())
                         <a href="{{ $users->nextPageUrl() }}{{ request('role') ? '&role=' . request('role') : '' }}{{ request('search') ? '&search=' . request('search') : '' }}"
                            class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-100 transition">
@@ -178,7 +178,6 @@
         @endif
 
         @else
-        <!-- Empty state -->
         <div class="text-center py-12">
             <svg class="w-16 h-16 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
