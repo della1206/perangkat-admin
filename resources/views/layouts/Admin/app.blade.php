@@ -44,9 +44,10 @@
 <body class="bg-green-100 flex h-screen">
 
     <!-- Sidebar -->
-    <aside class="w-64 bg-green-800 text-white flex flex-col">
-        <div class="p-4 text-2xl font-bold border-b border-gray-700">
-           ⚜️ SIPERDES ⚜️
+    <aside class="w-64 bg-green-800 text-white font-bold">
+        <div class="flex items-center space-x-6">
+     <img src="{{ asset('assets/img/logo.png') }}" alt="Logo Desa" class="w-12 h-12 rounded-xl shadow-lg">
+               ~SIPERDES~ 
         </div>
 
        <nav class="flex-1 p-4">
