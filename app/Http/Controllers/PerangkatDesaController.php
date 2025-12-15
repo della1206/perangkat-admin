@@ -21,6 +21,7 @@ class PerangkatDesaController extends Controller
             ->paginate(10)
             ->withQueryString();
 
+        // PERBAIKAN: Ganti $daftarJabatan menjadi $jabatanList
         $jabatanList = PerangkatDesa::distinct()->pluck('jabatan');
 
         return view('pages.perangkat_desa.index', compact('perangkat', 'jabatanList'));
@@ -46,7 +47,7 @@ class PerangkatDesaController extends Controller
 
         $data = $request->all();
 
-        // Upload foto jika ada
+        // Unggah foto jika ada
         if ($request->hasFile('foto')) {
             $fotoPath = $request->file('foto')->store('perangkat_desa', 'public');
             $data['foto'] = $fotoPath;
@@ -86,7 +87,7 @@ class PerangkatDesaController extends Controller
 
         $data = $request->all();
 
-        // Upload foto baru jika ada
+        // Unggah foto baru jika ada
         if ($request->hasFile('foto')) {
             // Hapus foto lama jika ada
             if ($perangkat->foto && Storage::disk('public')->exists($perangkat->foto)) {

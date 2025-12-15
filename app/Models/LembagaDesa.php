@@ -22,7 +22,7 @@ class LembagaDesa extends Model
         'logo',
     ];
 
-    // Untuk multiple foto
+    // Untuk banyak foto
     public function getFotoAttribute($value)
     {
         return $value ? json_decode($value, true) : [];

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\JabatanLembaga;
 use App\Models\LembagaDesa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage; // DITAMBAHKAN
 
 class JabatanLembagaController extends Controller
 {
@@ -13,7 +14,7 @@ class JabatanLembagaController extends Controller
         // Query dasar dengan eager loading
         $query = JabatanLembaga::with('lembaga');
         
-        // SEARCH: Cari berdasarkan nama jabatan atau nama lembaga
+        // PENCARIAN: Cari berdasarkan nama jabatan atau nama lembaga
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
             $query->where(function($q) use ($search) {
@@ -34,14 +35,14 @@ class JabatanLembagaController extends Controller
             $query->where('level', $request->level);
         }
         
-        // Sorting
+        // Pengurutan
         $query->orderBy('level')
               ->orderBy('nama_jabatan');
         
-        // PAGINATION: 10 data per halaman
+        // PAGINASI: 10 data per halaman
         $jabatan = $query->paginate(10);
         
-        // Tambahkan parameter filter ke pagination links
+        // Tambahkan parameter filter ke tautan paginasi
         if ($request->has('search')) {
             $jabatan->appends(['search' => $request->search]);
         }
@@ -68,10 +69,20 @@ class JabatanLembagaController extends Controller
         $request->validate([
             'lembaga_id' => 'required|exists:lembaga_desa,lembaga_id',
             'nama_jabatan' => 'required|string|max:100',
-            'level' => 'required|integer|min:1|max:10'
+            'level' => 'required|integer|min:1|max:10',
+            // Jika nanti ada upload logo jabatan, tambahkan:
+            // 'logo_jabatan' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        JabatanLembaga::create($request->all());
+        $data = $request->all();
+
+        // Contoh jika nanti ada upload logo jabatan:
+        // if ($request->hasFile('logo_jabatan')) {
+        //     $logoPath = $request->file('logo_jabatan')->store('jabatan/logo', 'public');
+        //     $data['logo_jabatan'] = $logoPath;
+        // }
+
+        JabatanLembaga::create($data);
 
         return redirect()->route('jabatan-lembaga.index')
             ->with('success', 'Jabatan lembaga berhasil ditambahkan.');
@@ -95,11 +106,29 @@ class JabatanLembagaController extends Controller
         $request->validate([
             'lembaga_id' => 'required|exists:lembaga_desa,lembaga_id',
             'nama_jabatan' => 'required|string|max:100',
-            'level' => 'required|integer|min:1|max:10'
+            'level' => 'required|integer|min:1|max:10',
+            // Jika nanti ada upload logo jabatan, tambahkan:
+            // 'logo_jabatan' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $jabatan = JabatanLembaga::findOrFail($id);
-        $jabatan->update($request->all());
+        $data = $request->all();
+
+        // Contoh jika nanti ada update logo jabatan:
+        // if ($request->hasFile('logo_jabatan')) {
+        //     // Hapus logo lama jika ada
+        //     if ($jabatan->logo_jabatan && Storage::disk('public')->exists($jabatan->logo_jabatan)) {
+        //         Storage::disk('public')->delete($jabatan->logo_jabatan);
+        //     }
+        //     
+        //     $logoPath = $request->file('logo_jabatan')->store('jabatan/logo', 'public');
+        //     $data['logo_jabatan'] = $logoPath;
+        // } else {
+        //     // Pertahankan logo lama jika tidak diupdate
+        //     $data['logo_jabatan'] = $jabatan->logo_jabatan;
+        // }
+
+        $jabatan->update($data);
 
         return redirect()->route('jabatan-lembaga.index')
             ->with('success', 'Jabatan berhasil diperbarui!');
@@ -108,6 +137,12 @@ class JabatanLembagaController extends Controller
     public function destroy($id)
     {
         $jabatan = JabatanLembaga::findOrFail($id);
+        
+        // Contoh jika nanti ada logo jabatan yang perlu dihapus:
+        // if ($jabatan->logo_jabatan && Storage::disk('public')->exists($jabatan->logo_jabatan)) {
+        //     Storage::disk('public')->delete($jabatan->logo_jabatan);
+        // }
+        
         $jabatan->delete();
 
         return redirect()->route('jabatan-lembaga.index')
