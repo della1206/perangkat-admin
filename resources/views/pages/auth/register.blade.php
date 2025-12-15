@@ -121,7 +121,7 @@
             <div class="flex justify-center lg:justify-start mb-8">
                 <div class="flex items-center space-x-3">
                     <div class="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center shadow-lg">
-                        <img src="{{ asset('assets/img/logodesa.png') }}" alt="Logo Desa" 
+                        <img src="{{ asset('assets/img/logo.png') }}" alt="Logo Desa" 
                              class="w-12 h-12 rounded-xl">
                     </div>
                     <div>
