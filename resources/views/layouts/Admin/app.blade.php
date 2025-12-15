@@ -47,7 +47,7 @@
     <aside class="w-64 bg-green-800 text-white flex flex-col">
     <div class="p-4 border-b border-gray-700">
         <div class="flex items-center gap-3">
-     <img src="{{ asset('assets/img/logo.png') }}" alt="Logo Desa" class="w-12 h-12 rounded-xl shadow-lg">
+     <img src="{{ asset('assets/img/logodesa.png') }}" alt="Logo Desa" class="w-12 h-12 rounded-xl shadow-lg">
                ~SIPERDES~ 
         </div>
 
