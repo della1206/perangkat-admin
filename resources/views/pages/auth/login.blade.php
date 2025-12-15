@@ -187,7 +187,7 @@
             <div class="text-center mb-6">
                 <div class="flex justify-center mb-4">
                     <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
-                        <img src="{{ asset('assets/img/logo.png') }}" alt="Logo Desa" 
+                        <img src="{{ asset('assets/img/logodesaa.png') }}" alt="Logo Desa" 
                              class="w-14 h-14 rounded-lg">
                     </div>
                 </div>
