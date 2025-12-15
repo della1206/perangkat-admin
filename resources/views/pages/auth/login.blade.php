@@ -17,7 +17,7 @@
             <!-- Ganti bagian logo dengan gambar -->
             <div class="flex justify-center lg:justify-start mb-8">
                 <div class="flex items-center space-x-3">
-                    <img src="{{ asset('assets/img/logo.png') }}" alt="Logo Desa" class="w-12 h-12 rounded-xl shadow-lg">
+                    <img src="{{ asset('assets/img/logodesa.png') }}" alt="Logo Desa" class="w-12 h-12 rounded-xl shadow-lg">
                     <div>
                         <h1 class="text-2xl font-bold text-gray-800">Desa Digital</h1>
                         <p class="text-sm text-gray-600">Admin System</p>
@@ -77,7 +77,7 @@
             <div class="text-center mb-2">
                 <div class="flex justify-center mb-4">
                     <div class="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center shadow-lg">
-                           <img src="{{ asset('assets/img/logo.png') }}" alt="Logo Desa" class="w-12 h-12 rounded-xl shadow-lg">
+                           <img src="{{ asset('assets/img/logodesa.png') }}" alt="Logo Desa" class="w-12 h-12 rounded-xl shadow-lg">
                         <i class="fas fa-village text-white text-2xl"></i>
                     </div>
                 </div>
