@@ -11,6 +11,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             CreateFirstUserSeeder::class,
             CreateJabatanDummySeeder::class,
+            AnggotaLembagaSeeder::class,
         ]);
     }
 }
