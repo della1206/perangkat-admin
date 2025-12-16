@@ -140,7 +140,7 @@
             <img src="https://ui-avatars.com/api/?name={{ urlencode(session('admin_name') ?? 'Admin Desa') }}&background=0D8ABC&color=fff"
                  alt="Avatar" class="w-8 h-8 rounded-full">
             <span class="text-gray-700 font-medium">
-                Hi, {{ session('admin_name') ?? 'Admin Desa' }}
+                Hi, {{ session('name') ?? 'Admin Desa' }}
             </span>
             <i class="fas fa-chevron-down text-gray-500 text-xs"></i>
         </div>
@@ -148,7 +148,7 @@
         <!-- Profile Dropdown -->
         <div id="profileDropdown" class="absolute right-6 mt-32 w-48 bg-white rounded-lg shadow-xl border border-gray-200 hidden z-50">
             <div class="p-4 border-b border-gray-200">
-                <p class="font-medium text-gray-800">{{ session('admin_name') ?? 'Admin Desa' }}</p>
+                <p class="font-medium text-gray-800">{{ session('name') ?? 'Admin Desa' }}</p>
                 <p class="text-sm text-gray-600">Administrator</p>
             </div>
             <div class="p-2">

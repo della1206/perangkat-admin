@@ -98,8 +98,15 @@
                     <div class="relative" x-data="{ profileOpen: false }">
                         <button @click="profileOpen = !profileOpen" class="flex items-center space-x-2 focus:outline-none bg-gray-50 p-1 pr-3 rounded-full hover:bg-gray-100 transition-colors">
                             <img src="https://ui-avatars.com/api/?name=Admin&background=10B981&color=fff" class="w-8 h-8 rounded-full">
-                            <span class="hidden sm:inline text-gray-700 font-semibold text-sm">Hi, Admin</span>
-                            <i class="fas fa-chevron-down text-[10px] text-gray-400 transition-transform" :class="profileOpen ? 'rotate-180' : ''"></i>
+@auth
+    <span class="hidden sm:inline text-gray-700 font-semibold text-sm">
+        Hi, {{ Auth::user()->name }}
+    </span>
+@else
+    <span class="hidden sm:inline text-gray-700 font-semibold text-sm">
+        Hi, Guest
+    </span>
+@endauth                            <i class="fas fa-chevron-down text-[10px] text-gray-400 transition-transform" :class="profileOpen ? 'rotate-180' : ''"></i>
                         </button>
                         <div x-show="profileOpen" @click.outside="profileOpen = false" x-cloak class="absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 dropdown-animate">
                             <div class="p-4 border-b">
