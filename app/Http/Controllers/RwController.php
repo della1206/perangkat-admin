@@ -125,5 +125,6 @@ class RwController extends Controller
 
         return redirect()->route('rw.index')
             ->with('success', 'Data RW berhasil dihapus.');
+            //tes
     }
 }

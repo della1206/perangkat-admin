@@ -156,5 +156,6 @@ class RtSeeder extends Seeder
         ];
         
         return $keterangan[array_rand($keterangan)];
+        //tes
     }
 }
