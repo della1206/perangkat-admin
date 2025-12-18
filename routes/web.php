@@ -85,3 +85,5 @@ Route::fallback(function () {
 // Rute khusus untuk Profile user (dapat diakses semua role)
     Route::get('/profile', [UserController::class, 'editProfile'])->name('profile.edit');
     Route::put('/profile', [UserController::class, 'updateProfile'])->name('profile.update');
+
+    Route::resource('anggota-lembaga', AnggotaLembagaController::class);
