@@ -13,7 +13,7 @@ class LembagaDesaController extends Controller
         // Query dasar
         $query = LembagaDesa::query();
         
-        // SEARCH: Cari berdasarkan nama lembaga, ketua, atau kontak
+        // PENCARIAN: Cari berdasarkan nama lembaga, ketua, atau kontak
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
             $query->where(function($q) use ($search) {
@@ -24,7 +24,7 @@ class LembagaDesaController extends Controller
             });
         }
         
-        // FILTER: Sorting
+        // FILTER: Pengurutan
         $sort = $request->get('sort', 'nama_lembaga');
         $order = $request->get('order', 'asc');
         
@@ -34,11 +34,11 @@ class LembagaDesaController extends Controller
             $query->orderBy('nama_lembaga');
         }
         
-        // PAGINATION: dengan per_page dari request
+        // PAGINASI: dengan per_page dari request
         $perPage = $request->get('per_page', 10);
         $lembaga = $query->paginate($perPage);
         
-        // Tambahkan semua parameter filter ke pagination links
+        // Tambahkan semua parameter filter ke tautan paginasi
         $lembaga->appends($request->except('page'));
         
         return view('pages.lembaga_desa.index', compact('lembaga'));
@@ -62,13 +62,13 @@ class LembagaDesaController extends Controller
 
         $data = $request->all();
 
-        // Upload logo jika ada
+        // Unggah logo jika ada
         if ($request->hasFile('logo')) {
             $logoPath = $request->file('logo')->store('lembaga/logo', 'public');
             $data['logo'] = $logoPath;
         }
 
-        // Upload multiple foto
+        // Unggah banyak foto
         $fotos = [];
         if ($request->hasFile('foto')) {
             foreach ($request->file('foto') as $foto) {
@@ -110,7 +110,7 @@ class LembagaDesaController extends Controller
         $lembaga = LembagaDesa::findOrFail($id);
         $data = $request->all();
 
-        // Update logo jika ada
+        // Perbarui logo jika ada
         if ($request->hasFile('logo')) {
             // Hapus logo lama jika ada
             if ($lembaga->logo && Storage::disk('public')->exists($lembaga->logo)) {
@@ -120,23 +120,23 @@ class LembagaDesaController extends Controller
             $logoPath = $request->file('logo')->store('lembaga/logo', 'public');
             $data['logo'] = $logoPath;
         } else {
-            // Pertahankan logo lama jika tidak diupdate
+            // Pertahankan logo lama jika tidak diperbarui
             $data['logo'] = $lembaga->logo;
         }
 
-        // Update foto jika ada
-        $currentFotos = $lembaga->foto ?: [];
+        // Perbarui foto jika ada
+        $fotoSaatIni = $lembaga->foto ?: [];
         
         if ($request->hasFile('foto')) {
-            // Upload foto baru
+            // Unggah foto baru
             foreach ($request->file('foto') as $foto) {
                 $path = $foto->store('lembaga/foto', 'public');
-                $currentFotos[] = $path;
+                $fotoSaatIni[] = $path;
             }
-            $data['foto'] = $currentFotos;
+            $data['foto'] = $fotoSaatIni;
         } else {
             // Pertahankan foto lama
-            $data['foto'] = $currentFotos;
+            $data['foto'] = $fotoSaatIni;
         }
 
         $lembaga->update($data);
@@ -180,7 +180,7 @@ class LembagaDesaController extends Controller
             }
             
             unset($fotos[$index]);
-            $fotos = array_values($fotos); // Reset index
+            $fotos = array_values($fotos); // Reset indeks
             
             $lembaga->update(['foto' => $fotos]);
         }

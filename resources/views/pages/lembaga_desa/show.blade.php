@@ -124,13 +124,18 @@
                                 <span class="text-gray-600">ID Lembaga:</span>
                                 <span class="font-medium text-gray-900">{{ $lembaga->lembaga_id }}</span>
                             </div>
+
                             <div class="flex justify-between">
                                 <span class="text-gray-600">Tanggal Dibuat:</span>
-                                <span class="font-medium">{{ $lembaga->created_at->format('d-m-Y') }}</span>
-                            </div>
+                                <span class="font-medium">
+                                    {{ optional($lembaga->created_at)->format('d-m-Y') ?: 'Belum tersedia' }}
+                                </span>
+
                             <div class="flex justify-between">
                                 <span class="text-gray-600">Terakhir Diperbarui:</span>
-                                <span class="font-medium">{{ $lembaga->updated_at->format('d-m-Y') }}</span>
+                                <span class="font-medium">
+                                    {{ optional($lembaga->updated_at)->format('d-m-Y') ?: 'Belum tersedia' }}
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -141,7 +146,12 @@
             <div class="px-8 py-6 bg-gray-50 border-t">
                 <div class="flex flex-col md:flex-row justify-between items-center">
                     <div class="text-sm text-gray-500 mb-4 md:mb-0">
-                        Terakhir diperbarui: {{ $lembaga->updated_at->format('d F Y H:i') }}
+                        Terakhir diperbarui: 
+                         @if($lembaga->updated_at)
+                        {{ $lembaga->updated_at->format('d F Y H:i') }}
+                         @else
+                            Data belum pernah diperbarui
+                        @endif
                     </div>
                     <div class="flex space-x-3">
                         <a href="{{ route('lembaga.edit', $lembaga->lembaga_id) }}"

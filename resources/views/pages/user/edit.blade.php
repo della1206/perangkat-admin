@@ -4,8 +4,8 @@
 <div class="container mx-auto px-4 py-8">
     <div class="max-w-2xl mx-auto">
         <div class="mb-8">
-            <h1 class="text-2xl font-bold text-gray-800">Tambah Data User</h1>
-            <p class="text-gray-600 mt-1">Tambahkan pengguna baru ke dalam sistem</p>
+            <h1 class="text-2xl font-bold text-gray-800">Edit Data User</h1>
+            <p class="text-gray-600 mt-1">Perbarui data pengguna sistem</p>
         </div>
 
         <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
@@ -26,8 +26,9 @@
             </div>
             @endif
 
-            <form action="{{ route('user.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('user.update', $user->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
+                @method('PUT')
 
                 <div class="space-y-6">
                     <div>
@@ -36,17 +37,10 @@
                         </label>
                         <div class="flex items-center space-x-6">
                             <div class="shrink-0">
-                                {{-- START FIX: Tentukan URL foto saat ini atau placeholder --}}
-                                @php
-                                    // Jalur photo yang diupload: storage/photos/
-                                    // Jalur placeholder: assets/img/fotoo.png
-                                    $photoUrl = $user->photo ? asset('storage/photos/' . $user->photo) : asset('assets/img/fotoo.png');
-                                @endphp
                                 <img id="photoPreview" 
                                     class="h-32 w-32 object-cover rounded-full border-2 border-gray-300"
-                                    src="{{ $photoUrl }}"
+                                    src="{{ $user->photo_url }}"
                                     alt="Preview foto profil">
-                                {{-- END FIX --}}
                             </div>
                             <div class="flex-1">
                                 <label class="block">
@@ -59,6 +53,11 @@
                                     <p class="mt-1 text-xs text-gray-500">
                                         PNG, JPG, atau JPEG (maks. 2MB)
                                     </p>
+                                    @if($user->photo)
+                                    <p class="mt-2 text-xs text-gray-500">
+                                        Foto saat ini: {{ $user->photo }}
+                                    </p>
+                                    @endif
                                 </label>
                             </div>
                         </div>
@@ -70,7 +69,7 @@
                         </label>
                         <input type="text" 
                                 name="name" 
-                                value="{{ old('name') }}"
+                                value="{{ old('name', $user->name) }}"
                                 class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                                 placeholder="Masukkan nama lengkap"
                                 required>
@@ -82,7 +81,7 @@
                         </label>
                         <input type="email" 
                                 name="email" 
-                                value="{{ old('email') }}"
+                                value="{{ old('email', $user->email) }}"
                                 class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                                 placeholder="contoh@email.com"
                                 required>
@@ -96,32 +95,33 @@
                                 class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                                 required>
                             <option value="">Pilih Role</option>
-                            <option value="super_admin" {{ old('role') == 'super_admin' ? 'selected' : '' }}>Super Admin</option>
-                            <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
-                            <option value="warga" {{ old('role') == 'warga' ? 'selected' : '' }}>Warga</option>
+                            <option value="super_admin" {{ old('role', $user->role) == 'super_admin' ? 'selected' : '' }}>Super Admin</option>
+                            <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Admin</option>
+                            <option value="warga" {{ old('role', $user->role) == 'warga' ? 'selected' : '' }}>Warga</option>
                         </select>
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Password <span class="text-red-500">*</span>
+                            Password (Biarkan kosong jika tidak ingin mengubah)
                         </label>
                         <input type="password" 
                                 name="password"
                                 class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                                placeholder="Minimal 8 karakter"
-                                required>
+                                placeholder="Minimal 8 karakter">
+                        <p class="mt-1 text-xs text-gray-500">
+                            Kosongkan jika tidak ingin mengubah password
+                        </p>
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Konfirmasi Password <span class="text-red-500">*</span>
+                            Konfirmasi Password
                         </label>
                         <input type="password" 
                                 name="password_confirmation"
                                 class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                                placeholder="Ulangi password"
-                                required>
+                                placeholder="Ulangi password jika ingin mengubah">
                     </div>
                 </div>
 
@@ -132,7 +132,7 @@
                     </a>
                     <button type="submit" 
                             class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium">
-                        Simpan Data
+                        Update Data
                     </button>
                 </div>
 

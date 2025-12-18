@@ -38,6 +38,8 @@
                 <div class="mt-4">
                     <span class="inline-block bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold">
                         {{ $totalWarga ?? 0 }} Data Tersedia
+
+                        {{ $totalWarga }} Data Tersedia
                     </span>
                 </div>
             </a>
@@ -53,7 +55,10 @@
                 <p class="text-gray-600 mb-4">Kelola data lembaga yang berperan dalam desa.</p>
                 <div class="mt-4">
                     <span class="inline-block bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-semibold">
+
                         {{ $totalLembaga ?? 0 }} Lembaga Aktif
+
+                        {{ $totalLembaga }} Lembaga Aktif
                     </span>
                 </div>
             </a>
@@ -92,6 +97,7 @@
                 </div>
                 <h3 class="text-xl font-bold text-gray-800 mb-2">Total Warga</h3>
                 <p class="text-5xl font-extrabold text-blue-600 mb-2">{{ $totalWarga ?? 0 }}</p>
+                <p class="text-5xl font-extrabold text-blue-600 mb-2">{{ $totalWarga }}</p>
                 <p class="text-gray-600 font-medium">Orang Terdaftar</p>
             </div>
             
@@ -103,6 +109,7 @@
                 </div>
                 <h3 class="text-xl font-bold text-gray-800 mb-2">Total Lembaga</h3>
                 <p class="text-5xl font-extrabold text-green-600 mb-2">{{ $totalLembaga ?? 0 }}</p>
+                <p class="text-5xl font-extrabold text-green-600 mb-2">{{ $totalLembaga }}</p>
                 <p class="text-gray-600 font-medium">Lembaga Aktif</p>
             </div>
             
@@ -114,6 +121,8 @@
                 </div>
                 <h3 class="text-xl font-bold text-gray-800 mb-2">Total Perangkat</h3>
                 <p class="text-5xl font-extrabold text-yellow-600 mb-2">{{ $totalPerangkat ?? 0 }}</p>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Total Jabatan</h3>
+                <p class="text-5xl font-extrabold text-yellow-600 mb-2">{{ $totalJabatan }}</p>
                 <p class="text-gray-600 font-medium">Anggota Aktif</p>
             </div>
         </div>
@@ -148,6 +157,12 @@
                     <div class="w-full bg-gray-200 rounded-full h-6 shadow-inner">
                         <div class="bg-gradient-to-r from-blue-500 to-blue-600 h-6 rounded-full flex items-center justify-end pr-4 shadow-lg" style="width: {{ $persenLaki }}%;">
                             <span class="text-white font-bold text-sm">{{ $persenLaki }}%</span>
+
+                        <span class="font-bold text-xl text-blue-600">{{ $persentaseLaki }}% ({{ $wargaLakiLaki }} orang)</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-6 shadow-inner">
+                        <div class="bg-gradient-to-r from-blue-500 to-blue-600 h-6 rounded-full flex items-center justify-end pr-4 shadow-lg" style="width: {{ $persentaseLaki }}%;">
+                            <span class="text-white font-bold text-sm">{{ $persentaseLaki }}%</span>
                         </div>
                     </div>
                 </div>
@@ -162,6 +177,11 @@
                     <div class="w-full bg-gray-200 rounded-full h-6 shadow-inner">
                         <div class="bg-gradient-to-r from-pink-400 to-pink-500 h-6 rounded-full flex items-center justify-end pr-4 shadow-lg" style="width: {{ $persenPerempuan }}%;">
                             <span class="text-white font-bold text-sm">{{ $persenPerempuan }}%</span>
+                        <span class="font-bold text-xl text-pink-600">{{ $persentasePerempuan }}% ({{ $wargaPerempuan }} orang)</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-6 shadow-inner">
+                        <div class="bg-gradient-to-r from-pink-400 to-pink-500 h-6 rounded-full flex items-center justify-end pr-4 shadow-lg" style="width: {{ $persentasePerempuan }}%;">
+                            <span class="text-white font-bold text-sm">{{ $persentasePerempuan }}%</span>
                         </div>
                     </div>
                 </div>
@@ -239,6 +259,10 @@
                         <p class="text-blue-600 font-bold text-4xl mb-2">{{ $persenLaki }}%</p>
                         <p class="text-gray-700 font-bold text-lg">Laki-laki</p>
                         <p class="text-gray-500">{{ $lakiLaki }} orang</p>
+
+                        <p class="text-blue-600 font-bold text-4xl mb-2">{{ $persentaseLaki }}%</p>
+                        <p class="text-gray-700 font-bold text-lg">Laki-laki</p>
+                        <p class="text-gray-500">{{ $wargaLakiLaki }} orang</p>
                     </div>
                     <div class="bg-pink-50 p-6 rounded-xl text-center">
                         <div class="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -249,6 +273,9 @@
                         <p class="text-pink-600 font-bold text-4xl mb-2">{{ $persenPerempuan }}%</p>
                         <p class="text-gray-700 font-bold text-lg">Perempuan</p>
                         <p class="text-gray-500">{{ $perempuan }} orang</p>
+                        <p class="text-pink-600 font-bold text-4xl mb-2">{{ $persentasePerempuan }}%</p>
+                        <p class="text-gray-700 font-bold text-lg">Perempuan</p>
+                        <p class="text-gray-500">{{ $wargaPerempuan }} orang</p>
                     </div>
                 </div>
             </div>
@@ -486,6 +513,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 labels: ['Laki-laki', 'Perempuan'],
                 datasets: [{
                     data: [lakiLaki, perempuan],
+                    data: [{{ $wargaLakiLaki }}, {{ $wargaPerempuan }}],
                     backgroundColor: [
                         'rgba(59, 130, 246, 0.8)',
                         'rgba(244, 114, 182, 0.8)'
@@ -522,6 +550,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                 const total = lakiLaki + perempuan;
                                 const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
                                 return `${label}: ${percentage}% (${value} orang)`;
+                                const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                return `${context.label}: ${percentage}% (${value} orang)`;
                             }
                         }
                     }
