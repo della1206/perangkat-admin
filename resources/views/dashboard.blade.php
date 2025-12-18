@@ -1,5 +1,5 @@
 @extends('layouts.admin.app')
-<!-- tes -->
+
 @section('content')
 <div class="container mx-auto px-4 py-8">
     <!-- Search Bar -->
@@ -37,7 +37,7 @@
                 <p class="text-gray-600 mb-4">Lihat dan kelola data warga desa secara lengkap.</p>
                 <div class="mt-4">
                     <span class="inline-block bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold">
-                        250 Data Tersedia
+                        {{ $totalWarga ?? 0 }} Data Tersedia
                     </span>
                 </div>
             </a>
@@ -53,7 +53,7 @@
                 <p class="text-gray-600 mb-4">Kelola data lembaga yang berperan dalam desa.</p>
                 <div class="mt-4">
                     <span class="inline-block bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-semibold">
-                        115 Lembaga Aktif
+                        {{ $totalLembaga ?? 0 }} Lembaga Aktif
                     </span>
                 </div>
             </a>
@@ -69,7 +69,11 @@
                 <p class="text-gray-600 mb-4">Atur struktur jabatan Desa.</p>
                 <div class="mt-4">
                     <span class="inline-block bg-yellow-100 text-yellow-700 px-4 py-2 rounded-full text-sm font-semibold">
-                        100 Jabatan Aktif
+                        @php
+                            // Jika ada model JabatanLembaga, ganti ini
+                            $totalJabatan = \App\Models\JabatanLembaga::count() ?? 0;
+                        @endphp
+                        {{ $totalJabatan }} Jabatan Aktif
                     </span>
                 </div>
             </a>
@@ -87,7 +91,7 @@
                     </svg>
                 </div>
                 <h3 class="text-xl font-bold text-gray-800 mb-2">Total Warga</h3>
-                <p class="text-5xl font-extrabold text-blue-600 mb-2">250</p>
+                <p class="text-5xl font-extrabold text-blue-600 mb-2">{{ $totalWarga ?? 0 }}</p>
                 <p class="text-gray-600 font-medium">Orang Terdaftar</p>
             </div>
             
@@ -98,7 +102,7 @@
                     </svg>
                 </div>
                 <h3 class="text-xl font-bold text-gray-800 mb-2">Total Lembaga</h3>
-                <p class="text-5xl font-extrabold text-green-600 mb-2">115</p>
+                <p class="text-5xl font-extrabold text-green-600 mb-2">{{ $totalLembaga ?? 0 }}</p>
                 <p class="text-gray-600 font-medium">Lembaga Aktif</p>
             </div>
             
@@ -108,13 +112,28 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                     </svg>
                 </div>
-                <h3 class="text-xl font-bold text-gray-800 mb-2">Total Jabatan</h3>
-                <p class="text-5xl font-extrabold text-yellow-600 mb-2">100</p>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Total Perangkat</h3>
+                <p class="text-5xl font-extrabold text-yellow-600 mb-2">{{ $totalPerangkat ?? 0 }}</p>
                 <p class="text-gray-600 font-medium">Anggota Aktif</p>
             </div>
         </div>
 
         <!-- Gender Statistics -->
+        @php
+            // Ambil data jenis kelamin dari database
+            $lakiLaki = \App\Models\Warga::where('jenis_kelamin', 'L')->orWhere('jenis_kelamin', 'Laki-laki')->count();
+            $perempuan = \App\Models\Warga::where('jenis_kelamin', 'P')->orWhere('jenis_kelamin', 'Perempuan')->count();
+            $totalJK = $lakiLaki + $perempuan;
+            
+            if($totalJK > 0) {
+                $persenLaki = round(($lakiLaki / $totalJK) * 100, 1);
+                $persenPerempuan = round(($perempuan / $totalJK) * 100, 1);
+            } else {
+                $persenLaki = 0;
+                $persenPerempuan = 0;
+            }
+        @endphp
+        
         <div class="bg-white p-8 shadow-xl rounded-2xl border border-gray-200">
             <h3 class="text-2xl font-bold mb-8 text-gray-800 border-b pb-4">Statistik Jenis Kelamin Warga</h3>
             <div class="space-y-8">
@@ -124,11 +143,11 @@
                             <div class="w-5 h-5 bg-blue-500 rounded-full mr-3"></div>
                             <span class="text-gray-800 font-bold text-lg">Laki-laki</span>
                         </div>
-                        <span class="font-bold text-xl text-blue-600">56% (140 orang)</span>
+                        <span class="font-bold text-xl text-blue-600">{{ $persenLaki }}% ({{ $lakiLaki }} orang)</span>
                     </div>
                     <div class="w-full bg-gray-200 rounded-full h-6 shadow-inner">
-                        <div class="bg-gradient-to-r from-blue-500 to-blue-600 h-6 rounded-full flex items-center justify-end pr-4 shadow-lg" style="width: 56%;">
-                            <span class="text-white font-bold text-sm">56%</span>
+                        <div class="bg-gradient-to-r from-blue-500 to-blue-600 h-6 rounded-full flex items-center justify-end pr-4 shadow-lg" style="width: {{ $persenLaki }}%;">
+                            <span class="text-white font-bold text-sm">{{ $persenLaki }}%</span>
                         </div>
                     </div>
                 </div>
@@ -138,11 +157,11 @@
                             <div class="w-5 h-5 bg-pink-500 rounded-full mr-3"></div>
                             <span class="text-gray-800 font-bold text-lg">Perempuan</span>
                         </div>
-                        <span class="font-bold text-xl text-pink-600">44% (110 orang)</span>
+                        <span class="font-bold text-xl text-pink-600">{{ $persenPerempuan }}% ({{ $perempuan }} orang)</span>
                     </div>
                     <div class="w-full bg-gray-200 rounded-full h-6 shadow-inner">
-                        <div class="bg-gradient-to-r from-pink-400 to-pink-500 h-6 rounded-full flex items-center justify-end pr-4 shadow-lg" style="width: 44%;">
-                            <span class="text-white font-bold text-sm">44%</span>
+                        <div class="bg-gradient-to-r from-pink-400 to-pink-500 h-6 rounded-full flex items-center justify-end pr-4 shadow-lg" style="width: {{ $persenPerempuan }}%;">
+                            <span class="text-white font-bold text-sm">{{ $persenPerempuan }}%</span>
                         </div>
                     </div>
                 </div>
@@ -150,56 +169,57 @@
         </div>
     </div>
 
-     <!-- PERANGKAT DESA DALAM SECTION - GAMBAR BESAR -->
-        <div class="mb-8 rounded-xl overflow-hidden shadow-2xl border border-gray-300">
-            <div class="relative bg-gradient-to-r from-blue-50 to-green-50">
-                <!-- Gambar Besar -->
-                <div class="w-full">
-                    <div class="flex flex-col lg:flex-row h-auto">
-                        <!-- Bagian Gambar (Lebih Besar) -->
-                        <div class="lg:w-7/12 xl:w-8/12 h-96 lg:h-auto">
-                            <img src="{{ asset('assets/img/perangkat1.png') }}"
-                                 alt="Perangkat Desa"
-                                 class="w-full h-full object-cover transform hover:scale-105 transition duration-700">
+    <!-- PERANGKAT DESA DALAM SECTION - GAMBAR BESAR -->
+    <div class="mb-8 rounded-xl overflow-hidden shadow-2xl border border-gray-300">
+        <div class="relative bg-gradient-to-r from-blue-50 to-green-50">
+            <!-- Gambar Besar -->
+            <div class="w-full">
+                <div class="flex flex-col lg:flex-row h-auto">
+                    <!-- Bagian Gambar (Lebih Besar) -->
+                    <div class="lg:w-7/12 xl:w-8/12 h-96 lg:h-auto">
+                        <img src="{{ asset('assets/img/perangkat1.png') }}"
+                             alt="Perangkat Desa"
+                             class="w-full h-full object-cover transform hover:scale-105 transition duration-700">
+                    </div>
+                    
+                    <!-- Bagian Konten -->
+                    <div class="lg:w-5/12 xl:w-4/12 p-8 md:p-10 flex flex-col justify-center bg-gradient-to-r from-blue-50/90 to-blue-100/70 backdrop-blur-sm">
+                        <div class="mb-6">
+                            <div class="inline-flex items-center px-4 py-2 rounded-full bg-blue-100 text-blue-800 text-sm font-bold mb-4 shadow-sm">
+                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                                </svg>
+                                PERANGKAT DESA 
+                            </div>
                         </div>
-                        
-                        <!-- Bagian Konten -->
-                        <div class="lg:w-5/12 xl:w-4/12 p-8 md:p-10 flex flex-col justify-center bg-gradient-to-r from-blue-50/90 to-blue-100/70 backdrop-blur-sm">
-                            <div class="mb-6">
-                                <div class="inline-flex items-center px-4 py-2 rounded-full bg-blue-100 text-blue-800 text-sm font-bold mb-4 shadow-sm">
-                                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
-                                    </svg>
-                                    PERANGKAT DESA 
-                                </div>
-                            </div>
-                            <h3 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6 leading-tight">
-                                Perangkat Desa
-                            </h3>
-                            <p class="text-gray-800 mb-8 text-lg leading-relaxed">
-                                Perangkat desa aktif melayani masyarakat dalam berbagai kegiatan pembangunan desa. Mereka berperan penting dalam pengelolaan administrasi, pembangunan, dan pelayanan kepada masyarakat.
-                            </p>
-                            <div class="flex flex-col sm:flex-row gap-4">
-                                <a href="{{ route('perangkat-desa.index') }}"
-                                   class="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                                    </svg>
-                                    <span class="font-semibold text-lg">Lihat Perangkat Desa</span>
-                                </a>
-                                <a href="{{ route('perangkat-desa.create') }}"
-                                   class="inline-flex items-center justify-center border-2 border-blue-600 text-blue-600 hover:bg-blue-50 px-6 py-4 rounded-lg transition-all duration-300">
-                                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                                    </svg>
-                                    <span class="font-semibold text-lg">Tambah Baru</span>
-                                </a>
-                            </div>
+                        <h3 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6 leading-tight">
+                            Perangkat Desa
+                        </h3>
+                        <p class="text-gray-800 mb-8 text-lg leading-relaxed">
+                            Perangkat desa aktif melayani masyarakat dalam berbagai kegiatan pembangunan desa. Mereka berperan penting dalam pengelolaan administrasi, pembangunan, dan pelayanan kepada masyarakat.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <a href="{{ route('perangkat-desa.index') }}"
+                               class="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                </svg>
+                                <span class="font-semibold text-lg">Lihat Perangkat Desa</span>
+                            </a>
+                            <a href="{{ route('perangkat-desa.create') }}"
+                               class="inline-flex items-center justify-center border-2 border-blue-600 text-blue-600 hover:bg-blue-50 px-6 py-4 rounded-lg transition-all duration-300">
+                                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                </svg>
+                                <span class="font-semibold text-lg">Tambah Baru</span>
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+
     <!-- Chart Section -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         <!-- Pie Chart -->
@@ -216,9 +236,9 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                             </svg>
                         </div>
-                        <p class="text-blue-600 font-bold text-4xl mb-2">56%</p>
+                        <p class="text-blue-600 font-bold text-4xl mb-2">{{ $persenLaki }}%</p>
                         <p class="text-gray-700 font-bold text-lg">Laki-laki</p>
-                        <p class="text-gray-500">140 orang</p>
+                        <p class="text-gray-500">{{ $lakiLaki }} orang</p>
                     </div>
                     <div class="bg-pink-50 p-6 rounded-xl text-center">
                         <div class="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -226,9 +246,9 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14a4 4 0 100-8 4 4 0 000 8zm0 0v6m0-6h6m-6 0H6"/>
                             </svg>
                         </div>
-                        <p class="text-pink-600 font-bold text-4xl mb-2">44%</p>
+                        <p class="text-pink-600 font-bold text-4xl mb-2">{{ $persenPerempuan }}%</p>
                         <p class="text-gray-700 font-bold text-lg">Perempuan</p>
-                        <p class="text-gray-500">110 orang</p>
+                        <p class="text-gray-500">{{ $perempuan }} orang</p>
                     </div>
                 </div>
             </div>
@@ -236,23 +256,23 @@
 
         <!-- Additional Info Card -->
         <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-8 shadow-xl rounded-2xl border border-blue-100">
-            <h3 class="text-2xl font-bold mb-6 text-gray-800">Informasi Media</h3>
+            <h3 class="text-2xl font-bold mb-6 text-gray-800">Informasi Sistem</h3>
             <div class="space-y-6">
                 <div class="bg-white/80 backdrop-blur-sm p-6 rounded-xl border border-gray-200">
                     <h4 class="font-bold text-gray-800 mb-3 flex items-center">
                         <svg class="w-5 h-5 text-blue-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2H4zm12 6a2 2 0 100 4 2 2 0 000-4z" clip-rule="evenodd"/>
                         </svg>
-                        Keterangan Media
+                        Statistik Pengguna
                     </h4>
                     <div class="space-y-3">
                         <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                            <span class="font-medium text-gray-700">Foto Perangkat Desa</span>
-                            <code class="bg-blue-100 text-blue-700 px-3 py-1 rounded text-sm font-mono border border-blue-200">'perangkat_desa'</code>
+                            <span class="font-medium text-gray-700">Total Pengguna Sistem</span>
+                            <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded text-sm font-mono border border-blue-200">{{ $totalUser ?? 0 }} User</span>
                         </div>
                         <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                            <span class="font-medium text-gray-700">Logo Lembaga Desa</span>
-                            <code class="bg-green-100 text-green-700 px-3 py-1 rounded text-sm font-mono border border-green-200">'lembaga_desa'</code>
+                            <span class="font-medium text-gray-700">Total Perangkat Desa</span>
+                            <span class="bg-green-100 text-green-700 px-3 py-1 rounded text-sm font-mono border border-green-200">{{ $totalPerangkat ?? 0 }} Orang</span>
                         </div>
                     </div>
                 </div>
@@ -262,16 +282,19 @@
                         <svg class="w-5 h-5 text-blue-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
                         </svg>
-                        Struktur Wilayah
+                        Keterangan Data
                     </h4>
                     <div class="space-y-3">
                         <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                            <span class="font-medium text-gray-700">Master RW</span>
-                            <span class="text-gray-600">Opsional </span>
+                            <span class="font-medium text-gray-700">Data Terupdate</span>
+                            <span class="text-gray-600">{{ date('d/m/Y H:i') }}</span>
                         </div>
                         <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                            <span class="font-medium text-gray-700">Master RT</span>
-                            <span class="text-gray-600">Di bawah RW</span>
+                            <span class="font-medium text-gray-700">Status Sistem</span>
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                                <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                Aktif
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -451,12 +474,18 @@ document.addEventListener('DOMContentLoaded', function() {
     // Chart.js Configuration
     const ctx = document.getElementById('wargaChart');
     if (ctx) {
+        // Data dari PHP
+        const lakiLaki = {{ $lakiLaki }};
+        const perempuan = {{ $perempuan }};
+        const persenLaki = {{ $persenLaki }};
+        const persenPerempuan = {{ $persenPerempuan }};
+        
         new Chart(ctx, {
             type: 'pie',
             data: {
                 labels: ['Laki-laki', 'Perempuan'],
                 datasets: [{
-                    data: [140, 110],
+                    data: [lakiLaki, perempuan],
                     backgroundColor: [
                         'rgba(59, 130, 246, 0.8)',
                         'rgba(244, 114, 182, 0.8)'
@@ -488,10 +517,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         padding: 12,
                         callbacks: {
                             label: function(context) {
-                                const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                                const label = context.label;
                                 const value = context.raw;
-                                const percentage = ((value / total) * 100).toFixed(1);
-                                return `${context.label}: ${percentage}% (${value} orang)`;
+                                const total = lakiLaki + perempuan;
+                                const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                return `${label}: ${percentage}% (${value} orang)`;
                             }
                         }
                     }
