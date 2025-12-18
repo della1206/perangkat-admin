@@ -18,25 +18,33 @@ class AuthController extends Controller
     }
 
     public function login(Request $request)
-    {
-        $request->validate([
-            'email' => 'required',
-            'password' => 'required|min:3',
+{
+    $request->validate([
+        'email' => 'required',
+        'password' => 'required|min:3',
+    ]);
+
+    $credentials = $request->only('email', 'password');
+
+    if (Auth::attempt($credentials)) {
+        $request->session()->regenerate();
+        
+        // Simpan semua data user ke session sekaligus
+        session([
+            'name' => Auth::user()->name,
+            'last_login' => now(),
+            // tambahkan data lain jika perlu
+            'user_id' => Auth::id(),
+            'email' => Auth::user()->email,
         ]);
-
-        $credentials = $request->only('email', 'password');
-
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            
-            // Simpan waktu login terakhir
-            session(['last_login' => now()]);
-            
-            return redirect()->route('dashboard.index')->with('success', 'Login berhasil!');
-        }
-
-        return back()->with('error', 'Email atau password salah.')->withInput();
+        
+        return redirect()->route('dashboard.index')
+            ->with('success', 'Login berhasil!');
     }
+
+    return back()->with('error', 'Email atau password salah.')
+                 ->withInput();
+}
 
     public function logout(Request $request)
     {

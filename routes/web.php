@@ -8,6 +8,7 @@ use App\Http\Controllers\LembagaDesaController;
 use App\Http\Controllers\PerangkatDesaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\JabatanLembagaController;
+use App\Http\Controllers\AnggotaLembagaController;
 
 // Redirect root ke login
 Route::get('/', function () {
