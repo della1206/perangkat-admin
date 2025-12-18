@@ -8,6 +8,9 @@ use App\Http\Controllers\LembagaDesaController;
 use App\Http\Controllers\PerangkatDesaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\JabatanLembagaController;
+use App\Http\Controllers\AnggotaLembagaController;
+use App\Http\Controllers\RwController;
+use App\Http\Controllers\RtController;
 
 // Redirect root ke login
 Route::get('/', function () {
@@ -87,3 +90,9 @@ Route::fallback(function () {
     Route::put('/profile', [UserController::class, 'updateProfile'])->name('profile.update');
 
     Route::resource('anggota-lembaga', AnggotaLembagaController::class);
+
+Route::resource('anggota-lembaga', AnggotaLembagaController::class);
+
+// RW Routes
+Route::resource('rw', RwController::class);
+Route::resource('rt', RtController::class);

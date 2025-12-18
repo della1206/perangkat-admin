@@ -53,24 +53,14 @@
 
        <nav class="flex-1 p-4">
     <ul class="space-y-3">
-    <li><a href="{{ route('dashboard.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('dashboard.*') ? 'bg-dark green-700' : '' }}">🏠 Dashboard</a></li>
-    <li class="border-t border-white-600 my-2 pt-2"></li>
-    <li><a href="{{ route('user.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('user.*') ? 'bg-dark green-700' : '' }}">👩🏻‍🦰 User</a></li>
-    <li><a href="{{ route('rw.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('jabatan.*') ? 'bg-dark green-700' : '' }}">🧑🏼‍💼 Rw</a></li>
-    <li><a href="{{ route('rt.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('jabatan.*') ? 'bg-dark green-700' : '' }}">🧑🏼‍💼 Rt</a></li>
-    
-    <!-- Garis Pembatas -->
-    <li class="border-t border-white-600 my-2 pt-2"></li>
-    
-    <li><a href="{{ route('warga.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('warga.*') ? 'bg-dark green-700' : '' }}">👨‍👩‍👧‍👦 Warga</a></li>
-
-    <li class="border-t border-white-600 my-2 pt-2"></li>
-
-    <li><a href="{{ route('perangkat-desa.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('perangkat-desa.*') ? 'bg-dark green-700' : '' }}">👥 Perangkat Desa</a></li>
-    <li><a href="{{ route('lembaga.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('lembaga.*') ? 'bg-dark green-700' : '' }}">🏢 Lembaga Desa</a></li>
-    <li><a href="{{ route('jabatan-lembaga.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('jabatan.*') ? 'bg-dark green-700' : '' }}">🔱 Jabatan Desa</a></li>
-    <li><a href="{{ route('anggota-lembaga.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('jabatan.*') ? 'bg-dark green-700' : '' }}">⚜️ Anggota-lembaga</a></li>
-</ul>
+        <li><a href="{{ route('dashboard.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('dashboard.*') ? 'bg-dark green-700' : '' }}">🏠 Dashboard</a></li>
+        <li><a href="{{ route('user.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('user.*') ? 'bg-dark green-700' : '' }}">👩🏻‍🦰 User</a></li>
+        <li><a href="{{ route('warga.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('warga.*') ? 'bg-dark green-700' : '' }}">👨‍👩‍👧‍👦 Warga</a></li>
+        <!-- TAMBAHKAN INI -->
+        <li><a href="{{ route('perangkat-desa.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('perangkat-desa.*') ? 'bg-dark green-700' : '' }}">👥 Perangkat Desa</a></li>
+        <li><a href="{{ route('lembaga.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('lembaga.*') ? 'bg-dark green-700' : '' }}">🏢 Lembaga Desa</a></li>
+        <li><a href="{{ route('jabatan-lembaga.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('jabatan.*') ? 'bg-dark green-700' : '' }}">🔱 Jabatan Desa</a></li>
+    </ul>
 </nav>
 
         <div class="p-4 border-t border-gray-700">

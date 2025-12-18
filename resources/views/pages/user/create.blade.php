@@ -38,9 +38,7 @@
                             <div class="shrink-0">
                                 <img id="photoPreview" 
                                     class="h-32 w-32 object-cover rounded-full border-2 border-gray-300"
-                                    {{-- START FIX: Menggunakan jalur yang benar (public/images/) --}}
-                                    src="{{ asset('img/fotoo.png') }}"
-                                    {{-- END FIX --}}
+                                    src="{{ asset('assets/img/fotoo.png') }}"
                                     alt="Preview foto profil">
                             </div>
                             <div class="flex-1">

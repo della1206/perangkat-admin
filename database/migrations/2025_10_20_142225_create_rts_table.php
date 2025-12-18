@@ -11,15 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rts', function (Blueprint $table) {
-        $table->id('rt_id');
-        $table->unsignedBigInteger('rw_id');
-        $table->string('nomor_rt');
-        $table->unsignedBigInteger('ketua_rt_warga_id')->nullable();
-        $table->text('keterangan')->nullable();
-        $table->timestamps();
+        Schema::create('rt', function (Blueprint $table) {
+            $table->id('rt_id');
+            $table->foreignId('rw_id')
+                  ->constrained('rw', 'rw_id')
+                  ->cascadeOnDelete(); // Foreign key ke tabel rw
+            $table->string('nomor_rt', 10);
+            $table->foreignId('ketua_rt_warga_id')
+                  ->nullable()
+                  ->constrained('warga', 'warga_id')
+                  ->nullOnDelete(); // Foreign key ke tabel warga
+            $table->text('keterangan')->nullable();
+            $table->timestamps();
 
-        $table->foreign('rw_id')->references('rw_id')->on('rws')->onDelete('cascade');
+            // Composite unique key: nomor_rt harus unik per RW
+            $table->unique(['rw_id', 'nomor_rt']);
         });
     }
 
@@ -28,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rts');
+        Schema::dropIfExists('rt');
     }
 };

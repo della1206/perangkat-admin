@@ -17,31 +17,87 @@ class CreateJabatanDummySeeder extends Seeder
     public function run()
     {
         $faker = Faker::create('id_ID');
-        $numberOfJabatan = 50;
+        $jumlahJabatan = 50;
 
-        // Ini penting agar relasi FK (lembaga_id) terisi dengan data yang valid
+        // Ambil ID lembaga dari tabel lembaga_desa untuk relasi FK
         $lembagaIds = DB::table('lembaga_desa')->pluck('lembaga_id')->toArray();
 
-        // Pastikan ada data di tabel induk sebelum melanjutkan
+        // Pastikan ada data di tabel lembaga_desa sebelum melanjutkan
         if (empty($lembagaIds)) {
             echo "Peringatan: Tidak ada data di tabel lembaga_desa. Jalankan CreateLembagaDummySeeder terlebih dahulu.\n";
             return;
         }
 
-        echo "Menambahkan $numberOfJabatan Jabatan Lembaga...\n";
+        echo "Menambahkan $jumlahJabatan Jabatan Lembaga...\n";
 
-        foreach (range(1, $numberOfJabatan) as $index) {
+        // Daftar jabatan dalam lembaga desa (bahasa Indonesia)
+        $daftarJabatan = [
+            'Ketua',
+            'Wakil Ketua',
+            'Sekretaris',
+            'Bendahara',
+            'Koordinator Bidang Pemberdayaan',
+            'Koordinator Bidang Kesehatan',
+            'Koordinator Bidang Pendidikan',
+            'Koordinator Bidang Ekonomi',
+            'Koordinator Bidang Pemuda',
+            'Koordinator Bidang Perempuan',
+            'Koordinator Bidang Lingkungan',
+            'Koordinator Bidang Sosial',
+            'Koordinator Bidang Infrastruktur',
+            'Anggota',
+            'Anggota Bidang Pemberdayaan',
+            'Anggota Bidang Kesehatan',
+            'Anggota Bidang Pendidikan',
+            'Anggota Bidang Ekonomi',
+            'Anggota Bidang Pemuda',
+            'Anggota Bidang Perempuan',
+            'Anggota Bidang Lingkungan',
+            'Anggota Bidang Sosial',
+            'Sekretaris I',
+            'Sekretaris II',
+            'Bendahara I',
+            'Bendahara II',
+            'Ketua Harian',
+            'Wakil Sekretaris',
+            'Wakil Bendahara',
+            'Staf Administrasi',
+            'Staf Keuangan',
+            'Staf Program',
+            'Staf Monitoring',
+            'Staf Evaluasi',
+            'Ketua Komisi A',
+            'Ketua Komisi B',
+            'Ketua Komisi C',
+            'Ketua Komisi D',
+            'Anggota Komisi A',
+            'Anggota Komisi B',
+            'Anggota Komisi C',
+            'Anggota Komisi D',
+            'Ketua Panitia',
+            'Wakil Ketua Panitia',
+            'Sekretaris Panitia',
+            'Bendahara Panitia',
+            'Anggota Panitia',
+            'Koordinator Wilayah',
+            'Koordinator Dusun',
+            'Koordinator RW'
+        ];
+
+        foreach (range(1, $jumlahJabatan) as $index) {
             
             $randomLembagaId = $faker->randomElement($lembagaIds);
 
             // Tambahkan data ke tabel jabatan_lembaga
             DB::table('jabatan_lembaga')->insert([
                 'lembaga_id'   => $randomLembagaId,
-                'nama_jabatan' => $faker->randomElement(['Ketua', 'Wakil Ketua', 'Sekretaris', 'Bendahara', 'Koordinator Bidang', 'Anggota']),
-                'level'        => $faker->numberBetween(1, 4), 
+                'nama_jabatan' => $faker->randomElement($daftarJabatan),
+                'level'        => $faker->numberBetween(1, 5), // Level 1-5
+                'created_at'   => now(),
+                'updated_at'   => now(),
             ]);
         }
         
-        echo "Seeder Jabatan Lembaga selesai. $numberOfJabatan Jabatan telah ditambahkan.\n";
+        echo "Seeder Jabatan Lembaga selesai. $jumlahJabatan jabatan telah ditambahkan.\n";
     }
 }

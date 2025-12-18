@@ -33,7 +33,7 @@ class PerangkatDesa extends Model
         return $this->belongsTo(Warga::class, 'warga_id', 'warga_id');
     }
 
-    // Scope untuk search
+    // Scope untuk pencarian
     public function scopeSearch($query, $search)
     {
         if ($search) {

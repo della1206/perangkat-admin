@@ -11,12 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-          Schema::create('rws', function (Blueprint $table) {
-        $table->id('rw_id');
-        $table->string('nomor_rw');
-        $table->unsignedBigInteger('ketua_rw_warga_id')->nullable();
-        $table->text('keterangan')->nullable();
-        $table->timestamps();
+          Schema::create('rw', function (Blueprint $table) {
+            $table->id('rw_id');
+            $table->string('nomor_rw', 10)->unique(); // Sesuai dengan controller
+            $table->foreignId('ketua_rw_warga_id')
+                  ->nullable()
+                  ->constrained('warga', 'warga_id')
+                  ->nullOnDelete(); // Foreign key ke tabel warga
+            $table->text('keterangan')->nullable();
+            $table->timestamps();
         });
     }
 

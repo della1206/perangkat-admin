@@ -48,29 +48,16 @@ class User extends Authenticatable
         if ($this->photo) {
             return asset('storage/photos/' . $this->photo);
         }
-        // Generate avatar dari nama
-        $name = urlencode($this->name);
-        return "https://ui-avatars.com/api/?name={$name}&background=random&color=fff&size=400";
+        // Fallback ke avatar placeholder
+        return asset('assets/img/fotoo.png');
     }
 
     // Getter untuk thumbnail foto
     public function getPhotoThumbnailUrlAttribute()
     {
         if ($this->photo) {
-            // Asumsi: Foto thumbnail disimpan di public/storage/photos/thumbnails
-            // Untuk skenario tanpa package image processing, kita gunakan foto asli dulu.
-            // Namun, untuk display list yang optimal, sebaiknya gunakan logic thumbnail yang benar.
-            // Sesuai logic sederhana yang Anda buat, kita tetap gunakan yang besar,
-            // atau jika Anda ingin skenario yang lebih baik, buat folder 'thumbnails'.
-            // Untuk konsistensi dengan index.blade.php yang Anda buat (meski salah path), 
-            // saya akan ubah index.blade.php untuk menggunakan accessor ini.
-            
-            // Saya akan kembalikan path foto asli dulu, dan nanti di index.blade.php
-            // akan menggunakan accessor ini.
             return asset('storage/photos/' . $this->photo);
         }
-        // Generate avatar thumbnail dari nama
-        $name = urlencode($this->name);
-        return "https://ui-avatars.com/api/?name={$name}&background=random&color=fff&size=100";
+        return asset('assets/img/fotoo.png');
     }
 }

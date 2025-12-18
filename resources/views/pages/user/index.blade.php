@@ -70,17 +70,10 @@
                         </td>
                         
                         <td class="px-6 py-4 whitespace-nowrap">
-                            @php
-                                // Periksa apakah ada foto dan gunakan URL yang tepat
-                                $photoPath = $user->photo ? asset('storage/photos/' . $user->photo) : asset('assets/img/fotoo.png');
-                                // Jika Anda menggunakan accessor photo_url dan yakin sudah benar:
-                                // $photoPath = $user->photo_url ?? asset('assets/img/fotoo.png'); 
-                            @endphp
-                            <img src="{{ $photoPath }}" 
+                            <img src="{{ $user->photo_url }}" 
                                  alt="{{ $user->name }}" 
                                  style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%;">
                         </td>
-                        {{-- END FIX --}}
                         
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm font-medium text-gray-900">{{ $user->name }}</div>
@@ -106,6 +99,11 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             @if(in_array(auth()->user()->role, ['super_admin', 'admin']))
                             <div class="flex justify-center space-x-2">
+                                <a href="{{ route('user.show', $user->id) }}"
+                                   class="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition">
+                                    Lihat
+                                </a>
+                                
                                 @if(auth()->user()->role === 'super_admin' || $user->role !== 'super_admin')
                                 <a href="{{ route('user.edit', $user->id) }}"
                                    class="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition">
