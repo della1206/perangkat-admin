@@ -24,7 +24,7 @@ class Rt extends Model
     {
         return $this->belongsTo(Warga::class, 'ketua_rt_warga_id', 'warga_id');
     }
-
+//test
     // Scope untuk pencarian
     public function scopeSearch($query, $search)
     {
