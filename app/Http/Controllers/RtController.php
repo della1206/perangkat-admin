@@ -185,7 +185,6 @@ class RtController extends Controller
         return redirect()->route('rt.index')
             ->with('success', 'Data RT berhasil diperbarui.');
     }
-//test
     public function destroy($id)
     {
         $rt = Rt::findOrFail($id);
