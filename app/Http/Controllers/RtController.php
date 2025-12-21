@@ -6,11 +6,18 @@ use App\Models\Rt;
 use App\Models\Rw;
 use App\Models\Warga;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RtController extends Controller
 {
     public function index(Request $request)
     {
+        // Cek apakah tabel rt ada
+        if (!\Schema::hasTable('rt')) {
+            return redirect()->route('dashboard')
+                ->with('error', 'Tabel RT belum tersedia. Silakan jalankan migration terlebih dahulu.');
+        }
+
         // Query dasar dengan eager loading
         $query = Rt::with(['rw', 'ketuaRt']);
         
@@ -47,11 +54,11 @@ class RtController extends Controller
         // PAGINATION: 10 data per halaman
         $rt = $query->paginate(10);
         
-        // Ambil data RW untuk dropdown filter (jika tabel ada)
+        // Ambil data RW untuk dropdown filter
         try {
             $rwList = Rw::orderBy('nomor_rw')->get();
         } catch (\Exception $e) {
-            $rwList = collect(); // Kosongkan jika tabel tidak ada
+            $rwList = collect();
         }
         
         // Tambahkan parameter filter ke pagination links
@@ -67,7 +74,7 @@ class RtController extends Controller
 
     public function create()
     {
-        // Ambil data RW (jika tabel ada)
+        // Ambil data RW
         try {
             $rwList = Rw::orderBy('nomor_rw')->get();
         } catch (\Exception $e) {
@@ -86,27 +93,13 @@ class RtController extends Controller
 
     public function store(Request $request)
     {
-        // Validasi manual tanpa exists untuk menghindari error tabel
+        // Validasi
         $validated = $request->validate([
-            'rw_id' => 'required|integer|min:1',
+            'rw_id' => 'required|exists:rw,rw_id',
             'nomor_rt' => 'required|string|max:10',
-            'ketua_rt_warga_id' => 'nullable|integer|min:1',
+            'ketua_rt_warga_id' => 'nullable|exists:warga,warga_id',
             'keterangan' => 'nullable|string|max:255',
         ]);
-        
-        // Cek apakah RW ada (jika tabel ada)
-        try {
-            if (!Rw::where('rw_id', $request->rw_id)->exists()) {
-                return back()->withErrors(['rw_id' => 'RW tidak ditemukan'])->withInput();
-            }
-        } catch (\Exception $e) {
-            // Tabel tidak ada, skip validasi
-        }
-        
-        // Cek apakah warga ada
-        if ($request->ketua_rt_warga_id && !Warga::where('warga_id', $request->ketua_rt_warga_id)->exists()) {
-            return back()->withErrors(['ketua_rt_warga_id' => 'Warga tidak ditemukan'])->withInput();
-        }
         
         // Validasi nomor RT unik per RW
         $exists = Rt::where('rw_id', $request->rw_id)
@@ -117,9 +110,14 @@ class RtController extends Controller
             return back()->withErrors(['nomor_rt' => 'Nomor RT sudah ada untuk RW ini'])->withInput();
         }
         
-        Rt::create($request->all());
+        // Buat data RT
+        Rt::create([
+            'rw_id' => $request->rw_id,
+            'nomor_rt' => $request->nomor_rt,
+            'ketua_rt_warga_id' => $request->ketua_rt_warga_id,
+            'keterangan' => $request->keterangan,
+        ]);
 
-        // KUNCI UTAMA: Gunakan with() bukan withSuccess()
         return redirect()->route('rt.index')
             ->with('success', 'Data RT berhasil ditambahkan.');
     }
@@ -132,16 +130,12 @@ class RtController extends Controller
 
     public function edit($id)
     {
-        $rt = Rt::findOrFail($id);
+        $rt = Rt::with(['ketuaRt'])->findOrFail($id);
         
-        // Ambil data RW (jika tabel ada)
-        try {
-            $rwList = Rw::orderBy('nomor_rw')->get();
-        } catch (\Exception $e) {
-            $rwList = collect();
-        }
+        // Ambil data RW
+        $rwList = Rw::orderBy('nomor_rw')->get();
         
-        // SOLUSI AMAN: Ambil semua warga, lalu filter di PHP
+        // Ambil semua warga
         $allWarga = Warga::orderBy('nama')->get();
         
         // Ambil warga yang sudah menjadi ketua RT (kecuali ketua RT saat ini)
@@ -163,27 +157,13 @@ class RtController extends Controller
     {
         $rt = Rt::findOrFail($id);
         
-        // Validasi manual tanpa exists untuk menghindari error tabel
+        // Validasi
         $validated = $request->validate([
-            'rw_id' => 'required|integer|min:1',
+            'rw_id' => 'required|exists:rw,rw_id',
             'nomor_rt' => 'required|string|max:10',
-            'ketua_rt_warga_id' => 'nullable|integer|min:1',
+            'ketua_rt_warga_id' => 'nullable|exists:warga,warga_id',
             'keterangan' => 'nullable|string|max:255',
         ]);
-        
-        // Cek apakah RW ada (jika tabel ada)
-        try {
-            if (!Rw::where('rw_id', $request->rw_id)->exists()) {
-                return back()->withErrors(['rw_id' => 'RW tidak ditemukan'])->withInput();
-            }
-        } catch (\Exception $e) {
-            // Tabel tidak ada, skip validasi
-        }
-        
-        // Cek apakah warga ada
-        if ($request->ketua_rt_warga_id && !Warga::where('warga_id', $request->ketua_rt_warga_id)->exists()) {
-            return back()->withErrors(['ketua_rt_warga_id' => 'Warga tidak ditemukan'])->withInput();
-        }
         
         // Validasi nomor RT unik per RW (kecuali untuk RT saat ini)
         $exists = Rt::where('rw_id', $request->rw_id)
@@ -195,9 +175,13 @@ class RtController extends Controller
             return back()->withErrors(['nomor_rt' => 'Nomor RT sudah ada untuk RW ini'])->withInput();
         }
 
-        $rt->update($request->all());
+        $rt->update([
+            'rw_id' => $request->rw_id,
+            'nomor_rt' => $request->nomor_rt,
+            'ketua_rt_warga_id' => $request->ketua_rt_warga_id,
+            'keterangan' => $request->keterangan,
+        ]);
 
-        // KUNCI UTAMA: Gunakan with() bukan withSuccess()
         return redirect()->route('rt.index')
             ->with('success', 'Data RT berhasil diperbarui.');
     }
@@ -207,7 +191,6 @@ class RtController extends Controller
         $rt = Rt::findOrFail($id);
         $rt->delete();
 
-        // KUNCI UTAMA: Gunakan with() bukan withSuccess()
         return redirect()->route('rt.index')
             ->with('success', 'Data RT berhasil dihapus.');
     }

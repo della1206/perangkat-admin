@@ -12,9 +12,9 @@
                class="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg">
                 Edit
             </a>
-            <a href="{{ route('rt.create') }}?rw_id={{ $rw->rw_id }}" 
-               class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
-                + Tambah RT
+            <a href="{{ route('rw.index') }}" 
+               class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg">
+                Kembali
             </a>
         </div>
     </div>
@@ -33,6 +33,10 @@
                     <p class="font-medium">{{ $rw->keterangan ?? '-' }}</p>
                 </div>
                 <div>
+                    <p class="text-sm text-gray-500">Jumlah RT</p>
+                    <p class="font-medium">{{ $rw->rts_count ?? 0 }} RT</p>
+                </div>
+                <div>
                     <p class="text-sm text-gray-500">Dibuat</p>
                     <p class="font-medium">{{ $rw->created_at->format('d M Y H:i') }}</p>
                 </div>
@@ -49,14 +53,18 @@
                     </div>
                     <div>
                         <h3 class="font-bold text-lg">{{ $rw->ketuaRw->nama }}</h3>
-                        <p class="text-gray-600">{{ $rw->ketuaRw->no_ktp }}</p>
+                        <p class="text-gray-600">{{ $rw->ketuaRw->no_ktp ?? 'Tidak ada NIK' }}</p>
                         <div class="flex gap-2 mt-2">
-                            <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded">
-                                {{ $rw->ketuaRw->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}
-                            </span>
-                            <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
-                                {{ $rw->ketuaRw->agama }}
-                            </span>
+                            @if($rw->ketuaRw->jenis_kelamin)
+                                <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded">
+                                    {{ $rw->ketuaRw->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}
+                                </span>
+                            @endif
+                            @if($rw->ketuaRw->agama)
+                                <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
+                                    {{ $rw->ketuaRw->agama }}
+                                </span>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -73,6 +81,10 @@
     <div class="bg-white rounded-lg shadow">
         <div class="px-6 py-4 border-b">
             <h2 class="text-lg font-semibold">Daftar RT di RW {{ $rw->nomor_rw }}</h2>
+            <a href="{{ route('rt.create') }}?rw_id={{ $rw->rw_id }}" 
+               class="mt-2 inline-block px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-sm">
+                + Tambah RT
+            </a>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full">
@@ -100,6 +112,10 @@
                         <td class="px-6 py-4">{{ $rt->keterangan ?? '-' }}</td>
                         <td class="px-6 py-4">
                             <div class="flex gap-2">
+                                <a href="{{ route('rt.show', $rt->rt_id) }}" 
+                                   class="px-3 py-1 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded text-sm">
+                                    Detail
+                                </a>
                                 <a href="{{ route('rt.edit', $rt->rt_id) }}" 
                                    class="px-3 py-1 bg-yellow-100 hover:bg-yellow-200 text-yellow-700 rounded text-sm">
                                     Edit
@@ -119,6 +135,29 @@
                     @endforelse
                 </tbody>
             </table>
+        </div>
+    </div>
+
+    {{-- Tombol Aksi --}}
+    <div class="bg-white rounded-lg shadow p-6 mt-6">
+        <div class="flex justify-between items-center">
+            <h2 class="text-lg font-semibold">Aksi</h2>
+            <div class="flex gap-3">
+                <a href="{{ route('rw.edit', $rw->rw_id) }}" 
+                   class="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg">
+                    Edit Data
+                </a>
+                <form action="{{ route('rw.destroy', $rw->rw_id) }}" 
+                      method="POST" 
+                      onsubmit="return confirm('Hapus RW {{ $rw->nomor_rw }}? Semua data RT di RW ini juga akan dihapus.')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" 
+                            class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg">
+                        Hapus RW
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
