@@ -9,8 +9,8 @@ class Rw extends Model
 {
     use HasFactory;
     
+    protected $table = 'rw'; // TAMBAHKAN INI
     protected $primaryKey = 'rw_id';
-    protected $fillable = ['nomor_rw', 'ketua_rw_warga_id', 'keterangan'];
 
     // Relasi ke Warga (ketua RW)
     public function ketuaRw()

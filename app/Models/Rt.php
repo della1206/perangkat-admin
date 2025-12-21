@@ -9,6 +9,7 @@ class Rt extends Model
 {
     use HasFactory;
     
+    protected $table = 'rt'; // TAMBAHKAN INI
     protected $primaryKey = 'rt_id';
     protected $fillable = ['rw_id', 'nomor_rt', 'ketua_rt_warga_id', 'keterangan'];
 
