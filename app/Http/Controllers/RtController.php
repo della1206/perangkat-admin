@@ -6,7 +6,6 @@ use App\Models\Rt;
 use App\Models\Rw;
 use App\Models\Warga;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class RtController extends Controller

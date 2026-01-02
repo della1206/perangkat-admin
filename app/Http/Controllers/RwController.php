@@ -6,13 +6,14 @@ use App\Models\Rw;
 use App\Models\Warga;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Schema;
 
 class RwController extends Controller
 {
     public function index(Request $request)
     {
         // Validasi jika tabel RW belum ada
-        if (!\Schema::hasTable('rw')) {
+        if (!Schema::hasTable('rw')) {
             return redirect()->route('dashboard')
                 ->with('error', 'Tabel RW belum tersedia. Silakan jalankan migration terlebih dahulu.');
         }
@@ -65,7 +66,7 @@ class RwController extends Controller
         ->orderBy('nama')
         ->get();
         
-        // Jika tidak ada warga yang tersedia
+        // Jika tidak ada warga yang tersedia, ambil semua warga
         if ($warga->isEmpty()) {
             $warga = Warga::orderBy('nama')->get();
         }
