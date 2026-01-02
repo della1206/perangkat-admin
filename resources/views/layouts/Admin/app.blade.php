@@ -69,7 +69,7 @@
     <li><a href="{{ route('perangkat-desa.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('perangkat-desa.*') ? 'bg-dark green-700' : '' }}">👥 Perangkat Desa</a></li>
     <li><a href="{{ route('lembaga.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('lembaga.*') ? 'bg-dark green-700' : '' }}">🏢 Lembaga Desa</a></li>
     <li><a href="{{ route('jabatan-lembaga.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('jabatan.*') ? 'bg-dark green-700' : '' }}">🔱 Jabatan Desa</a></li>
-    <li><a href="{{ route('anggota-lembaga.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('jabatan.*') ? 'bg-dark green-700' : '' }}">⚜️ Anggota-lembaga</a></li>
+    <li><a href="{{ route('anggota-lembaga.index') }}" class="block p-2 rounded hover:bg-green-700 {{ request()->routeIs('jabatan.*') ? 'bg-dark green-700' : '' }}">⚜️ Anggota lembaga</a></li>
 </ul>
 </nav>
 

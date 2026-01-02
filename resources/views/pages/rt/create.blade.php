@@ -51,9 +51,19 @@
                     @foreach ($warga as $w)
                         <option value="{{ $w->warga_id }}" {{ old('ketua_rt_warga_id') == $w->warga_id ? 'selected' : '' }}>
                             {{ $w->nama }} - {{ $w->no_ktp }}
+                            @if($w->telp)
+                                ({{ $w->telp }})
+                            @endif
                         </option>
                     @endforeach
                 </select>
+                {{-- Debug: tampilkan jumlah warga --}}
+                <p class="text-xs text-gray-500 mt-1">
+                    Total warga tersedia: {{ $warga->count() }}
+                    @if($warga->count() === 0)
+                        <span class="text-red-500"> - Tidak ada warga yang tersedia</span>
+                    @endif
+                </p>
                 @error('ketua_rt_warga_id')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
