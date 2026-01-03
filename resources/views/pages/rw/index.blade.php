@@ -95,10 +95,6 @@
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex gap-2">
-                                <a href="{{ route('rw.show', $item->rw_id) }}" 
-                                   class="px-3 py-1 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded text-sm">
-                                    Detail
-                                </a>
                                 <a href="{{ route('rw.edit', $item->rw_id) }}" 
                                    class="px-3 py-1 bg-yellow-100 hover:bg-yellow-200 text-yellow-700 rounded text-sm">
                                     Edit

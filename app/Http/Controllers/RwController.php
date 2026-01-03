@@ -135,6 +135,7 @@ class RwController extends Controller
     {
         try {
             $rw = Rw::with(['ketuaRw', 'rts', 'rts.ketuaRt'])
+                  ->withCount('rts')
                    ->findOrFail($id);
             
             // Hitung statistik
