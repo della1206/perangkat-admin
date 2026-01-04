@@ -7,7 +7,7 @@ use App\Models\Rw;
 use App\Models\Warga;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
-
+//test
 class RtController extends Controller
 {
     public function index(Request $request)
