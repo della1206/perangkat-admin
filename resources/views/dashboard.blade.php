@@ -159,7 +159,7 @@
                 <div class="flex flex-col lg:flex-row h-auto">
                     <!-- Bagian Gambar -->
                     <div class="lg:w-7/12 xl:w-8/12 h-96 lg:h-auto">
-                        <img src="{{ asset('assets/img/perangkat1.png') }}"
+                        <img src="{{ asset('assets/img/perangkat1.webp') }}"
                              alt="Perangkat Desa"
                              class="w-full h-full object-cover transform hover:scale-105 transition duration-700">
                     </div>

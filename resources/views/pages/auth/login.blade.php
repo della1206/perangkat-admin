@@ -5,120 +5,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Admin - Desa</title>
+    
+    <link rel="preload" as="image" href="{{ asset('assets/img/perangkat1.webp') }}">
+    <link rel="preload" as="image" href="{{ asset('assets/img/logooo.png.webp') }}">
+
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
+        [x-cloak] { display: none !important; }
+
         body {
-            background-image: url('{{ asset("assets/img/perangkat1.png") }}');
+            /* FIX: Memperbaiki kutip dan nama file agar tidak Parse Error */
+            background-image: url("{{ asset('assets/img/perangkat1.webp') }}");
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             background-attachment: fixed;
             min-height: 100vh;
+            margin: 0;
+            padding: 0;
         }
 
-        /* Overlay yang sangat transparan agar gambar benar-benar kelihatan */
+        /* Overlay transparan agar konten tetap terbaca */
         body::before {
             content: '';
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, 
-                rgba(255, 255, 255, 0.3) 0%, 
-                rgba(255, 255, 255, 0.2) 50%,
-                rgba(255, 255, 255, 0.15) 100%);
+            top: 0; left: 0; width: 100%; height: 100%;
             z-index: 1;
             pointer-events: none;
         }
 
-        /* Efek brightness untuk gambar lebih cerah */
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .animate-fade-in {
-            animation: fadeIn 0.8s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .shadow-xl {
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 
-                        0 10px 10px -5px rgba(0, 0, 0, 0.08);
-        }
-
-        /* Kontainer utama dengan z-index lebih tinggi */
         .main-container {
             position: relative;
             z-index: 10;
         }
 
-        /* Welcome section dengan background lebih transparan */
         .welcome-section {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(2px);
-            border-radius: 1rem;
-            padding: 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.25);
-        }
-
-        /* Login form dengan sedikit blur */
-        .login-form {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(2px);
-            border-radius: 1rem;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border-radius: 1.5rem;
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
-        /* Text dengan kontras lebih baik */
-        .text-contrast {
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Elemen dengan latar lebih solid */
-        .solid-bg {
+        .login-form {
             background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
 
-        /* Input fields yang lebih terlihat */
-        .input-field {
-            background: rgba(255, 255, 255, 0.95);
-            border: 1px solid rgba(209, 213, 219, 0.8);
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out;
         }
 
-        /* Hover effect untuk card */
-        .hover-lift {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .hover-lift:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 25px 35px -5px rgba(0, 0, 0, 0.15),
-                        0 15px 15px -5px rgba(0, 0, 0, 0.08);
+        .input-field:focus {
+            ring: 2px;
+            ring-color: #3b82f6;
+            border-color: #3b82f6;
         }
     </style>
 </head>
 
-<body class="flex items-center justify-center p-4">
+<body class="flex items-center justify-center p-4"></body>
     <div class="main-container max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
 
         <!-- Left Side - Welcome Section -->
@@ -126,7 +80,7 @@
             <!-- Logo -->
             <div class="flex justify-center lg:justify-start mb-8">
                 <div class="flex items-center space-x-3">
-                    <img src="{{ asset('assets/img/logo.png') }}" alt="Logo Desa" 
+                    <img src="{{ asset('assets/img/logoo.png.webp') }}" alt="Logo Desa" 
                          class="w-12 h-12 rounded-xl shadow-lg">
                     <div>
                         <h1 class="text-2xl font-bold text-gray-800 text-contrast">Desa Digital</h1>
@@ -187,7 +141,7 @@
             <div class="text-center mb-6">
                 <div class="flex justify-center mb-4">
                     <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
-                        <img src="{{ asset('assets/img/logo.png') }}" alt="Logo Desa" 
+                        <img src="{{ asset('assets/img/logoo.png.webp') }}" alt="Logo Desa" 
                              class="w-14 h-14 rounded-lg">
                     </div>
                 </div>

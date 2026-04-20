@@ -111,3 +111,47 @@
   text-align: center;
   margin-top: 1rem;
 }
+@media (max-width: 1200px) {
+  /* 1. Paksa halaman utama mengambil lebar penuh */
+  .layout-wrapper:not(.layout-without-menu) .layout-page {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    [x-cloak] { display: none !important; }
+  }
+
+  /* 2. Pastikan container utama tidak meluap (overflow) */
+  .content-wrapper {
+    padding: 10px !important;
+    width: 100% !important;
+    margin: 0 !important;
+  }
+
+  /* 3. Atur kartu dashboard (Data Warga, Lembaga, dll) agar tumpuk vertikal */
+  /* Ganti '.row' dengan class kontainer kartu Anda jika berbeda */
+  .row > * {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    display: block !important;
+    margin-bottom: 15px;
+  }
+
+  /* 4. Perbaikan Gambar agar tidak keluar dari kotak */
+  img, .layout-demo-placeholder img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+  
+  /* 5. Navbar agar tetap rapi */
+  .layout-navbar {
+    width: 100% !important;
+    left: 0 !important;
+  }
+}
+
+/* --- OPTIMASI GAMBAR LOGIN --- */
+/* Tambahkan ini agar background login di gambar pertama Anda lebih ringan */
+.bg-login-image {
+    background-size: cover;
+    background-position: center;
+    image-rendering: -webkit-optimize-contrast;
+}
